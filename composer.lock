@@ -4,9 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "3af1244de0670c0acd5ad13ab23751f6",
-    "content-hash": "f5b6f6ec59dd05b9fb8611fabc56025f",
+    "hash": "a7bf8884ac626caf9c07d67dfc3f3045",
+    "content-hash": "a2a7342977b388903ecec28e5584cc3d",
     "packages": [
+        {
+            "name": "citco/carbon",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/citco/carbon.git",
+                "reference": "39e4fd374263eeda77a084bfc735cbed522dea0d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/citco/carbon/zipball/39e4fd374263eeda77a084bfc735cbed522dea0d",
+                "reference": "39e4fd374263eeda77a084bfc735cbed522dea0d",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": "1.*",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Citco\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "This is a wrapper for nesbot/carbon which also calculates which days are British bank holidays (England & Wales only).",
+            "keywords": [
+                "Bank",
+                "british",
+                "england",
+                "holiday",
+                "holidays",
+                "wales"
+            ],
+            "time": "2016-03-01 19:49:21"
+        },
         {
             "name": "container-interop/container-interop",
             "version": "1.2.0",
@@ -214,6 +253,53 @@
             "time": "2016-07-23 09:33:29"
         },
         {
+            "name": "m6web/firewall",
+            "version": "v1.0.2",
+            "target-dir": "M6Web/Component/Firewall",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/M6Web/Firewall.git",
+                "reference": "d255a958f4a7c15ce5a9c95eccf0ba125416d6b9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/M6Web/Firewall/zipball/d255a958f4a7c15ce5a9c95eccf0ba125416d6b9",
+                "reference": "d255a958f4a7c15ce5a9c95eccf0ba125416d6b9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "atoum/atoum": "@stable"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "M6Web\\Component\\Firewall": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "M6Web",
+                    "email": "opensource@m6web.fr",
+                    "homepage": "http://tech.m6web.fr/"
+                }
+            ],
+            "description": "Library providing IP filtering features",
+            "keywords": [
+                "IP",
+                "filtering",
+                "firewall"
+            ],
+            "time": "2016-10-13 09:50:22"
+        },
+        {
             "name": "mongodb/mongodb",
             "version": "1.1.0-alpha1",
             "source": {
@@ -277,6 +363,137 @@
             "time": "2016-09-28 22:45:39"
         },
         {
+            "name": "monolog/monolog",
+            "version": "1.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/monolog.git",
+                "reference": "4cdd014b809867f4c040523011d2c3607d55e6b4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/4cdd014b809867f4c040523011d2c3607d55e6b4",
+                "reference": "4cdd014b809867f4c040523011d2c3607d55e6b4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "psr/log": "~1.0"
+            },
+            "provide": {
+                "psr/log-implementation": "1.0.0"
+            },
+            "require-dev": {
+                "aws/aws-sdk-php": "^2.4.9 || ^3.0",
+                "doctrine/couchdb": "~1.0@dev",
+                "graylog2/gelf-php": "~1.0",
+                "jakub-onderka/php-parallel-lint": "0.9",
+                "php-amqplib/php-amqplib": "~2.4",
+                "php-console/php-console": "^3.1.3",
+                "phpunit/phpunit": "~4.5",
+                "phpunit/phpunit-mock-objects": "2.3.0",
+                "ruflin/elastica": ">=0.90 <3.0",
+                "sentry/sentry": "^0.13",
+                "swiftmailer/swiftmailer": "~5.3"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+                "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+                "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
+                "ext-mongo": "Allow sending log messages to a MongoDB server",
+                "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+                "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+                "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
+                "php-console/php-console": "Allow sending log messages to Google Chrome",
+                "rollbar/rollbar": "Allow sending log messages to Rollbar",
+                "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
+                "sentry/sentry": "Allow sending log messages to a Sentry server"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Monolog\\": "src/Monolog"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be",
+                    "homepage": "http://seld.be"
+                }
+            ],
+            "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
+            "homepage": "http://github.com/Seldaek/monolog",
+            "keywords": [
+                "log",
+                "logging",
+                "psr-3"
+            ],
+            "time": "2017-04-10 07:58:43"
+        },
+        {
+            "name": "nesbot/carbon",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/briannesbitt/Carbon.git",
+                "reference": "926aee5ab38c2868816aa760f862a85ad01cb61a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/926aee5ab38c2868816aa760f862a85ad01cb61a",
+                "reference": "926aee5ab38c2868816aa760f862a85ad01cb61a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0",
+                "symfony/translation": "~2.6 || ~3.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2",
+                "phpunit/phpunit": "~4.0 || ~5.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.23-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Carbon\\": "src/Carbon/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brian Nesbitt",
+                    "email": "brian@nesbot.com",
+                    "homepage": "http://nesbot.com"
+                }
+            ],
+            "description": "A simple API extension for DateTime.",
+            "homepage": "http://carbon.nesbot.com",
+            "keywords": [
+                "date",
+                "datetime",
+                "time"
+            ],
+            "time": "2017-02-06 22:02:47"
+        },
+        {
             "name": "nikic/fast-route",
             "version": "v1.2.0",
             "source": {
@@ -318,6 +535,103 @@
                 "routing"
             ],
             "time": "2017-01-19 11:35:12"
+        },
+        {
+            "name": "oscarotero/psr7-middlewares",
+            "version": "v3.20.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/oscarotero/psr7-middlewares.git",
+                "reference": "34af332804e03703dc28f009a7b2c6a35268b81f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/oscarotero/psr7-middlewares/zipball/34af332804e03703dc28f009a7b2c6a35268b81f",
+                "reference": "34af332804e03703dc28f009a7b2c6a35268b81f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "aura/router": "^3.0",
+                "aura/session": "2.*",
+                "ext-mcrypt": "*",
+                "filp/whoops": "2.*",
+                "friendsofphp/php-cs-fixer": "^1.12",
+                "google/recaptcha": "^1.1",
+                "imagecow/imagecow": "^2.0",
+                "justinrainbow/json-schema": ">=3.0",
+                "league/route": "^2.0",
+                "m6web/firewall": "~1.0",
+                "matthiasmullie/scrapbook": "^1.0.1",
+                "maximebf/debugbar": "~1.11",
+                "micheh/psr7-cache": "^0.5.0",
+                "mikey179/vfsstream": "^1.6",
+                "mobiledetect/mobiledetectlib": "^2.8",
+                "monolog/monolog": "^1.17",
+                "mrclay/minify": "^2.2",
+                "neomerx/cors-psr7": "^1.0",
+                "nikic/fast-route": "^0.7",
+                "paragonie/csp-builder": "^1.3",
+                "phpunit/phpunit": ">=4.8",
+                "piwik/referrer-spam-blacklist": "^1.0",
+                "ramsey/uuid": "^3.1",
+                "relay/relay": "1.*",
+                "willdurand/geocoder": "^3.2",
+                "willdurand/negotiation": "~2.0",
+                "zendframework/zend-diactoros": "1.*"
+            },
+            "suggest": {
+                "aura/router": "To use AuraRouter",
+                "aura/session": "To use AuraSession",
+                "filp/whoops": "To use Whoops",
+                "google/recaptcha": "To use Recaptcha",
+                "imagecow/imagecow": "To use ImageTransformer",
+                "justinrainbow/json-schema": "To validate JSON with route-matched schemas.",
+                "league/route": "To use LeagueRoute",
+                "m6web/firewall": "To use Firewall",
+                "maximebf/debugbar": "To use DebugBar",
+                "micheh/psr7-cache": "To use Cache",
+                "mobiledetect/mobiledetectlib": "To use DetectDevice",
+                "mrclay/minify": "To use Minify",
+                "neomerx/cors-psr7": "To use Cors",
+                "nikic/fast-route": "To use FastRoute",
+                "paragonie/csp-builder": "To use Csp",
+                "piwik/referrer-spam-blacklist": "To use BlockSpam",
+                "psr/cache-implementation": "To use Cache",
+                "psr/log-implementation": "To use AccessLog",
+                "ramsey/uuid": "To use Uuid",
+                "willdurand/geocoder": "To use Geolocate",
+                "willdurand/negotiation": "To use FormatNegotiator, LanguageNegotiator and EncodingNegotiator"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Psr7Middlewares\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oscar Otero",
+                    "email": "oom@oscarotero.com",
+                    "homepage": "http://oscarotero.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Collection of HTTP middlewares compatible with PSR-7",
+            "homepage": "https://github.com/oscarotero/psr7-middlewares",
+            "keywords": [
+                "http",
+                "middlewares",
+                "psr-7",
+                "psr-messages"
+            ],
+            "time": "2017-03-23 18:11:12"
         },
         {
             "name": "php-di/invoker",
@@ -460,6 +774,42 @@
                 "reflection"
             ],
             "time": "2015-11-29 10:34:25"
+        },
+        {
+            "name": "php-di/slim-bridge",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PHP-DI/Slim-Bridge.git",
+                "reference": "075f9c5b3dc3f4a27a4502025cd138b79a04e18b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PHP-DI/Slim-Bridge/zipball/075f9c5b3dc3f4a27a4502025cd138b79a04e18b",
+                "reference": "075f9c5b3dc3f4a27a4502025cd138b79a04e18b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~5.5|~7.0",
+                "php-di/invoker": "^1.2.0",
+                "php-di/php-di": "^5.2.0",
+                "slim/slim": "^3.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "DI\\Bridge\\Slim\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "PHP-DI integration in Slim",
+            "time": "2016-09-02 22:21:13"
         },
         {
             "name": "pimple/pimple",
@@ -610,6 +960,53 @@
             "time": "2016-08-06 14:39:51"
         },
         {
+            "name": "psr/log",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "time": "2016-10-10 12:19:37"
+        },
+        {
             "name": "slim/slim",
             "version": "3.x-dev",
             "source": {
@@ -738,6 +1135,71 @@
                 "shim"
             ],
             "time": "2016-11-14 01:06:16"
+        },
+        {
+            "name": "symfony/translation",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/translation.git",
+                "reference": "2a6f7a97421875ea66ace2fc943c2303d4d2289d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/translation/zipball/2a6f7a97421875ea66ace2fc943c2303d4d2289d",
+                "reference": "2a6f7a97421875ea66ace2fc943c2303d4d2289d",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.9",
+                "symfony/polyfill-mbstring": "~1.0"
+            },
+            "conflict": {
+                "symfony/config": "<2.8",
+                "symfony/yaml": "<3.3"
+            },
+            "require-dev": {
+                "psr/log": "~1.0",
+                "symfony/config": "~2.8|~3.0",
+                "symfony/intl": "^2.8.18|^3.2.5",
+                "symfony/yaml": "~3.3"
+            },
+            "suggest": {
+                "psr/log": "To use logging capability in translator",
+                "symfony/config": "",
+                "symfony/yaml": ""
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.3-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Translation\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Translation Component",
+            "homepage": "https://symfony.com",
+            "time": "2017-04-12 14:14:56"
         }
     ],
     "packages-dev": [],
