@@ -1,0 +1,29 @@
+{
+  "name": "dylnio/foundation",
+  "type": "library",
+  "keywords": [],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Bill Yildirim",
+      "email": "bill@dyln.io"
+    }
+  ],
+  "require": {
+    "mongodb/mongodb": "^1.0",
+    "danielstjules/stringy": "^2.1",
+    "league/event": "^2.1",
+    "container-interop/container-interop": "^1.1"
+  },
+  "require-dev": {},
+  "autoload": {
+    "psr-4": {
+      "Dyln\\": "src/Dyln"
+    }
+  },
+  "repositories": [],
+  "minimum-stability": "dev",
+  "platform": {
+    "php": "^7.0"
+  }
+}
