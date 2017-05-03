@@ -6,6 +6,7 @@ use Dyln\Util\ArrayUtil;
 use Dyln\Util\Browser;
 use Dyln\Util\IpUtil;
 use MongoDB\Database;
+use MongoDB\Driver\Manager;
 
 class MongoSessionHandler implements \SessionHandlerInterface
 {
@@ -14,24 +15,21 @@ class MongoSessionHandler implements \SessionHandlerInterface
     protected static $memorySession = [];
     /** @var \MongoDB\Collection */
     protected $mongo;
-    protected $collectionName;
     protected $doc = [];
     protected $sessionConfig = [];
 
-    /**
-     * Instantiate
-     *
-     * @param Database $db
-     * @param string $collection
-     * @param array $config for the mongo connection
-     *
-     * @throws \Exception
-     */
-    protected function __construct($db, $collection, array $config)
+    protected function __construct($host, $databaseName, $collectionName, array $config)
     {
         $this->sessionConfig = ArrayUtil::getIn($config, ['session_config'], []);
-        $this->mongo = $db;
-        $this->collectionName = $collection;
+        $manager = new Manager($host, [], []);
+        $db = new Database($manager, $databaseName, [
+            'typeMap' => [
+                'array'    => 'array',
+                'document' => 'array',
+                'root'     => 'array',
+            ],
+        ]);
+        $this->mongo = $db->selectCollection($collectionName);
     }
 
     /**
@@ -44,10 +42,10 @@ class MongoSessionHandler implements \SessionHandlerInterface
         return self::$_instance;
     }
 
-    public static function register($db, $collection, $config = [])
+    public static function register($host, $databaseName, $collectionName, array $config = [])
     {
         if (!self::$_instance) {
-            $handler = new self($db, $collection, $config);
+            $handler = new self($host, $databaseName, $collectionName, $config);
             self::$_instance = $handler;
         } else {
             $handler = self::$_instance;
@@ -81,12 +79,6 @@ class MongoSessionHandler implements \SessionHandlerInterface
         );
     }
 
-
-    private function getCollection()
-    {
-        return $this->mongo->selectCollection($this->collectionName);
-    }
-
     /**
      * Destroy's the session
      *
@@ -99,7 +91,7 @@ class MongoSessionHandler implements \SessionHandlerInterface
         if ($this->isIgnorableSession()) {
             return true;
         }
-        $result = $this->getCollection()->deleteOne(['_id' => $id], ['w' => 1]);
+        $result = $this->mongo->deleteOne(['_id' => $id], ['w' => 1]);
 
         return ($result['ok'] == 1);
     }
@@ -136,7 +128,7 @@ class MongoSessionHandler implements \SessionHandlerInterface
      */
     public function gc($max)
     {
-        $this->getCollection()->deleteMany(['expire' => ['$lt' => time()]]);
+        $this->mongo->deleteMany(['expire' => ['$lt' => time()]]);
 
         return true;
     }
@@ -150,19 +142,12 @@ class MongoSessionHandler implements \SessionHandlerInterface
         return true;
     }
 
-    /**
-     * Reads the session from Mongo
-     *
-     * @param string $id
-     *
-     * @return string
-     */
     public function read($id)
     {
         if ($this->isIgnorableSession()) {
             return self::$memorySession;
         }
-        $this->doc = $this->getCollection()->findOne(['_id' => $id]);
+        $this->doc = $this->mongo->findOne(['_id' => $id]);
         if (!isset($this->doc['d'])) {
             return false;
         } else {
@@ -209,7 +194,7 @@ class MongoSessionHandler implements \SessionHandlerInterface
                 $doc['d'] = $data;
             }
             $options = ['upsert' => true];
-            $this->getCollection()->updateOne(['_id' => $id], ['$set' => $doc], $options);
+            $this->mongo->updateOne(['_id' => $id], ['$set' => $doc], $options);
 
             return true;
         }
