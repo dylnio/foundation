@@ -21,7 +21,8 @@
     "citco/carbon": "^1.0",
     "oscarotero/psr7-middlewares": "^3.20",
     "m6web/firewall": "^1.0",
-    "monolog/monolog": "^1.22"
+    "monolog/monolog": "^1.22",
+    "html2text/html2text": "^4.0"
   },
   "require-dev": {},
   "autoload": {

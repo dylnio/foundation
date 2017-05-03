@@ -2,6 +2,7 @@
 
 namespace Dyln\Util;
 
+use Html2Text\Html2Text;
 use Stringy\StaticStringy;
 
 class StringUtil
@@ -177,5 +178,12 @@ class StringUtil
         }
 
         return str_replace(array_keys($formatted), array_values($formatted), $template);
+    }
+
+    static public function htmlToText($document)
+    {
+        $html = new Html2Text($document);
+
+        return $html->getText();
     }
 }
