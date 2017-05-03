@@ -22,7 +22,7 @@ class Identity implements IdentityInterface
 
     public function getId()
     {
-        return $this->data['id'];
+        return $this->data['_id'];
     }
 
     public function getDisplayName()
@@ -40,7 +40,7 @@ class Identity implements IdentityInterface
         return isset($this->getRoles()[$role]);
     }
 
-    public function getSerializeData()
+    public function getSerializeIdentityData()
     {
         return $this->data;
     }
