@@ -20,7 +20,7 @@ class App extends \Slim\App
     {
         $this->config = $config;
         $containerBuilder = new ContainerBuilder(Container::class);
-        $cache = $this->getCache($params);
+        $cache = $this->getDiCache($params);
         $containerBuilder->setDefinitionCache($cache);
         $containerBuilder->addDefinitions($this->config);
         $container = $containerBuilder->build();
@@ -31,7 +31,7 @@ class App extends \Slim\App
         $this->registerModules($container);
     }
 
-    private function getCache($params = [])
+    private function getDiCache($params = [])
     {
         $adapter = $params['di']['cache']['adapter'];
         if ($adapter == RedisCache::class) {
@@ -65,6 +65,8 @@ class App extends \Slim\App
     {
         foreach ($this->modules as $module) {
             $module->init($params);
+        }
+        foreach ($this->modules as $module) {
             $module->boot();
         }
     }
