@@ -55,8 +55,9 @@ class AnonymousIdentity implements IdentityInterface
     public function getSerializeIdentityData()
     {
         return [
-            '_id'   => (string)$this->getId(),
-            'roles' => $this->getRoles(),
+            '_id'       => (string)$this->getId(),
+            'roles'     => $this->getRoles(),
+            '__class__' => get_class($this),
         ];
     }
 

@@ -30,7 +30,7 @@ class SessionStorage extends AbstractStorage
 
     public function saveIdentity(IdentityInterface $identity)
     {
-        $this->getSessionSegment()->set(self::IDENTITY_SESSION_KEY, serialize($identity->getSerializeData()));
+        $this->getSessionSegment()->set(self::IDENTITY_SESSION_KEY, serialize($identity->getSerializeIdentityData()));
     }
 
     public function clearIdentity()

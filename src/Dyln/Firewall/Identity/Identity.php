@@ -17,7 +17,7 @@ class Identity implements IdentityInterface
 
     public function getId()
     {
-        return $this->data['id'];
+        return $this->data['_id'];
     }
 
     public function getDisplayName()
