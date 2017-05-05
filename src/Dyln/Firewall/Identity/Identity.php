@@ -15,11 +15,6 @@ class Identity implements IdentityInterface
         $this->data = $data;
     }
 
-    public function getRoles()
-    {
-        return $this->data['roles'];
-    }
-
     public function getId()
     {
         return $this->data['id'];
@@ -40,7 +35,12 @@ class Identity implements IdentityInterface
         return isset($this->getRoles()[$role]);
     }
 
-    public function getSerializeData()
+    public function getRoles()
+    {
+        return $this->data['roles'];
+    }
+
+    public function getSerializeIdentityData()
     {
         return $this->data;
     }

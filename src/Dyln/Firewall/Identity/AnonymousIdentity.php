@@ -13,16 +13,6 @@ class AnonymousIdentity implements IdentityInterface
         $this->uuid = uniqid('_x_', true);
     }
 
-    public function getId()
-    {
-        return null;
-    }
-
-    public function getRoles()
-    {
-        return [Roles::GUEST];
-    }
-
     public function getDisplayName()
     {
         return '~ANON~';
@@ -42,6 +32,11 @@ class AnonymousIdentity implements IdentityInterface
         return false;
     }
 
+    public function getRoles()
+    {
+        return [Roles::GUEST];
+    }
+
     public function getUuid()
     {
         return $this->uuid;
@@ -57,11 +52,16 @@ class AnonymousIdentity implements IdentityInterface
         return null;
     }
 
-    public function getSerializeData()
+    public function getSerializeIdentityData()
     {
         return [
             '_id'   => (string)$this->getId(),
             'roles' => $this->getRoles(),
         ];
+    }
+
+    public function getId()
+    {
+        return null;
     }
 }

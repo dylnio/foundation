@@ -41,6 +41,10 @@ class FirewallGuard
         if ($request->isXhr()) {
             return $response->withStatus(401);
         }
+        $accept = $request->getHeader('Accept');
+        if ($accept && $accept[0] == 'application/json') {
+            return $response->withStatus(401);
+        }
         $location = $this->firewall->getRoute(Firewall::ROUTE_DENIED);
         if (!$this->firewall->isLoggedIn()) {
             $target = (string)$request->getUri();
