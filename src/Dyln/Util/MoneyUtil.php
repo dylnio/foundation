@@ -15,6 +15,6 @@ class MoneyUtil
     {
         $amount = (float)bcdiv($amount, 100, 2);
 
-        return round($amount, 2);
+        return number_format(round($amount, 2), 2);
     }
 }

@@ -6,6 +6,9 @@ use Dyln\Util\MoneyUtil;
 
 class FormatCurrency extends \Twig_Extension
 {
+    const APPEND = 'append';
+    const PREPPEND = 'prepend';
+
     public function getName()
     {
         return 'formatcurrency';
@@ -21,15 +24,25 @@ class FormatCurrency extends \Twig_Extension
     public function formatCurrency($valueInPence, $currency = 'GBP')
     {
         $symbol = '';
+        $placement = self::PREPPEND;
         switch (strtoupper($currency)) {
             case 'GBP':
                 $symbol = '£';
+                $placement = self::PREPPEND;
                 break;
             case 'USD':
                 $symbol = '$';
+                $placement = self::PREPPEND;
+                break;
+            case 'EUR':
+                $symbol = '€';
+                $placement = self::APPEND;
                 break;
         }
-
-        return $symbol . ' ' . MoneyUtil::toFloat($valueInPence);
+        if ($placement == self::PREPPEND) {
+            return $symbol . ' ' . MoneyUtil::toFloat($valueInPence);
+        } else {
+            return MoneyUtil::toFloat($valueInPence) . ' ' . $symbol;
+        }
     }
 }
