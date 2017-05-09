@@ -35,8 +35,10 @@ class FirewallGuard
         }
         if ($request->isGet()) {
             $route = $this->getRoute($request);
-            $url = $this->router->pathFor($route->getName(), [], $request->getQueryParams());
-            $this->session->set('_redirectafterlogin', $url);
+            if ($route) {
+                $url = $this->router->pathFor($route->getName(), [], $request->getQueryParams());
+                $this->session->set('_redirectafterlogin', $url);
+            }
         }
         $url = $this->firewall->getRoute(Firewall::ROUTE_LOGIN);
         if ($url) {
