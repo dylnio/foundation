@@ -55,10 +55,8 @@ class SessionStorage extends AbstractStorage
         $data = $this->getSessionSegment()->get(self::IDENTITY_SESSION_KEY);
         if ($data) {
             $data = unserialize($data);
-            if (isset($data['id'])) {
-                $class = ArrayUtil::getIn($data, ['__class__'], Identity::class);
-                $identity = new $class($data);
-            }
+            $class = ArrayUtil::getIn($data, ['__class__'], Identity::class);
+            $identity = new $class($data);
         }
 
         return $identity;
