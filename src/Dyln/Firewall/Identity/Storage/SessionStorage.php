@@ -6,6 +6,7 @@ use Dyln\Firewall\Identity\AnonymousIdentity;
 use Dyln\Firewall\Identity\Identity;
 use Dyln\Firewall\Identity\IdentityInterface;
 use Dyln\Session\Session;
+use Dyln\Util\ArrayUtil;
 
 class SessionStorage extends AbstractStorage
 {
@@ -54,8 +55,9 @@ class SessionStorage extends AbstractStorage
         $data = $this->getSessionSegment()->get(self::IDENTITY_SESSION_KEY);
         if ($data) {
             $data = unserialize($data);
-            if ($data['id']) {
-                $identity = new Identity(['data' => $data]);
+            if (isset($data['id'])) {
+                $class = ArrayUtil::getIn($data, ['__class__'], Identity::class);
+                $identity = new $class($data);
             }
         }
 

@@ -33,6 +33,15 @@ class FirewallGuard
         if ($authorized === true || $authorized === null) {
             return $next($request, $response, $this);
         }
+        if ($request->isGet()) {
+            $route = $this->getRoute($request);
+            $url = $this->router->pathFor($route->getName(), [], $request->getQueryParams());
+            $this->session->set('_redirectafterlogin', $url);
+        }
+        $url = $this->firewall->getRoute(Firewall::ROUTE_LOGIN);
+        if ($url) {
+            return $response->withRedirect($url);
+        }
 
         return $response->withStatus(401);
     }

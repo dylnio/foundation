@@ -10,6 +10,16 @@ class Debugbar extends \Twig_Extension
     /** @var  \Twig_Environment */
     protected $environment;
 
+    /**
+     * Debugbar constructor.
+     * @param \Twig_Environment $environment
+     */
+    public function __construct(\Twig_Environment $environment)
+    {
+        $this->environment = $environment;
+    }
+
+
     public function getName()
     {
         return 'debugbar';
@@ -20,11 +30,6 @@ class Debugbar extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('debugbar', [$this, 'debugbar']),
         ];
-    }
-
-    public function initRuntime(\Twig_Environment $environment)
-    {
-        $this->environment = $environment;
     }
 
     public function debugbar()
