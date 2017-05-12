@@ -10,6 +10,7 @@ class Debugbar
 
     static public function add($section, $data)
     {
+        $section = str_replace(' ', '_', $section);
         $existing = ArrayUtil::getIn(self::$data, $section, []);
         $existing[] = $data;
         self::$data[$section] = $existing;
