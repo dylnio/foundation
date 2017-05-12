@@ -2,6 +2,8 @@
 
 namespace Dyln;
 
+use Dyln\Util\BooleanUtil;
+
 class AppEnv
 {
     const DEFAULT_ENV = 'default';
@@ -66,6 +68,6 @@ class AppEnv
 
     static public function isDebugEnabled()
     {
-        return AppEnv::env('app.debug', false);
+        return BooleanUtil::getBool(AppEnv::env('app.debug', false));
     }
 }
