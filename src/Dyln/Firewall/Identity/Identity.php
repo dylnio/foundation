@@ -32,7 +32,9 @@ class Identity implements IdentityInterface
 
     public function hasRole($role)
     {
-        return isset($this->getRoles()[$role]);
+        $roles = $this->getRoles();
+
+        return in_array($role, $roles);
     }
 
     public function getRoles()
