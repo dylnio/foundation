@@ -184,7 +184,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
      * @param callable|null $callback
      * @return Collection
      */
-    public function filter(callable $callback = null): Collection
+    public function filter(callable $callback = null)
     {
         if ($callback) {
             $return = [];
@@ -230,7 +230,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return null;
     }
 
-    public function map(callable $callback = null): Collection
+    public function map(callable $callback = null)
     {
         $return = [];
         if ($callback) {
