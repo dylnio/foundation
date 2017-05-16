@@ -43,7 +43,11 @@ class Debugbar extends \Twig_Extension
                 $data[$sectionName] = [
                     'count' => $sectionData->count(),
                     'time'  => $sectionData->reduce(function ($carry, $item) {
-                        return $carry + \Dyln\Util\ArrayUtil::getIn($item, ['time'], 0);
+                        if ($item) {
+                            return $carry + \Dyln\Util\ArrayUtil::getIn($item, ['time'], 0);
+                        }
+
+                        return $carry;
                     }, 0),
                     'data'  => $sectionData->toArrayValues(),
                 ];
