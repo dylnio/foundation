@@ -384,7 +384,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return self::create($data);
     }
 
-    public function some(callable $callback): bool
+    public function some(callable $callback)
     {
         foreach ($this->data as $key => $value) {
             if ($callback($value, $key)) {
