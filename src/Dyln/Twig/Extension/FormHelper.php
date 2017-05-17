@@ -20,7 +20,6 @@ class FormHelper extends \Twig_Extension
         $this->session = $session;
     }
 
-
     public function getName()
     {
         return 'formhelper';
