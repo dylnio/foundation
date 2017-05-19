@@ -19,4 +19,8 @@ interface ModelInterface
     public function preSave();
 
     public function hasProperty($property);
+
+    public function addTempData($field, $value);
+
+    public function getTempData($field, $default = null);
 }

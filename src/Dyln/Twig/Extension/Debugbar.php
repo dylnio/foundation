@@ -19,7 +19,6 @@ class Debugbar extends \Twig_Extension
         $this->environment = $environment;
     }
 
-
     public function getName()
     {
         return 'debugbar';

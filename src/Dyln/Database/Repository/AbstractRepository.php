@@ -41,7 +41,7 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->daos[$key] = $dao;
     }
 
-    public function fetch($id, $fields = [])
+    public function fetch($id, $fields = [], $daoKey = 'default')
     {
         /** @var BSONDocument $result */
         $result = $this->getDao()->fetch($id, $fields);
@@ -56,16 +56,16 @@ abstract class AbstractRepository implements RepositoryInterface
         return null;
     }
 
-    public function getById($id, $fields = [])
+    public function getById($id, $fields = [], $daoKey = 'default')
     {
-        return $this->fetch($id, $fields);
+        return $this->fetch($id, $fields, $daoKey);
     }
 
-    public function fetchBy($condition = [], $fields = [], $limit = null, $skip = null, $sort = null)
+    public function fetchBy($condition = [], $fields = [], $limit = null, $skip = null, $sort = null, $daoKey = 'default')
     {
         $collection = new Collection();
         /** @var Cursor $result */
-        $result = $this->getDao()->fetchBy($condition, $fields, $limit, $skip, $sort);
+        $result = $this->getDao($daoKey)->fetchBy($condition, $fields, $limit, $skip, $sort);
         if ($result) {
             foreach ($result as $row) {
                 if ($row instanceof BSONDocument) {
@@ -78,27 +78,14 @@ abstract class AbstractRepository implements RepositoryInterface
         return $collection;
     }
 
-    public function fetchOneBy($condition = [], $fields = [])
+    public function fetchOneBy($condition = [], $fields = [], $daoKey = 'default')
     {
-        /** @var Cursor $result */
-        $result = $this->getDao()->fetchBy($condition, $fields, 1, 0, null);
-        $result = iterator_to_array($result);
-        if (!empty($result)) {
-            /** @var BSONDocument $row */
-            $row = array_shift($result);
-            if ($row instanceof BSONDocument) {
-                $row = $row->getArrayCopy();
-            }
-
-            return $this->hydrate($row);
-        }
-
-        return null;
+        return $this->fetchBy($condition, $fields, 1, 0, null, $daoKey)->first();
     }
 
-    public function count($condition = [])
+    public function count($condition = [], $daoKey = 'default')
     {
-        return (int)$this->getDao()->count($condition);
+        return (int)$this->getDao($daoKey)->count($condition);
     }
 
     public function hydrate($data)
@@ -121,7 +108,7 @@ abstract class AbstractRepository implements RepositoryInterface
         return $collection;
     }
 
-    public function save(ModelInterface $model, $options = [])
+    public function save(ModelInterface $model, $options = [], $daoKey = 'default')
     {
         /**
          * Logic:
@@ -137,22 +124,22 @@ abstract class AbstractRepository implements RepositoryInterface
             $forceInsert = $options['forceInsert'];
         }
         if ($model->getId() && !$forceInsert) {
-            $model = $this->getDao()->update($model, $options);
+            $model = $this->getDao($daoKey)->update($model, $options);
         } else {
-            $model = $this->getDao()->save($model, $options);
+            $model = $this->getDao($daoKey)->save($model, $options);
         }
 
         return $model;
     }
 
-    public function fetchByMultiId($ids = [], $fields = [])
+    public function fetchByMultiId($ids = [], $fields = [], $daoKey = 'default')
     {
         $collection = new Collection();
         if (empty($ids)) {
             return $collection;
         }
         $ids = array_unique($ids);
-        $result = $this->getDao()->fetchBy(['_id' => ['$in' => array_values($ids)]], $fields);
+        $result = $this->getDao($daoKey)->fetchBy(['_id' => ['$in' => array_values($ids)]], $fields);
         $data = [];
         foreach ($result as $row) {
             $data[(string)$row["_id"]] = $row;
@@ -167,16 +154,16 @@ abstract class AbstractRepository implements RepositoryInterface
         return $collection;
     }
 
-    public function delete($id)
+    public function delete($id, $daoKey = 'default')
     {
-        $this->getDao()->delete($id);
+        $this->getDao($daoKey)->delete($id);
     }
 
-    public function deleteByCondition($condition = [])
+    public function deleteByCondition($condition = [], $daoKey = 'default')
     {
         if (!$condition) {
             throw new \Exception('Empty condition is not allowed');
         }
-        $this->getDao()->deleteBy($condition);
+        $this->getDao($daoKey)->deleteBy($condition);
     }
 }

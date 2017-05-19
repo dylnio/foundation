@@ -37,6 +37,8 @@ abstract class AbstractModel implements ModelInterface
     public function addTempData($field, $value)
     {
         $this->temp[$field] = $value;
+
+        return $this;
     }
 
     public function getTempData($field, $default = null)
