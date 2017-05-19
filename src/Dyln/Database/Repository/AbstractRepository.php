@@ -14,15 +14,21 @@ abstract class AbstractRepository implements RepositoryInterface
     protected $daos = [];
     protected $entityClassName;
 
-    private function __construct(DaoInterface $dao, $entityClassName)
+    private function __construct(array $daos, $entityClassName)
     {
-        $this->daos['default'] = $dao;
+        foreach ($daos as $key => $dao) {
+            $this->daos[$key] = $dao;
+        }
         $this->entityClassName = $entityClassName;
     }
 
-    static public function factory(DaoInterface $dao, $entityClassName)
+    static public function factory($daos, $entityClassName)
     {
-        return new static($dao, $entityClassName);
+        if (!is_array($daos)) {
+            $daos = ['default' => $daos];
+        }
+
+        return new static($daos, $entityClassName);
     }
 
     public function getDao($key = 'default')
