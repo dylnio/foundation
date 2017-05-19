@@ -10,13 +10,13 @@ use MongoDB\Model\BSONDocument;
 
 abstract class AbstractRepository implements RepositoryInterface
 {
-    /** @var  DaoInterface */
-    protected $dao;
+    /** @var  DaoInterface[] */
+    protected $daos = [];
     protected $entityClassName;
 
     private function __construct(DaoInterface $dao, $entityClassName)
     {
-        $this->dao = $dao;
+        $this->daos['default'] = $dao;
         $this->entityClassName = $entityClassName;
     }
 
@@ -25,9 +25,14 @@ abstract class AbstractRepository implements RepositoryInterface
         return new static($dao, $entityClassName);
     }
 
-    public function getDao()
+    public function getDao($key = 'default')
     {
-        return $this->dao;
+        return $this->daos[$key];
+    }
+
+    public function addDao($key, DaoInterface $dao)
+    {
+        $this->daos[$key] = $dao;
     }
 
     public function fetch($id, $fields = [])

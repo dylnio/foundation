@@ -3,11 +3,12 @@
 namespace Dyln\Repository;
 
 
+use Dyln\Dao\DaoInterface;
 use Dyln\Model\ModelInterface;
 
 interface RepositoryInterface
 {
-    public function getDao();
+    public function getDao($key = 'default');
 
     public function fetch($id, $fields = []);
 
@@ -22,4 +23,7 @@ interface RepositoryInterface
     public function fetchByMultiId($ids = [], $fields = []);
 
     public function delete($id);
+
+    public function addDao($key, DaoInterface $dao);
+
 }
