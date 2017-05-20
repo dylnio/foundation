@@ -5,6 +5,7 @@ namespace Dyln\Repository;
 use Dyln\Collection\Collection;
 use Dyln\Dao\DaoInterface;
 use Dyln\Model\ModelInterface;
+use MongoDB\BSON\ObjectID;
 use MongoDB\Driver\Cursor;
 use MongoDB\Model\BSONDocument;
 
@@ -63,19 +64,10 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public function fetchBy($condition = [], $fields = [], $limit = null, $skip = null, $sort = null, $daoKey = 'default')
     {
-        $collection = new Collection();
-        /** @var Cursor $result */
-        $result = $this->getDao($daoKey)->fetchBy($condition, $fields, $limit, $skip, $sort);
-        if ($result) {
-            foreach ($result as $row) {
-                if ($row instanceof BSONDocument) {
-                    $row = $row->getArrayCopy();
-                }
-                $collection->add($this->hydrate($row));
-            }
-        }
+        /** @var Cursor $cursor */
+        $cursor = $this->getDao($daoKey)->fetchBy($condition, $fields, $limit, $skip, $sort);
 
-        return $collection;
+        return $this->hydrateCursor($cursor);
     }
 
     public function fetchOneBy($condition = [], $fields = [], $daoKey = 'default')
@@ -98,10 +90,16 @@ abstract class AbstractRepository implements RepositoryInterface
         return $model;
     }
 
-    public function hydrateCursor($cursor)
+    public function hydrateCursor(Cursor $cursor = null)
     {
         $collection = new Collection();
+        if (!$cursor) {
+            return $collection;
+        }
         foreach ($cursor as $row) {
+            if ($row instanceof BSONDocument) {
+                $row = $row->getArrayCopy();
+            }
             $collection->add($this->hydrate($row));
         }
 
@@ -138,20 +136,12 @@ abstract class AbstractRepository implements RepositoryInterface
         if (empty($ids)) {
             return $collection;
         }
-        $ids = array_unique($ids);
-        $result = $this->getDao($daoKey)->fetchBy(['_id' => ['$in' => array_values($ids)]], $fields);
-        $data = [];
-        foreach ($result as $row) {
-            $data[(string)$row["_id"]] = $row;
-        }
+        $ids = Collection::create($ids)->trim()->filter()->map(function ($id) {
+            return new ObjectID($id);
+        })->toArrayValues();
+        $cursor = $this->getDao($daoKey)->fetchBy(['_id' => ['$in' => $ids]], $fields);
 
-        foreach ($ids as $id) {
-            if (isset($data[(string)$id])) {
-                $collection->add($this->hydrate($data[(string)$id]), (string)$id);
-            }
-        }
-
-        return $collection;
+        return $this->hydrateCursor($cursor);
     }
 
     public function delete($id, $daoKey = 'default')
