@@ -6,8 +6,11 @@ use ReflectionClass;
 
 class Enum
 {
-    public static function isValid($key)
+    public static function isValid($key = null)
     {
+        if (!$key) {
+            return false;
+        }
         $consts = self::getAsArray();
 
         return in_array($key, $consts);
