@@ -53,14 +53,15 @@ class Firewall
     public function isAuthorized($resource, $privilege, $params = [])
     {
         $authorized = false;
-        $identityRoles = $this->auth->getIdentity()->getRoles();
+        $identity = $this->auth->getIdentity();
+        $identityRoles = $identity->getRoles();
         if ($this->isLoggedIn()) {
             $identityRoles[] = Roles::GUEST;
         }
         $identityRoles = array_unique($identityRoles);
         $rule = $this->getRule($resource, $privilege);
         if ($rule instanceof \Closure) {
-            $authorized = $rule($params);
+            $authorized = $rule($identity, $params);
         } else {
             foreach ($identityRoles as $identityRole) {
                 if (in_array($identityRole, $rule)) {
