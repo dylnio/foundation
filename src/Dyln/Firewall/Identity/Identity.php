@@ -42,7 +42,7 @@ class Identity implements IdentityInterface
         return isset($this->data['roles']) ? $this->data['roles'] : [];
     }
 
-    public function getSerializeIdentityData()
+    public function getSerializeIdentityData($options = [])
     {
         return $this->data;
     }
