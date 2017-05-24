@@ -52,7 +52,7 @@ class AnonymousIdentity implements IdentityInterface
         return null;
     }
 
-    public function getSerializeIdentityData()
+    public function getSerializeIdentityData($options = [])
     {
         return [
             '_id'       => (string)$this->getId(),
