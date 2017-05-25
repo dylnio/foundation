@@ -121,4 +121,5 @@ class Payload implements PayloadInterface
     {
         return ArrayUtil::getIn($this->data, $key, $default);
     }
+
 }
