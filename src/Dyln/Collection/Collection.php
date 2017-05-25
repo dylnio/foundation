@@ -180,10 +180,6 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         array_pop($this->data);
     }
 
-    /**
-     * @param callable|null $callback
-     * @return Collection
-     */
     public function filter(callable $callback = null)
     {
         if ($callback) {
