@@ -33,7 +33,7 @@ class Session
         if (session_status() !== PHP_SESSION_ACTIVE) {
             ini_set('session.gc_maxlifetime', 365 * 24 * 60 * 60); // 1 year
             ini_set('session.cookie_lifetime', 365 * 24 * 60 * 60); // 1 year
-            ini_set('session.gc_probability', 1);
+            ini_set('session.gc_probability', 0);
             ini_set('session.gc_divisor', 100);
             ini_set('session.cookie_secure', false);
             ini_set('session.use_only_cookies', true);
