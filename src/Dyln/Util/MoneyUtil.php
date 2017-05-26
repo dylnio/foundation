@@ -4,6 +4,9 @@ namespace Dyln\Util;
 
 class MoneyUtil
 {
+    const APPEND = 'append';
+    const PREPPEND = 'prepend';
+
     static public function toPence($amount)
     {
         $amount = round($amount, 2);
@@ -16,5 +19,30 @@ class MoneyUtil
         $amount = (float)bcdiv($amount, 100, 2);
 
         return number_format(round($amount, 2), 2);
+    }
+
+    static public function formatCurrency($valueInPence, $currency = 'GBP')
+    {
+        $symbol = '';
+        $placement = self::PREPPEND;
+        switch (strtoupper($currency)) {
+            case 'GBP':
+                $symbol = '£';
+                $placement = self::PREPPEND;
+                break;
+            case 'USD':
+                $symbol = '$';
+                $placement = self::PREPPEND;
+                break;
+            case 'EUR':
+                $symbol = '€';
+                $placement = self::APPEND;
+                break;
+        }
+        if ($placement == self::PREPPEND) {
+            return $symbol . ' ' . MoneyUtil::toFloat($valueInPence);
+        } else {
+            return MoneyUtil::toFloat($valueInPence) . ' ' . $symbol;
+        }
     }
 }

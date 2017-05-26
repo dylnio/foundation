@@ -23,26 +23,6 @@ class FormatCurrency extends \Twig_Extension
 
     public function formatCurrency($valueInPence, $currency = 'GBP')
     {
-        $symbol = '';
-        $placement = self::PREPPEND;
-        switch (strtoupper($currency)) {
-            case 'GBP':
-                $symbol = '£';
-                $placement = self::PREPPEND;
-                break;
-            case 'USD':
-                $symbol = '$';
-                $placement = self::PREPPEND;
-                break;
-            case 'EUR':
-                $symbol = '€';
-                $placement = self::APPEND;
-                break;
-        }
-        if ($placement == self::PREPPEND) {
-            return $symbol . ' ' . MoneyUtil::toFloat($valueInPence);
-        } else {
-            return MoneyUtil::toFloat($valueInPence) . ' ' . $symbol;
-        }
+        return MoneyUtil::formatCurrency($valueInPence, $currency);
     }
 }
