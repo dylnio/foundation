@@ -20,9 +20,14 @@ class Firewall
         $this->routes = $routes ?: ['login' => null, 'logout' => null, 'denied' => null];
     }
 
-    public function addRule($resource, $privilege, $callbackOrRoles = [])
+    public function addRule($resources, $privilege, $callbackOrRoles = [])
     {
-        $this->rules[$resource][$privilege] = $callbackOrRoles;
+        if (!is_array($resources)) {
+            $resources = [$resources];
+        }
+        foreach ($resources as $resource) {
+            $this->rules[$resource][$privilege] = $callbackOrRoles;
+        }
     }
 
     public function getRoute($type)
