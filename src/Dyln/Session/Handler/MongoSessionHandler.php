@@ -21,7 +21,7 @@ class MongoSessionHandler implements \SessionHandlerInterface
     protected function __construct($host, $databaseName, $collectionName, array $config)
     {
         $this->sessionConfig = ArrayUtil::getIn($config, ['session_config'], []);
-        $manager = new Manager($host, [], []);
+        $manager = new Manager($host, ArrayUtil::getIn($this->sessionConfig, ['handler', 'mongo', 'uri_options'], []), ArrayUtil::getIn($this->sessionConfig, ['handler', 'mongo', 'driver_options'], []));
         $db = new Database($manager, $databaseName, [
             'typeMap' => [
                 'array'    => 'array',
