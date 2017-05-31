@@ -390,4 +390,11 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
 
         return false;
     }
+
+    public function slice($offset = 0, $length = 1)
+    {
+        $sliced = array_slice($this->data, $offset, $length);
+
+        return new static($sliced);
+    }
 }
