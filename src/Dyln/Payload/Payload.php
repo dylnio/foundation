@@ -81,8 +81,12 @@ class Payload implements PayloadInterface
         ];
     }
 
-    public function getMessages()
+    public function getMessages($key = null)
     {
+        if ($key) {
+            return ArrayUtil::getIn($this->messages, $key);
+        }
+
         return $this->messages;
     }
 
