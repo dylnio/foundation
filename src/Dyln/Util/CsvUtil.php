@@ -37,4 +37,20 @@ class CsvUtil
 
         return $results[0];
     }
+
+    static public function head($handle, $lines = 200)
+    {
+        if (!is_resource($handle)) {
+            throw new \InvalidArgumentException('$handle must be a resource');
+        }
+        $delimiter = self::getDelimiter($handle);
+        $i = 1;
+        $rows = [];
+        while ($i <= $lines) {
+            $row = fgetcsv($handle, 4096, $delimiter);
+            $rows[] = $row;
+        }
+
+        return $rows;
+    }
 }
