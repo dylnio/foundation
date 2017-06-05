@@ -123,6 +123,10 @@ class Payload implements PayloadInterface
 
     public function get($key, $default = null)
     {
+        if (strpos($key, '.') !== false) {
+            $key = explode('.', $key);
+        }
+
         return ArrayUtil::getIn($this->data, $key, $default);
     }
 
