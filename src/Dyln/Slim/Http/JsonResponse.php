@@ -14,11 +14,12 @@ class JsonResponse extends Response
         ]);
     }
 
-    public function withError(array $messages = [])
+    public function withError($message = null, $code = 0)
     {
         return $this->withJson([
             'success' => false,
-            'error'   => $messages,
+            'message' => $message,
+            'code'    => $code,
         ]);
     }
 }
