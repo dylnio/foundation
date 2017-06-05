@@ -3,9 +3,8 @@
 namespace Dyln\Slim\Http;
 
 use Dyln\Debugbar\Debugbar;
-use Slim\Http\Response;
 
-class DebugResponse extends Response
+class DebugResponse extends JsonResponse
 {
     public function withJson($data, $status = null, $encodingOptions = 0)
     {
