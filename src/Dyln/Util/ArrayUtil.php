@@ -46,7 +46,7 @@ class ArrayUtil
             $current = $current[$key];
         }
 
-        return $current ?: $default;
+        return is_null($current) ? $default : $current;
     }
 
     static public function isAssoc(array $array)
