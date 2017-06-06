@@ -34,7 +34,11 @@ class ArrayUtil
             return $array;
         }
         if (!is_array($keys)) {
-            $keys = [$keys];
+            if (strpos($keys, '.') !== false) {
+                $keys = explode('.', $keys);
+            } else {
+                $keys = [$keys];
+            }
         }
 
         $current = $array;
