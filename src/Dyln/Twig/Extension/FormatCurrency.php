@@ -21,7 +21,7 @@ class FormatCurrency extends \Twig_Extension
         ];
     }
 
-    public function formatCurrency($valueInPence, $currency = 'GBP')
+    public function formatCurrency($valueInPence, $currency = null)
     {
         return MoneyUtil::formatCurrency($valueInPence, $currency);
     }

@@ -21,8 +21,12 @@ class MoneyUtil
         return number_format(round($amount, 2), 2);
     }
 
-    static public function formatCurrency($valueInPence, $currency = 'GBP')
+    static public function formatCurrency($valueInPence, $currency = null)
     {
+        $value = MoneyUtil::toFloat($valueInPence);
+        if (!$currency) {
+            return $value;
+        }
         $symbol = '';
         $placement = self::PREPPEND;
         switch (strtoupper($currency)) {
@@ -40,9 +44,9 @@ class MoneyUtil
                 break;
         }
         if ($placement == self::PREPPEND) {
-            return $symbol . ' ' . MoneyUtil::toFloat($valueInPence);
+            return $symbol . ' ' . $value;
         } else {
-            return MoneyUtil::toFloat($valueInPence) . ' ' . $symbol;
+            return $value . ' ' . $symbol;
         }
     }
 }
