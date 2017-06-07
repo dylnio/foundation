@@ -4,31 +4,56 @@ namespace Dyln\Slim;
 
 use DI\ContainerBuilder;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\RedisCache;
 use Dyln\DI\Container;
 use Dyln\Slim\Module\ModuleInterface;
+use Dyln\Util\ArrayUtil;
 use Interop\Container\ContainerInterface;
 
 class App extends \Slim\App
 {
     /** @var ModuleInterface[] */
     protected $modules = [];
-    protected $config;
 
     public function __construct($config, $params = [])
     {
-        $this->config = $config;
         $containerBuilder = new ContainerBuilder(Container::class);
         $cache = $this->getDiCache($params);
         $containerBuilder->setDefinitionCache($cache);
-        $containerBuilder->addDefinitions($this->config);
+        $config = $this->enhanceConfig($config, $params, $cache);
+        $containerBuilder->addDefinitions($config);
         $container = $containerBuilder->build();
         $container->set('app', $this);
         $container->set(App::class, $this);
         $container->set('app_params', $params);
         parent::__construct($container);
         $this->registerModules($container);
+    }
+
+    private function enhanceConfig($config = [], $params = [], CacheProvider $cache = null)
+    {
+        $merged = null;
+        $key = 'enhanced_di_config';
+        if ($cache) {
+            $merged = $cache->fetch($key);
+        }
+        if (!$merged) {
+            $merged = $config;
+            $modules = ArrayUtil::getIn($params, ['modules'], []);
+            foreach ($modules as $moduleName) {
+                $moduleConfig = call_user_func($moduleName . '::getConfig');
+                if ($moduleConfig) {
+                    $merged = array_merge($merged, $moduleConfig);
+                }
+            }
+            if ($cache) {
+                $cache->save($key, $merged);
+            }
+        }
+
+        return $merged;
     }
 
     private function getDiCache($params = [])
@@ -90,4 +115,5 @@ class App extends \Slim\App
     {
         return $this->delete($pattern, $actionClassName . ':dispatch');
     }
+
 }
