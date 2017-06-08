@@ -22,7 +22,8 @@
     "oscarotero/psr7-middlewares": "^3.20",
     "m6web/firewall": "^1.0",
     "monolog/monolog": "^1.22",
-    "html2text/html2text": "^4.0"
+    "html2text/html2text": "^4.0",
+    "jeremeamia/superclosure": "^2.3"
   },
   "require-dev": {},
   "autoload": {
