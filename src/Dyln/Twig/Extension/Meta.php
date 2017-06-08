@@ -2,8 +2,6 @@
 
 namespace Dyln\Twig\Extension;
 
-use Dyln\Util\ArrayUtil;
-
 class Meta extends \Twig_Extension
 {
     private $meta = [];
@@ -23,7 +21,7 @@ class Meta extends \Twig_Extension
     public function meta($meta = [])
     {
         $this->meta = $meta;
-        $raws = ArrayUtil::getIn($this->meta, ['raws'], []);
+        $raws = $this->meta['raws']??[];
         $html = '';
 
         if (!$canonical = $this->get('canonical')) {

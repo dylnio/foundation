@@ -4,25 +4,28 @@ namespace Dyln\Slim;
 
 use DI\ContainerBuilder;
 use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\RedisCache;
 use Dyln\DI\Container;
 use Dyln\Slim\Module\ModuleInterface;
 use Dyln\Util\ArrayUtil;
 use Interop\Container\ContainerInterface;
+use SuperClosure\SerializableClosure;
 
 class App extends \Slim\App
 {
     /** @var ModuleInterface[] */
     protected $modules = [];
 
-    public function __construct($config, $params = [])
+    public function __construct($params = [])
     {
+        if (!defined('CACHED_SERVICES_FILE')) {
+            define('CACHED_SERVICES_FILE', '/tmp/__services.cache.php');
+        }
         $containerBuilder = new ContainerBuilder(Container::class);
         $cache = $this->getDiCache($params);
         $containerBuilder->setDefinitionCache($cache);
-        $config = $this->enhanceConfig($config, $params, $cache);
+        $config = $this->enhanceConfig($params);
         $containerBuilder->addDefinitions($config);
         $container = $containerBuilder->build();
         $container->set('app', $this);
@@ -32,28 +35,31 @@ class App extends \Slim\App
         $this->registerModules($container);
     }
 
-    private function enhanceConfig($config = [], $params = [], CacheProvider $cache = null)
+    private function enhanceConfig($params = [])
     {
-        $merged = null;
-        $key = 'enhanced_di_config';
-        if ($cache) {
-            $merged = $cache->fetch($key);
+        $purge = $_REQUEST['purge']??false;
+        if ($purge && file_exists(CACHED_SERVICES_FILE)) {
+            unlink(CACHED_SERVICES_FILE);
         }
-        if (!$merged) {
-            $merged = $config;
+        if (file_exists(CACHED_SERVICES_FILE)) {
+            $serialized = file_get_contents(CACHED_SERVICES_FILE);
+        } else {
             $modules = ArrayUtil::getIn($params, ['modules'], []);
-            foreach ($modules as $moduleName) {
-                $moduleConfig = call_user_func($moduleName . '::getConfig');
-                if ($moduleConfig) {
-                    $merged = array_merge($merged, $moduleConfig);
-                }
-            }
-            if ($cache) {
-                $cache->save($key, $merged);
+            $serialized = ModuleConfigSerializer::combineAndSerialize($modules);
+            file_put_contents(CACHED_SERVICES_FILE, $serialized);
+        }
+        if (!$serialized) {
+            $serialized = [];
+        }
+
+        $data = unserialize($serialized);
+        foreach ($data as $key => $value) {
+            if ($value instanceof SerializableClosure) {
+                $data[$key] = $value->getClosure();
             }
         }
 
-        return $merged;
+        return $data;
     }
 
     private function getDiCache($params = [])

@@ -7,6 +7,4 @@ interface ModuleInterface
     public function init($params = []);
 
     public function boot();
-
-    static public function getConfig();
 }

@@ -39,7 +39,8 @@ class AppEnv
         } else {
             $servername = $_SERVER['SERVER_NAME'];
         }
-        if (in_array($servername, self::$serverToEnvMap[self::LIVE_ENV])) {
+        $list = self::$serverToEnvMap[self::LIVE_ENV]??[];
+        if (in_array($servername, $list)) {
             return self::LIVE_ENV;
         }
 
