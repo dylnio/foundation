@@ -38,18 +38,26 @@ class Debugbar extends \Twig_Extension
             $payload = $this->format($payload);
             $data = [];
             foreach ($payload as $sectionName => $sectionData) {
-                $sectionData = Collection::create($sectionData);
-                $data[$sectionName] = [
-                    'count' => $sectionData->count(),
-                    'time'  => $sectionData->reduce(function ($carry, $item) {
-                        if ($item) {
-                            return $carry + \Dyln\Util\ArrayUtil::getIn($item, ['time'], 0);
-                        }
+                if ($sectionName == 'ApiResponse') {
+                    $data[$sectionName] = [
+                        'count' => 1,
+                        'time'  => 0,
+                        'data'  => $sectionData,
+                    ];
+                } else {
+                    $sectionData = Collection::create($sectionData);
+                    $data[$sectionName] = [
+                        'count' => $sectionData->count(),
+                        'time'  => $sectionData->reduce(function ($carry, $item) {
+                            if ($item) {
+                                return $carry + \Dyln\Util\ArrayUtil::getIn($item, ['time'], 0);
+                            }
 
-                        return $carry;
-                    }, 0),
-                    'data'  => $sectionData->toArrayValues(),
-                ];
+                            return $carry;
+                        }, 0),
+                        'data'  => $sectionData->toArrayValues(),
+                    ];
+                }
             }
 
             return $this->environment->render('debugbar/debugbar.twig', ['data' => $data]);
