@@ -58,7 +58,6 @@ class Messenger
         return $asJson ? json_encode($keyMessages) : $keyMessages;
     }
 
-
     private function getSegment()
     {
         if (!$this->segment) {
