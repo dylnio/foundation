@@ -3,16 +3,14 @@
 namespace Dyln\ApiClient;
 
 use Dyln\ApiClient\ResponseBodyMiddleware\ConvertToPayloadMiddleware;
-use Dyln\AppEnv;
 use Dyln\ApiClient\ResponseBodyMiddleware\DebugbarMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\JsonDecodeMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\ResponseBodyMiddlewareInterface;
+use Dyln\AppEnv;
 use Dyln\Guzzle\Cookie\SessionCookieJar;
 use Dyln\Payload\PayloadFactory;
-use Dyln\Session\Session;
 use Dyln\Util\ArrayUtil;
 use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Cookie\SetCookie;
 use GuzzleHttp\Exception\ClientException;

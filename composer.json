@@ -27,11 +27,8 @@
   },
   "require-dev": {},
   "autoload": {
-    "psr-0": {
-      "Dyln": "src/"
-    },
     "psr-4": {
-      "Dyln\\": "src/Dyln"
+      "Dyln\\": "src/"
     }
   },
   "repositories": [],
