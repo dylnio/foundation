@@ -1,9 +1,9 @@
 <?php
 
-namespace Dyln\Model\Formatter;
+namespace Dyln\Database\Model\Formatter;
 
-use Dyln\Model\Formatter\Exception\InvalidFieldException;
-use Dyln\Model\Formatter\Rules\Rules;
+use Dyln\Database\Model\Formatter\Exception\InvalidFieldException;
+use Dyln\Database\Model\Formatter\Rules\Rules;
 
 abstract class AbstractFormatter implements Formatter
 {

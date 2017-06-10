@@ -1,6 +1,6 @@
 <?php
 
-namespace Dyln\Repository;
+namespace Dyln\Database\Repository;
 
 class GenericRepository extends AbstractRepository
 {

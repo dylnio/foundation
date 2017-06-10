@@ -1,6 +1,6 @@
 <?php
 
-namespace Dyln\Model\Formatter\Exception;
+namespace Dyln\Database\Model\Formatter\Exception;
 
 class InvalidFieldException extends \Exception
 {

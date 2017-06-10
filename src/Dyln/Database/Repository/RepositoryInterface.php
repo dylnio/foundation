@@ -1,10 +1,10 @@
 <?php
 
-namespace Dyln\Repository;
+namespace Dyln\Database\Repository;
 
 
-use Dyln\Dao\DaoInterface;
-use Dyln\Model\ModelInterface;
+use Dyln\Database\Dao\DaoInterface;
+use Dyln\Database\Model\ModelInterface;
 
 interface RepositoryInterface
 {

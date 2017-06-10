@@ -1,8 +1,8 @@
 <?php
 
-namespace Dyln\Model\Formatter;
+namespace Dyln\Database\Model\Formatter;
 
-use Dyln\Model\Formatter\Rules\Rules;
+use Dyln\Database\Model\Formatter\Rules\Rules;
 
 interface Formatter
 {

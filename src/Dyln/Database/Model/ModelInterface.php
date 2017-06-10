@@ -1,6 +1,6 @@
 <?php
 
-namespace Dyln\Model;
+namespace Dyln\Database\Model;
 
 interface ModelInterface
 {

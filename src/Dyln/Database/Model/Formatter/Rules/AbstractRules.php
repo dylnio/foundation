@@ -1,8 +1,8 @@
 <?php
 
-namespace Dyln\Model\Formatter\Rules;
+namespace Dyln\Database\Model\Formatter\Rules;
 
-use Dyln\Model\ModelInterface;
+use Dyln\Database\Model\ModelInterface;
 
 abstract class AbstractRules implements Rules
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Dyln\Repository;
+namespace Dyln\Database\Repository;
 
 use Dyln\Collection\Collection;
-use Dyln\Dao\DaoInterface;
-use Dyln\Model\ModelInterface;
+use Dyln\Database\Dao\DaoInterface;
+use Dyln\Database\Model\ModelInterface;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Driver\Cursor;
 use MongoDB\Model\BSONDocument;

@@ -1,9 +1,9 @@
 <?php
 
-namespace Dyln\Dao;
+namespace Dyln\Database\Dao;
 
 use Dyln\Collection\Collection;
-use Dyln\Model\ModelInterface;
+use Dyln\Database\Model\ModelInterface;
 
 /**
  * Class MemoryDao

@@ -1,10 +1,10 @@
 <?php
 
-namespace Dyln\Dao;
+namespace Dyln\Database\Dao;
 
 use Dyln\AppEnv;
+use Dyln\Database\Model\ModelInterface;
 use Dyln\Debugbar\Debugbar;
-use Dyln\Model\ModelInterface;
 use Dyln\Util\Timer;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Database;
