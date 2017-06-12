@@ -57,7 +57,6 @@ class ApiClient
         $headers = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
         $requestOptions = [
             'headers' => $headers,
-            'cookies' => $this->getCookieJar(),
         ];
         if ($query) {
             $requestOptions['query'] = $query;
@@ -117,6 +116,7 @@ class ApiClient
 
     private function request($method, $path, $options)
     {
+        $options['cookies'] = $this->getCookieJar();
         $res = $this->getHttpClient()->request($method, $this->prepareUri($path), $options);
         $cookieString = $res->getHeaderLine('Set-Cookie');
         $cookie = SetCookie::fromString($cookieString);
