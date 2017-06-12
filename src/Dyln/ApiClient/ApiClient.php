@@ -71,7 +71,7 @@ class ApiClient
 
             return $body;
         } catch (ClientException $e) {
-            $responseBody = (string)$e->getResponse()->getBody();
+            $responseBody = $e->getResponse()->getBody()->getContents();
             $responseBody = json_decode($responseBody, true);
             if (!$responseBody) {
                 if ($e->getCode() == 401) {
