@@ -50,7 +50,7 @@ class ApiClient
 
     public function call($path, array $query = null, array $data = null, $method = 'GET', $options = [])
     {
-        $this->addResponseBodyMiddlewate(new ConvertToPayloadMiddleware());
+        $this->addResponseBodyMiddleware(new ConvertToPayloadMiddleware());
         if (AppEnv::isDebugEnabled()) {
             $query['XDEBUG_SESSION_START'] = 'PHPSTORM';
         }
@@ -88,7 +88,7 @@ class ApiClient
         }
     }
 
-    public function addResponseBodyMiddlewate(ResponseBodyMiddlewareInterface $middleware)
+    public function addResponseBodyMiddleware(ResponseBodyMiddlewareInterface $middleware)
     {
         $this->responseBodyMiddlewares[] = $middleware;
     }
