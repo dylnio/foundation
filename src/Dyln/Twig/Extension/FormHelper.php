@@ -43,7 +43,7 @@ class FormHelper extends \Twig_Extension
         return $this->helper;
     }
 
-    public function getValue($formname, $field, $default = null)
+    public function getValue($field, $default = null, $formname = 'form')
     {
         $formHelper = $this->getHelper($formname);
         if ($formHelper) {
@@ -53,7 +53,7 @@ class FormHelper extends \Twig_Extension
         return $default;
     }
 
-    public function getError($formname, $field)
+    public function getError($field, $formname = 'form')
     {
         $formHelper = $this->getHelper($formname);
         if ($formHelper) {
@@ -63,7 +63,7 @@ class FormHelper extends \Twig_Extension
         return null;
     }
 
-    public function isValid($formname)
+    public function isValid($formname = 'form')
     {
         $formHelper = $this->getHelper($formname);
         if ($formHelper) {
