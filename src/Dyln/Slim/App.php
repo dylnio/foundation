@@ -85,6 +85,7 @@ class App extends \Slim\App
     private function registerModules(ContainerInterface $container)
     {
         $modules = $container->get('app_params')['modules'];
+        $modules = array_values(array_unique($modules));
         foreach ($modules as $moduleClass) {
             /** @var ModuleInterface $module */
             $module = $container->get($moduleClass);
