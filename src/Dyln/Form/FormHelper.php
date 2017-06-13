@@ -2,20 +2,27 @@
 
 namespace Dyln\Form;
 
+use Dyln\Session\Session;
 use Dyln\Util\ArrayUtil;
 
 class FormHelper
 {
     protected $values = [];
     protected $errors = [];
+    /**
+     * @var Session
+     */
+    protected $session;
+    protected $id;
 
     /**
      * FormHelper constructor.
-     * @param array $values
+     * @param Session $session
      */
-    public function __construct(array $values = [])
+    public function __construct(Session $session)
     {
-        $this->values = $values;
+        $this->session = $session;
+        $this->id = uniqid();
     }
 
 
@@ -66,5 +73,10 @@ class FormHelper
     public function getValues()
     {
         return $this->values;
+    }
+
+    public function save($name = 'form')
+    {
+        $this->session->getSegment('form')->set($name, $this);
     }
 }
