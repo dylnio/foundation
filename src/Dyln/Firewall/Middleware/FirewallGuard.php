@@ -54,7 +54,12 @@ class FirewallGuard
         if ($route) {
             /** @var CallableResolver $callable */
             $callable = $route->getCallable();
-            list($resource, $privilege) = explode(':', $callable);
+            if ($callable instanceof \Closure) {
+                $resource = $route->getName();
+                $privilege = '~';
+            } else {
+                list($resource, $privilege) = explode(':', $callable);
+            }
             if ($this->firewall->isAuthorized($resource, $privilege)) {
                 return true;
             }
