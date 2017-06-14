@@ -404,4 +404,9 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
             $callback($item);
         }
     }
+
+    public function implode($glue = ',')
+    {
+        return implode($glue, $this->data);
+    }
 }
