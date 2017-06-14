@@ -397,4 +397,11 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
 
         return new static($sliced);
     }
+
+    public function forEach (callable $callback)
+    {
+        foreach ($this->data as $item) {
+            $callback($item);
+        }
+    }
 }
