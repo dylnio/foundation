@@ -42,10 +42,8 @@ class ApiClient
         $this->baseUrl = $baseUrl;
         $this->defaultHeaders = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
         $this->cookieJar = $cookieJar;
-        $this->responseBodyMiddlewares = [
-            new JsonDecodeMiddleware(),
-            new DebugbarMiddleware(),
-        ];
+        $this->addResponseBodyMiddleware(new JsonDecodeMiddleware());
+        $this->addResponseBodyMiddleware(new DebugbarMiddleware());
     }
 
     public function call($path, array $query = null, array $data = null, $method = 'GET', $options = [])
@@ -89,7 +87,7 @@ class ApiClient
 
     public function addResponseBodyMiddleware(ResponseBodyMiddlewareInterface $middleware)
     {
-        $this->responseBodyMiddlewares[] = $middleware;
+        $this->responseBodyMiddlewares[get_class($middleware)] = $middleware;
     }
 
     private function getHttpClient()
