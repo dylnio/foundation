@@ -24,15 +24,12 @@ class Meta extends \Twig_Extension
         $raws = $this->meta['raws']??[];
         $html = '';
 
-        if (!$canonical = $this->get('canonical')) {
-            throw new \Exception('Canonical is mandatory');
-        }
-        $html .= '<title>' . $this->get('title', 'Welcome to Twizy.com') . '</title>';
-        $html .= '<link rel="canonical" href="' . $canonical . '">';
-        $html .= '<meta name="description" content="' . $this->get('description', 'Welcome to Twizy.com') . '" />';
-        $html .= '<meta name="keywords" content="' . $this->get('keywords', 'e cig, e cig uk, best e cig, e cigarette, electronic cigarette, e cig kits, e liquid, e cig liquid, innokin, vision, provape, aqwa') . '" />';
-        $html .= '<meta property="og:title" content="' . $this->get('og_title', $this->get('title', 'Welcome to Twizy.com')) . '" />';
-        $html .= '<meta property="og:url" content="' . $canonical . '" />';
+        $html .= '<title>' . $this->get('title', 'Welcome') . '</title>';
+        $html .= '<link rel="canonical" href="' . $this->get('canonical', '') . '">';
+        $html .= '<meta name="description" content="' . $this->get('description', 'Welcome') . '" />';
+        $html .= '<meta name="keywords" content="' . $this->get('keywords', '') . '" />';
+        $html .= '<meta property="og:title" content="' . $this->get('og_title', $this->get('title', 'Welcome')) . '" />';
+        $html .= '<meta property="og:url" content="' . $this->get('canonical', '') . '" />';
         if ($ogType = $this->get('og_type')) {
             $html .= '<meta property="og:type" content="' . $ogType . '" />';
         }
@@ -50,7 +47,7 @@ class Meta extends \Twig_Extension
 
     private function get($keys, $default = null)
     {
-        $value = ArrayUtil::getIn($this->meta, $keys, $default);
+        $value = \Dyln\Util\ArrayUtil::getIn($this->meta, $keys, $default);
         if (is_array($value)) {
             $value = implode(', ', $value);
         }
