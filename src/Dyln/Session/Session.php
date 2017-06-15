@@ -55,6 +55,16 @@ class Session
         return true;
     }
 
+    public function delete($keys)
+    {
+        if (!is_array($keys)) {
+            $keys = [$keys];
+        }
+        $this->getDefaultSegment()->delete($keys);
+
+        return true;
+    }
+
     public function getDefaultSegment()
     {
         return $this->getSegment(self::DEFAULT_SEGMENT_NAME);
@@ -72,6 +82,15 @@ class Session
         }
 
         return $this->segments[$name];
+    }
+
+    public function deleteSegment($name)
+    {
+        $name = StringUtil::canonicalizeName($name);
+        if (!isset($this->segments[$name])) {
+            unset($this->segments[$name]);
+        }
+
     }
 
     public function get($key, $default = null, $deleteAfter = false)

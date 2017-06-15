@@ -44,8 +44,13 @@ class Segment
         return $value;
     }
 
-    public function delete($key)
+    public function delete($keys)
     {
-        unset($this->session[$this->name][$this->cleanKey($key)]);
+        if (!is_array($keys)) {
+            $keys = [$keys];
+        }
+        foreach ($keys as $key) {
+            unset($this->session[$this->name][$this->cleanKey($key)]);
+        }
     }
 }
