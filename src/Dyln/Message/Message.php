@@ -16,6 +16,11 @@ class Message
         return $this->isError;
     }
 
+    public function isSuccess()
+    {
+        return !$this->isError;
+    }
+
     public function getData()
     {
         return $this->data;
