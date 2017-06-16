@@ -2,13 +2,13 @@
 
 namespace Dyln\ApiClient;
 
-use Dyln\ApiClient\ResponseBodyMiddleware\ConvertToPayloadMiddleware;
+use Dyln\ApiClient\ResponseBodyMiddleware\ConvertToMessageMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\DebugbarMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\JsonDecodeMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\ResponseBodyMiddlewareInterface;
 use Dyln\AppEnv;
 use Dyln\Guzzle\Cookie\SessionCookieJar;
-use Dyln\Payload\PayloadFactory;
+use Dyln\Message\MessageFactory;
 use Dyln\Util\ArrayUtil;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJarInterface;
@@ -48,7 +48,7 @@ class ApiClient
 
     public function call($path, array $query = null, array $data = null, $method = 'GET', $options = [])
     {
-        $this->addResponseBodyMiddleware(new ConvertToPayloadMiddleware());
+        $this->addResponseBodyMiddleware(new ConvertToMessageMiddleware());
         if (AppEnv::isDebugEnabled()) {
             $query['XDEBUG_SESSION_START'] = 'PHPSTORM';
         }
@@ -79,9 +79,9 @@ class ApiClient
                 }
             }
 
-            return PayloadFactory::createErrorPayload($responseBody);
+            return MessageFactory::error($responseBody);
         } catch (\Exception $e) {
-            return PayloadFactory::createErrorPayload(['exception' => $e->getMessage()]);
+            return MessageFactory::error(['message' => $e->getMessage()]);
         }
     }
 

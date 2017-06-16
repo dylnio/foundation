@@ -26,6 +26,7 @@ class Debugbar extends \Twig_Extension
 
     public function getFunctions()
     {
+        /** @noinspection PhpUndefinedClassInspection */
         return [
             new \Twig_SimpleFunction('debugbar', [$this, 'debugbar']),
         ];
@@ -62,6 +63,8 @@ class Debugbar extends \Twig_Extension
 
             return $this->environment->render('debugbar/debugbar.twig', ['data' => $data]);
         }
+
+        return null;
     }
 
     private function format($payload)

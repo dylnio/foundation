@@ -16,6 +16,7 @@ class FormatCurrency extends \Twig_Extension
 
     public function getFunctions()
     {
+        /** @noinspection PhpUndefinedClassInspection */
         return [
             new \Twig_SimpleFunction('formatCurrency', [$this, 'formatCurrency']),
         ];

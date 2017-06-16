@@ -7,7 +7,7 @@ use Dyln\CommandBus\Command\Handler\Handler;
 use Dyln\CommandBus\Command\Handler\HandlerWithEmitter;
 use Dyln\CommandBus\Command\Handler\Resolver\HandlerResolver;
 use Dyln\CommandBus\Exception\HandlerNotFoundException;
-use Dyln\Payload\Payload;
+use Dyln\Message\Message;
 use Interop\Container\ContainerInterface;
 use League\Event\Emitter;
 
@@ -33,7 +33,7 @@ class Bus
             throw new HandlerNotFoundException();
         }
 
-        /** @var Payload $paylod */
+        /** @var Message $paylod */
         $paylod = $handler->handle($command);
         $eventsTriggered = $handler->getEventsTriggered();
         foreach ($eventsTriggered as $eventData) {

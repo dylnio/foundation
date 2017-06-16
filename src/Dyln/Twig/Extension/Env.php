@@ -13,6 +13,7 @@ class Env extends \Twig_Extension
 
     public function getFunctions()
     {
+        /** @noinspection PhpUndefinedClassInspection */
         return [
             new \Twig_SimpleFunction('getAppEnv', [$this, 'getAppEnv']),
             new \Twig_SimpleFunction('isAppLive', [$this, 'isAppLive']),

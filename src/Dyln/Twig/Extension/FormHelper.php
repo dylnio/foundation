@@ -27,6 +27,7 @@ class FormHelper extends \Twig_Extension
 
     public function getFunctions()
     {
+        /** @noinspection PhpUndefinedClassInspection */
         return [
             new \Twig_SimpleFunction('getFormFieldValue', [$this, 'getValue']),
             new \Twig_SimpleFunction('getFormFieldError', [$this, 'getError']),

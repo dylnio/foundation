@@ -1,7 +1,8 @@
 <?php
+
 namespace Dyln\Validator;
 
-use Dyln\Payload\PayloadFactory;
+use Dyln\Message\MessageFactory;
 
 class NotEmptyValidator extends AbstractValidator
 {
@@ -9,9 +10,9 @@ class NotEmptyValidator extends AbstractValidator
     public function isValid($value)
     {
         if ($value === null || $value === '') {
-            return PayloadFactory::createErrorPayload(['value cannot be empty']);
+            return MessageFactory::error(['message' => 'value cannot be empty']);
         }
 
-        return PayloadFactory::createSuccessPayload();
+        return MessageFactory::success();
     }
 }

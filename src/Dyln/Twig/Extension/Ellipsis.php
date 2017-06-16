@@ -11,6 +11,7 @@ class Ellipsis extends \Twig_Extension
 
     public function getFunctions()
     {
+        /** @noinspection PhpUndefinedClassInspection */
         return [
             new \Twig_SimpleFunction('ellipsis', [$this, 'ellipsis']),
         ];

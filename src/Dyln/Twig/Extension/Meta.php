@@ -13,6 +13,7 @@ class Meta extends \Twig_Extension
 
     public function getFunctions()
     {
+        /** @noinspection PhpUndefinedClassInspection */
         return [
             new \Twig_SimpleFunction('meta', [$this, 'meta']),
         ];

@@ -2,8 +2,8 @@
 
 namespace Dyln\Params;
 
-use Dyln\Payload\Payload;
-use Dyln\Payload\PayloadFactory;
+use Dyln\Message\Message;
+use Dyln\Message\MessageFactory;
 use Dyln\Util\ArrayUtil;
 use Dyln\Validator\Validator;
 
@@ -13,7 +13,7 @@ abstract class AbstractParams implements Params
     protected $validators = [];
     protected $filters = [];
     protected $defaultFilters = [];
-    /** @var  Payload */
+    /** @var  Message */
     protected $validation;
 
     public function __construct($params = [])
@@ -73,27 +73,23 @@ abstract class AbstractParams implements Params
             }
             foreach ($validators as $validator) {
                 if ($validator instanceof Validator) {
-                    /** @var Payload $result */
+                    /** @var Message $result */
                     $result = $validator->isValid($value);
                 } elseif (is_callable($validator)) {
-                    /** @var Payload $result */
+                    /** @var Message $result */
                     $result = $validator($value);
                 } else {
-                    $result = PayloadFactory::createErrorPayload(['generic' => ['msg' => 'Invalid Validator']]);
+                    $result = MessageFactory::error(['message' => ['generic' => ['msg' => 'Invalid Validator']]]);
                 }
                 if ($result->isError()) {
-                    $msgs = $result->getMessages();
-                    $this->validation = PayloadFactory::createErrorPayload([$field => [
-                        'msg'  => array_shift($msgs),
-                        'code' => null,
-                    ]]);
+                    $this->validation = MessageFactory::error(['message' => [$field => $result->getError()]]);
 
                     return;
                 }
             }
         }
 
-        $this->validation = PayloadFactory::createSuccessPayload();
+        $this->validation = MessageFactory::success();
 
         return;
     }
@@ -130,7 +126,7 @@ abstract class AbstractParams implements Params
 
     public function isValid()
     {
-        return $this->getValidationResult()->isSuccess();
+        return !$this->getValidationResult()->isError();
     }
 
     public function getValidationResult()

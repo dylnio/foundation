@@ -1,7 +1,8 @@
 <?php
+
 namespace Dyln\Validator\String;
 
-use Dyln\Payload\PayloadFactory;
+use Dyln\Message\MessageFactory;
 use Dyln\Validator\AbstractValidator;
 
 class CompareValidator extends AbstractValidator
@@ -16,6 +17,6 @@ class CompareValidator extends AbstractValidator
     public function isValid($value)
     {
 
-        return $value === $this->compareToValue ? PayloadFactory::createSuccessPayload() : PayloadFactory::createErrorPayload(['value does not match']);
+        return $value === $this->compareToValue ? MessageFactory::success() : MessageFactory::error(['message' => 'value does not match']);
     }
 }

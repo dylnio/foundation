@@ -226,7 +226,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return null;
     }
 
-    public function map(callable $callback = null)
+    public function map(callable $callback = null): Collection
     {
         $return = [];
         if ($callback) {

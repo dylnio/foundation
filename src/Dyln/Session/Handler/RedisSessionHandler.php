@@ -184,7 +184,7 @@ class RedisSessionHandler implements \SessionHandlerInterface
     public function read($id)
     {
         if ($this->isIgnorableSession()) {
-            return self::$memorySession;
+            return self::$memorySession[$id] ?? null;
         }
         $this->doc = $this->redis->get($id);
         if (!isset($this->doc['d'])) {
@@ -230,7 +230,7 @@ class RedisSessionHandler implements \SessionHandlerInterface
             ];
             $doc['d'] = $data;
             $timeout = (int)ini_get('session.gc_maxlifetime');
-            $res = $this->redis->set($id, $doc, $timeout);
+            $this->redis->set($id, $doc, $timeout);
 
             return true;
         }

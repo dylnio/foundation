@@ -26,6 +26,7 @@ class FlashMessenger extends \Twig_Extension
 
     public function getFunctions()
     {
+        /** @noinspection PhpUndefinedClassInspection */
         return [
             new \Twig_SimpleFunction('flash', [$this, 'flash']),
         ];

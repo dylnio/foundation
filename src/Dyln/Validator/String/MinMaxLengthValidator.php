@@ -1,7 +1,8 @@
 <?php
+
 namespace Dyln\Validator\String;
 
-use Dyln\Payload\PayloadFactory;
+use Dyln\Message\MessageFactory;
 use Dyln\Validator\AbstractValidator;
 
 class MinMaxLengthValidator extends AbstractValidator
@@ -19,15 +20,15 @@ class MinMaxLengthValidator extends AbstractValidator
     public function isValid($value)
     {
         if (strlen($value) < $this->min) {
-            return PayloadFactory::createErrorPayload(['value length cannot be less than ' . $this->min]);
+            return MessageFactory::error(['message' => 'value length cannot be less than ' . $this->min]);
         }
 
         if ($this->max) {
             if (strlen($value) > $this->max) {
-                return PayloadFactory::createErrorPayload(['value length cannot be more than ' . $this->max]);
+                return MessageFactory::error(['message' => 'value length cannot be more than ' . $this->max]);
             }
         }
 
-        return PayloadFactory::createSuccessPayload();
+        return MessageFactory::success();
     }
 }
