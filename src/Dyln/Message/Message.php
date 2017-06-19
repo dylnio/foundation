@@ -10,6 +10,7 @@ class Message
     protected $data = [];
     protected $errorMessage = null;
     protected $errorCode = null;
+    protected $errorExtra = [];
 
     public function isError()
     {
@@ -36,6 +37,7 @@ class Message
         if ($this->isError()) {
             return [
                 'message' => $this->errorMessage,
+                'extra'   => $this->errorExtra,
                 'code'    => $this->errorCode,
             ];
         }
@@ -108,11 +110,12 @@ class Message
     public function withError(array $error = [])
     {
         if (empty($error['message'])) {
-            throw new \Exception('Invalid error. ["message" => "Error Message", "code"=>100]');
+            throw new \Exception('Invalid error. ["message" => "Error Message", "code"=>100,"extra"=>["exception" => ....]]');
         }
 
         $this->errorMessage = $error['message'];
         $this->errorCode = $error['code']??null;
+        $this->errorExtra = $error['extra']??null;
 
         return $this;
     }

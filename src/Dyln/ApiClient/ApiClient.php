@@ -14,6 +14,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Cookie\SetCookie;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 
 class ApiClient
 {
@@ -78,8 +79,21 @@ class ApiClient
                     $responseBody = ['message' => 'Unkown error'];
                 }
             }
+            $message = $responseBody['message'];
+            $extra = [
+                'exception' => $responseBody['exception']??null,
+            ];
 
-            return MessageFactory::error($responseBody);
+            return MessageFactory::error(['message' => $message, 'extra' => $extra]);
+        } catch (ServerException $e) {
+            $responseBody = $e->getResponse()->getBody()->getContents();
+            $responseBody = json_decode($responseBody, true);
+            $message = $responseBody['message'];
+            $extra = [
+                'exception' => $responseBody['exception']??null,
+            ];
+
+            return MessageFactory::error(['message' => $message, 'extra' => $extra]);
         } catch (\Exception $e) {
             return MessageFactory::error(['message' => $e->getMessage()]);
         }
