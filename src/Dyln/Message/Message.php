@@ -57,7 +57,7 @@ class Message
     public function getErrorCode()
     {
         if ($this->isError()) {
-            return $this->errorMessage;
+            return $this->errorCode;
         }
 
         return null;
