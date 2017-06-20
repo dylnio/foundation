@@ -16,8 +16,8 @@ class DebugbarMiddleware implements ResponseBodyMiddlewareInterface
         if ($debugInfo) {
             unset($body['debug']);
         }
-        $debugInfo['ApiResponse'] = $body;
         Debugbar::addBulk($debugInfo);
+
         return $body;
     }
 }
