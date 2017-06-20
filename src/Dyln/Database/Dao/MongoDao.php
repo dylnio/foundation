@@ -33,7 +33,7 @@ class MongoDao extends AbstractDao
         $result = $this->getDbAdapter()->selectCollection($this->tableName)->findOne($condition, $options);
         $time = Timer::result();
         if (class_exists('Dyln\Debugbar\Debugbar')) {
-            if (AppEnv::isDebugEnabled()) {
+            if (AppEnv::isDebugBarEnabled()) {
                 $bt = [];
                 $traces = debug_backtrace();
                 for ($i = 15; $i > 0; $i--) {
@@ -88,7 +88,7 @@ class MongoDao extends AbstractDao
         $cursor = $this->getDbAdapter()->selectCollection($this->tableName)->find($condition, $options);
         $time = Timer::result();
         if (class_exists('Dyln\Debugbar\Debugbar')) {
-            if (AppEnv::isDebugEnabled()) {
+            if (AppEnv::isDebugBarEnabled()) {
                 $bt = [];
                 $traces = debug_backtrace();
                 for ($i = 15; $i > 0; $i--) {
@@ -154,7 +154,7 @@ class MongoDao extends AbstractDao
             $result = $this->getDbAdapter()->selectCollection($this->getTableName())->insertOne($data, $options);
             $time = Timer::result();
             if (class_exists('Dyln\Debugbar\Debugbar')) {
-                if (AppEnv::isDebugEnabled()) {
+                if (AppEnv::isDebugBarEnabled()) {
                     $bt = [];
                     $traces = debug_backtrace();
                     for ($i = 15; $i > 0; $i--) {
@@ -202,7 +202,7 @@ class MongoDao extends AbstractDao
             $this->getDbAdapter()->selectCollection($this->getTableName())->updateOne($condition, $operation, $options);
             $time = Timer::result();
             if (class_exists('Dyln\Debugbar\Debugbar')) {
-                if (AppEnv::isDebugEnabled()) {
+                if (AppEnv::isDebugBarEnabled()) {
                     $bt = [];
                     $traces = debug_backtrace();
                     for ($i = 15; $i > 0; $i--) {
@@ -241,7 +241,7 @@ class MongoDao extends AbstractDao
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->count($condition);
         $time = Timer::result();
         if (class_exists('Dyln\Debugbar\Debugbar')) {
-            if (AppEnv::isDebugEnabled()) {
+            if (AppEnv::isDebugBarEnabled()) {
                 $bt = [];
                 $traces = debug_backtrace();
                 for ($i = 15; $i > 0; $i--) {
@@ -279,7 +279,7 @@ class MongoDao extends AbstractDao
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteOne($condition);
         $time = Timer::result();
         if (class_exists('Dyln\Debugbar\Debugbar')) {
-            if (AppEnv::isDebugEnabled()) {
+            if (AppEnv::isDebugBarEnabled()) {
                 $bt = [];
                 $traces = debug_backtrace();
                 for ($i = 15; $i > 0; $i--) {
@@ -317,7 +317,7 @@ class MongoDao extends AbstractDao
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteMany($condition, $options);
         $time = Timer::result();
         if (class_exists('Dyln\Debugbar\Debugbar')) {
-            if (AppEnv::isDebugEnabled()) {
+            if (AppEnv::isDebugBarEnabled()) {
                 $bt = [];
                 $traces = debug_backtrace();
                 for ($i = 15; $i > 0; $i--) {

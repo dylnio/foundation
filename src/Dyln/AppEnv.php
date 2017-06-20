@@ -71,4 +71,9 @@ class AppEnv
     {
         return BooleanUtil::getBool(AppEnv::env('app.debug', false));
     }
+
+    static public function isDebugBarEnabled()
+    {
+        return BooleanUtil::getBool(AppEnv::env('app.debugbar', false));
+    }
 }
