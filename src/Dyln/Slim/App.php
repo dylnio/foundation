@@ -23,10 +23,13 @@ class App extends \Slim\App
             define('CACHED_SERVICES_FILE', '/tmp/__services.cache.php');
         }
         $containerBuilder = new ContainerBuilder(Container::class);
+        $config = $this->enhanceConfig($params);
+        $services = ArrayUtil::getIn($config, ['services'], []);
+        $params = array_merge($params, ArrayUtil::getIn($config, ['params'], []));
+
+        $containerBuilder->addDefinitions($services);
         $cache = $this->getDiCache($params);
         $containerBuilder->setDefinitionCache($cache);
-        $config = $this->enhanceConfig($params);
-        $containerBuilder->addDefinitions($config);
         $container = $containerBuilder->build();
         $container->set('app', $this);
         $container->set(App::class, $this);
@@ -34,6 +37,7 @@ class App extends \Slim\App
         parent::__construct($container);
         $this->registerModules($container);
     }
+
 
     private function enhanceConfig($params = [])
     {
@@ -45,7 +49,8 @@ class App extends \Slim\App
             $serialized = file_get_contents(CACHED_SERVICES_FILE);
         } else {
             $modules = ArrayUtil::getIn($params, ['modules'], []);
-            $serialized = ModuleConfigSerializer::combineAndSerialize($modules);
+            $merged = ModuleConfigSerializer::combineModuleConfig($modules);
+            $serialized = serialize($merged);
             file_put_contents(CACHED_SERVICES_FILE, $serialized);
         }
         if (!$serialized) {
@@ -53,9 +58,9 @@ class App extends \Slim\App
         }
 
         $data = unserialize($serialized);
-        foreach ($data as $key => $value) {
+        foreach ($data['services'] as $key => $value) {
             if ($value instanceof SerializableClosure) {
-                $data[$key] = $value->getClosure();
+                $data['services'][$key] = $value->getClosure();
             }
         }
 

@@ -2,37 +2,41 @@
 
 namespace Dyln\Slim;
 
+use Dyln\Util\ArrayUtil;
 use SuperClosure\SerializableClosure;
 
 class ModuleConfigSerializer
 {
-    static public function combineAndSerialize($moduleClasses = [])
+    static public function combineModuleConfig($moduleClasses = [])
     {
-        $combined = [];
+        $services = [];
+        $params = [];
         /** @noinspection PhpIncludeInspection */
-        $combined = array_merge($combined, include ROOT_DIR . '/app/config/services.php');
+        $services = array_merge($services, include ROOT_DIR . '/app/config/services.php');
         /** @noinspection PhpIncludeInspection */
-        $combined = array_merge($combined, include ROOT_DIR . '/app/config/config.php');
+        $services = array_merge($services, include ROOT_DIR . '/app/config/config.php');
+        /** @noinspection PhpIncludeInspection */
+        $params = array_merge($params, include ROOT_DIR . '/app/config/params.php');
         foreach ($moduleClasses as $moduleClass) {
             $reflectionClass = new \ReflectionClass($moduleClass);
             $file = $reflectionClass->getFileName();
             $dir = dirname($file);
-            $servicesFile = $dir . '/services.php';
-            if (file_exists($servicesFile)) {
+            $configFile = $dir . '/_config.php';
+            if (file_exists($configFile)) {
                 /** @noinspection PhpIncludeInspection */
-                $services = @include $servicesFile;
-                if (is_array($services)) {
-                    $combined = array_merge($combined, $services);
-                }
+                $config = @include $configFile;
+                $moduleServices = ArrayUtil::getIn($config, ['services'], []);
+                $moduleParams = ArrayUtil::getIn($config, ['params'], []);
+                $services = array_merge($services, $moduleServices);
+                $params = array_merge($params, $moduleParams);
             }
         }
-        foreach ($combined as $key => $value) {
+        foreach ($services as $key => $value) {
             if ($value instanceof \Closure) {
-                $combined[$key] = new SerializableClosure($value);
+                $services[$key] = new SerializableClosure($value);
             }
         }
-        $serialized = serialize($combined);
 
-        return $serialized;
+        return ['services' => $services, 'params' => $params];
     }
 }
