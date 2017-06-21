@@ -53,4 +53,9 @@ class Segment
             unset($this->session[$this->name][$this->cleanKey($key)]);
         }
     }
+
+    public function destroy()
+    {
+        unset($this->session[$this->name]);
+    }
 }

@@ -86,11 +86,8 @@ class Session
 
     public function deleteSegment($name)
     {
-        $name = StringUtil::canonicalizeName($name);
-        if (!isset($this->segments[$name])) {
-            unset($this->segments[$name]);
-        }
-
+        $this->getSegment($name)->destroy();
+        unset($this->segments[$name]);
     }
 
     public function get($key, $default = null, $deleteAfter = false)
