@@ -92,7 +92,7 @@ class ApiClient
             $responseBody = json_decode($responseBody, true);
             $message = $responseBody['message'];
             $extra = [
-                'exception' => $responseBody['exception'] ?? null,
+                'exception' => $responseBody['exception'] ?? $responseBody['error'] ?? null,
             ];
 
             return MessageFactory::error(['message' => $message, 'extra' => $extra]);
