@@ -39,7 +39,7 @@ class AppEnv
         } else {
             $servername = $_SERVER['SERVER_NAME'];
         }
-        $list = self::$serverToEnvMap[self::LIVE_ENV]??[];
+        $list = self::$serverToEnvMap[self::LIVE_ENV] ?? [];
         if (in_array($servername, $list)) {
             return self::LIVE_ENV;
         }
@@ -69,7 +69,13 @@ class AppEnv
 
     static public function isDebugEnabled()
     {
-        return BooleanUtil::getBool(AppEnv::env('app.debug', false));
+        $debug = BooleanUtil::getBool(AppEnv::env('app.debug', false));
+        if (!$debug) {
+            $overwrite = $_GET['debug'] ?? $_COOKIE['debug'] ?? null;
+            $debug = $overwrite === AppEnv::env('app.debug.url_key');
+        }
+
+        return $debug;
     }
 
     static public function isDebugBarEnabled()
