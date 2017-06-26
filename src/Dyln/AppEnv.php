@@ -72,7 +72,9 @@ class AppEnv
         $debug = BooleanUtil::getBool(AppEnv::env('app.debug', false));
         if (!$debug) {
             $overwrite = $_GET['debug'] ?? $_COOKIE['debug'] ?? null;
-            $debug = $overwrite === AppEnv::env('app.debug.url_key');
+            if ($overwrite) {
+                $debug = $overwrite === AppEnv::env('app.debug.url_key');
+            }
         }
 
         return $debug;
