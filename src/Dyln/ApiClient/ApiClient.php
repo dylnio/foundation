@@ -75,13 +75,15 @@ class ApiClient
             if (!$responseBody) {
                 if ($e->getCode() == 401) {
                     $responseBody = ['message' => '401 Unauthorized'];
+                } else if ($e->getCode() == 403) {
+                    $responseBody = ['message' => '403 Unauthorized'];
                 } else {
                     $responseBody = ['message' => 'Unkown error'];
                 }
             }
             $message = $responseBody['message'];
             $extra = [
-                'exception' => $responseBody['exception']??null,
+                'exception' => $responseBody['exception'] ?? null,
             ];
 
             return MessageFactory::error(['message' => $message, 'extra' => $extra]);
@@ -90,7 +92,7 @@ class ApiClient
             $responseBody = json_decode($responseBody, true);
             $message = $responseBody['message'];
             $extra = [
-                'exception' => $responseBody['exception']??null,
+                'exception' => $responseBody['exception'] ?? null,
             ];
 
             return MessageFactory::error(['message' => $message, 'extra' => $extra]);
