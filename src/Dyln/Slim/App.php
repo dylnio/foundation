@@ -38,7 +38,6 @@ class App extends \Slim\App
         $this->registerModules($container);
     }
 
-
     private function enhanceConfig($params = [])
     {
         $purge = $_REQUEST['purge']??false;
