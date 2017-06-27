@@ -34,6 +34,14 @@ abstract class AbstractModel implements ModelInterface
         $this->setDefaults();
     }
 
+    static public function fromArray(array $data = [], $dirty = false)
+    {
+        return new static([
+            'dirty' => $dirty,
+            'data'  => $data,
+        ]);
+    }
+
     public function addTempData($field, $value)
     {
         $this->temp[$field] = $value;
