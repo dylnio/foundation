@@ -8,6 +8,7 @@ use Dyln\ApiClient\ResponseBodyMiddleware\JsonDecodeMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\ResponseBodyMiddlewareInterface;
 use Dyln\AppEnv;
 use Dyln\Guzzle\Cookie\SessionCookieJar;
+use Dyln\Message\Message;
 use Dyln\Message\MessageFactory;
 use Dyln\Util\ArrayUtil;
 use GuzzleHttp\Client;
@@ -47,7 +48,7 @@ class ApiClient
         $this->addResponseBodyMiddleware(new DebugbarMiddleware());
     }
 
-    public function call($path, array $query = null, array $data = null, $method = 'GET', $options = [])
+    public function call($path, array $query = null, array $data = null, $method = 'GET', $options = []): Message
     {
         $this->addResponseBodyMiddleware(new ConvertToMessageMiddleware());
         if (AppEnv::isDebugEnabled()) {
