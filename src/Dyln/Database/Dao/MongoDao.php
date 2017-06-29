@@ -5,11 +5,10 @@ namespace Dyln\Database\Dao;
 use Dyln\AppEnv;
 use Dyln\Database\Model\ModelInterface;
 use Dyln\Debugbar\Debugbar;
-use Dyln\Sentry\Sentry;
 use Dyln\Util\Timer;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Database;
-use MongoDB\Driver\Exception\ConnectionTimeoutException;
+use function Dyln\_retry;
 
 /**
  * Class MongoDao
@@ -61,20 +60,9 @@ class MongoDao extends AbstractDao
             $options['sort'] = $sort;
         }
         Timer::start();
-        $try = 5;
-        while ($try) {
-            try {
-                $cursor = $this->getDbAdapter()->selectCollection($this->tableName)->find($condition, $options);
-                break;
-            } catch (ConnectionTimeoutException $e) {
-                Sentry::debug('Mongo Connection Timeout. Try: ' . $try);
-                sleep(0.5);
-                $try--;
-                if (!$try) {
-                    throw $e;
-                }
-            }
-        }
+        $cursor = _retry(function () use ($condition, $options) {
+            return $this->getDbAdapter()->selectCollection($this->tableName)->find($condition, $options);
+        }, 5);
         $time = Timer::result();
         if (AppEnv::isDebugBarEnabled()) {
             $bt = [];
