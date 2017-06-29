@@ -5,9 +5,11 @@ namespace Dyln\Database\Dao;
 use Dyln\AppEnv;
 use Dyln\Database\Model\ModelInterface;
 use Dyln\Debugbar\Debugbar;
+use Dyln\Sentry\Sentry;
 use Dyln\Util\Timer;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Database;
+use MongoDB\Driver\Exception\ConnectionTimeoutException;
 
 /**
  * Class MongoDao
@@ -26,38 +28,13 @@ class MongoDao extends AbstractDao
         $condition = [
             $this->idFieldName => $id,
         ];
-        $options = [
-            'projection' => $fields,
-        ];
-        Timer::start();
-        $result = $this->getDbAdapter()->selectCollection($this->tableName)->findOne($condition, $options);
-        $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
-            $bt = [];
-            $traces = debug_backtrace();
-            for ($i = 15; $i > 0; $i--) {
-                if (isset($traces[$i])) {
-                    $t = $traces[$i];
-                    $bt[] = [
-                        'file'     => isset($t['file']) ? $t['file'] : false,
-                        'line'     => isset($t['line']) ? $t['line'] : false,
-                        'function' => isset($t['function']) ? $t['function'] : false,
-                    ];
-                }
-            }
-            Debugbar::add('Mongo', [
-                'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.findOne',
-                'options'   => json_encode($options),
-                'query'     => json_encode($condition),
-                'time'      => $time,
-                'backtrace' => $bt,
-            ]);
-        }
-        if ($result) {
-            return $result;
+        $cursor = $this->fetchBy($condition, $fields, 1, 0);
+        $result = $cursor->toArray();
+        if (count($result) === 0) {
+            return false;
         }
 
-        return false;
+        return $result[0];
     }
 
     /**
@@ -67,6 +44,7 @@ class MongoDao extends AbstractDao
      * @param null $skip
      * @param null $sort
      * @return \MongoDB\Driver\Cursor
+     * @throws \Exception
      */
     public function fetchBy($condition = [], $fields = [], $limit = null, $skip = null, $sort = null)
     {
@@ -83,7 +61,20 @@ class MongoDao extends AbstractDao
             $options['sort'] = $sort;
         }
         Timer::start();
-        $cursor = $this->getDbAdapter()->selectCollection($this->tableName)->find($condition, $options);
+        $try = 5;
+        while ($try) {
+            try {
+                $cursor = $this->getDbAdapter()->selectCollection($this->tableName)->find($condition, $options);
+                break;
+            } catch (ConnectionTimeoutException $e) {
+                Sentry::debug('Mongo Connection Timeout. Try: ' . $try);
+                sleep(0.5);
+                $try--;
+                if (!$try) {
+                    throw $e;
+                }
+            }
+        }
         $time = Timer::result();
         if (AppEnv::isDebugBarEnabled()) {
             $bt = [];
