@@ -27,6 +27,9 @@
   },
   "require-dev": {},
   "autoload": {
+    "files": [
+      "src/functions/init.php"
+    ],
     "psr-4": {
       "Dyln\\": "src/Dyln/"
     }
