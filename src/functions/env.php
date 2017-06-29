@@ -1,6 +1,8 @@
 <?php
 
-if (!function_exists('_load_env_')) {
+namespace Dyln;
+
+if (!function_exists('Dyln\_load_env_')) {
     function _load_env_($dir)
     {
         $autodetect = ini_get('auto_detect_line_endings');
