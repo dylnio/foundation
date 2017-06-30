@@ -413,5 +413,6 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
     public function redindex()
     {
         return new static($this->toArrayValues());
+
     }
 }
