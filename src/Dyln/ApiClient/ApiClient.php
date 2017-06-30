@@ -53,6 +53,7 @@ class ApiClient
         $this->addResponseBodyMiddleware(new ConvertToMessageMiddleware());
         if (AppEnv::isDebugEnabled()) {
             $query['XDEBUG_SESSION_START'] = 'PHPSTORM';
+            $query['debug'] = AppEnv::env('app.debug.url_key');
         }
         $headers = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
         $requestOptions = [
