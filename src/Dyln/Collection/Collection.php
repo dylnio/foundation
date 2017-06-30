@@ -409,4 +409,9 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
     {
         return implode($glue, $this->data);
     }
+
+    public function redindex()
+    {
+        return new static($this->toArrayValues());
+    }
 }
