@@ -180,7 +180,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         array_pop($this->data);
     }
 
-    public function filter(callable $callback = null)
+    public function filter(callable $callback = null): Collection
     {
         if ($callback) {
             $return = [];
@@ -410,7 +410,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return implode($glue, $this->data);
     }
 
-    public function redindex()
+    public function reindex()
     {
         return new static($this->toArrayValues());
 
