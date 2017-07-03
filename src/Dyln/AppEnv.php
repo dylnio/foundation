@@ -23,7 +23,11 @@ class AppEnv
     static public function getAppEnv()
     {
         if (!defined('APPLICATION_ENV')) {
-            define('APPLICATION_ENV', getenv('APPLICATION_ENV') ?: get_cfg_var('APPLICATION_ENV') ?: self::getAppEnvFromServerName());
+            $env = getenv('APPLICATION_ENV') ??get_cfg_var('APPLICATION_ENV')??self::getAppEnvFromServerName();
+            if (!$env) {
+                throw new \Exception('APPLICATION_ENV is not set');
+            }
+            define('APPLICATION_ENV', $env);
         }
         putenv('APPLICATION_ENV=' . APPLICATION_ENV);
         $_ENV['APPLICATION_ENV'] = APPLICATION_ENV;
