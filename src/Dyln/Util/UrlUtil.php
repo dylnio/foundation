@@ -18,4 +18,15 @@ class UrlUtil
 
         return self::getBaseUrl() . $uri;
     }
+
+    static public function generate($path = null)
+    {
+        $path = ltrim(trim($path), '/');
+        $base = self::getBaseUrl();
+        if (!$path) {
+            return $base;
+        }
+
+        return $base . '/' . $path;
+    }
 }
