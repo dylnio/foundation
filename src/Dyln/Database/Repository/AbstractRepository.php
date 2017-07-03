@@ -17,8 +17,16 @@ abstract class AbstractRepository implements RepositoryInterface
 
     private function __construct(array $daos, $entityClassName)
     {
+        $aliases = [];
         foreach ($daos as $key => $dao) {
-            $this->daos[$key] = $dao;
+            if (is_string($dao)) {
+                $aliases[$key] = $dao;
+            } else {
+                $this->daos[$key] = $dao;
+            }
+        }
+        foreach ($aliases as $key => $target) {
+            $this->daos[$key] = $this->daos[$target];
         }
         $this->entityClassName = $entityClassName;
     }
@@ -26,7 +34,9 @@ abstract class AbstractRepository implements RepositoryInterface
     static public function factory($daos, $entityClassName)
     {
         if (!is_array($daos)) {
-            $daos = ['default' => $daos];
+            $daos = [
+                'default' => $daos,
+            ];
         }
 
         return new static($daos, $entityClassName);
