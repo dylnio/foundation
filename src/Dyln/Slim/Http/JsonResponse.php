@@ -21,17 +21,19 @@ class JsonResponse extends Response
         return $response;
     }
 
-    public function withError($message = null, $code = 0)
+    public function withError($message = null, $code = 0, $extra = [])
     {
         $this->isError = true;
         if (is_array($message)) {
-            $code = $message['code'];
-            $message = $message['message'];
+            $code = $message['code']??null;
+            $message = $message['message']??null;
+            $extra = $message['extra']??[];
         }
         $response = $this->withJson([
             'success' => false,
             'message' => $message,
             'code'    => $code,
+            'extra'   => $extra,
         ]);
 
         return $response;
