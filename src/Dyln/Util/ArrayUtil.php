@@ -43,7 +43,7 @@ class ArrayUtil
 
         $current = $array;
         foreach ($keys as $key) {
-            if (!$current || !array_key_exists($key, $current)) {
+            if (!$current || !is_array($current) || !array_key_exists($key, $current)) {
                 return $default;
             }
 

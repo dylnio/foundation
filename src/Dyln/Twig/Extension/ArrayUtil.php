@@ -17,7 +17,7 @@ class ArrayUtil extends \Twig_Extension
         ];
     }
 
-    public function arr(array $array, array $keys, $default = null)
+    public function arr(array $array, $keys, $default = null)
     {
         return \Dyln\Util\ArrayUtil::getIn($array, $keys, $default);
     }
