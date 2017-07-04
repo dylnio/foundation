@@ -2,6 +2,7 @@
 
 namespace Dyln\Firewall\Middleware;
 
+use Dyln\Firewall\Exception\RouteNotFoundException;
 use Dyln\Firewall\Firewall;
 use Dyln\Session\Session;
 use Dyln\Slim\CallableResolver;
@@ -52,7 +53,7 @@ class FirewallGuard
     {
         $route = $this->getRoute($request);
         if (!$route) {
-            throw new \Exception('Route not found: ' . $request->getUri()->getPath(), 404);
+            throw new RouteNotFoundException('Route not found: ' . $request->getUri()->getPath());
         }
         /** @var CallableResolver $callable */
         $callable = $route->getCallable();
