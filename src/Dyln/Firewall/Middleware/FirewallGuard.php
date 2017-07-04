@@ -51,18 +51,19 @@ class FirewallGuard
     private function authorized(Request $request)
     {
         $route = $this->getRoute($request);
-        if ($route) {
-            /** @var CallableResolver $callable */
-            $callable = $route->getCallable();
-            if ($callable instanceof \Closure) {
-                $resource = $route->getName();
-                $privilege = '~';
-            } else {
-                list($resource, $privilege) = explode(':', $callable);
-            }
-            if ($this->firewall->isAuthorized($resource, $privilege)) {
-                return true;
-            }
+        if (!$route) {
+            throw new \Exception('Route not found: ' . $request->getUri()->getPath(), 404);
+        }
+        /** @var CallableResolver $callable */
+        $callable = $route->getCallable();
+        if ($callable instanceof \Closure) {
+            $resource = $route->getName();
+            $privilege = '~';
+        } else {
+            list($resource, $privilege) = explode(':', $callable);
+        }
+        if ($this->firewall->isAuthorized($resource, $privilege)) {
+            return true;
         }
 
         return false;
