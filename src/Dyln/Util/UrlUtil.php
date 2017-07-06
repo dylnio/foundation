@@ -27,6 +27,6 @@ class UrlUtil
             return $base;
         }
 
-        return $base . '/' . $path;
+        return trim($base . '/' . $path, '/');
     }
 }
