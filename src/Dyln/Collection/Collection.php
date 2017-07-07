@@ -400,8 +400,8 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
 
     public function forEach (callable $callback)
     {
-        foreach ($this->data as $item) {
-            $callback($item);
+        foreach ($this->data as $index => $item) {
+            $callback($item, $index);
         }
     }
 
