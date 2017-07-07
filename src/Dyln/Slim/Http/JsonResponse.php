@@ -26,8 +26,8 @@ class JsonResponse extends Response
         $this->isError = true;
         if (is_array($message)) {
             $code = $message['code']??null;
-            $message = $message['message']??null;
             $extra = $message['extra']??[];
+            $message = $message['message'] ?? null;
         }
         $response = $this->withJson([
             'success' => false,
