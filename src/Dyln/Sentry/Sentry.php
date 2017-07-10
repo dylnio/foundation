@@ -3,6 +3,7 @@
 namespace Dyln\Sentry;
 
 use Dyln\AppEnv;
+use Dyln\Sentry\Exception\NotLoggableException;
 
 class Sentry
 {
@@ -75,6 +76,9 @@ class Sentry
 
     static public function exception($e)
     {
+        if ($e instanceof NotLoggableException) {
+            return;
+        }
         if (self::getInstance()->enabled) {
             self::getInstance()->client->captureException($e);
         }
