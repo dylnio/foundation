@@ -23,7 +23,7 @@ class AppEnv
     static public function getAppEnv()
     {
         if (!defined('APPLICATION_ENV')) {
-            $env = getenv('APPLICATION_ENV') ??get_cfg_var('APPLICATION_ENV')??self::getAppEnvFromServerName();
+            $env = getenv('APPLICATION_ENV') ?? get_cfg_var('APPLICATION_ENV') ?? self::getAppEnvFromServerName();
             if (!$env) {
                 throw new \Exception('APPLICATION_ENV is not set');
             }
@@ -59,10 +59,10 @@ class AppEnv
     static public function env($key, $default = null)
     {
         $value = getenv($key);
-        if ($value === false) {
+        if (!$value) {
             return $default;
         }
-        if ($value && strpos($value, '{{') !== false) {
+        if (strpos($value, '{{') !== false) {
             foreach (self::$placeholders as $placeholder) {
                 $value = str_replace('{{' . $placeholder . '}}', self::env($placeholder), $value);
             }
