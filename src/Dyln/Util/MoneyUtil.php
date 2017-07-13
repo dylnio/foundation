@@ -18,7 +18,7 @@ class MoneyUtil
         return number_format(round($amount, 2), 2);
     }
 
-    static public function formatCurrency($valueInPence, $currency = null)
+    static public function formatCurrency($valueInPence, $currency = null, $hideSymbol = false)
     {
         $value = MoneyUtil::toFloat($valueInPence);
         if (!$currency) {
@@ -28,13 +28,24 @@ class MoneyUtil
         switch (strtoupper($currency)) {
             case 'GBP':
                 setlocale(LC_MONETARY, 'en_GB.UTF-8');
+                $format = '$ %!n';
+                if ($hideSymbol) {
+                    $format = '%!n';
+                }
                 break;
             case 'USD':
                 setlocale(LC_MONETARY, 'en_US.UTF-8');
+                $format = '£ %!n';
+                if ($hideSymbol) {
+                    $format = '%!n';
+                }
                 break;
             case 'EUR':
                 setlocale(LC_MONETARY, 'de_DE.UTF-8');
                 $format = '€ %!n';
+                if ($hideSymbol) {
+                    $format = '%!n';
+                }
                 break;
         }
 
