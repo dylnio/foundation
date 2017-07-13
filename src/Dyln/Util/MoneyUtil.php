@@ -28,14 +28,14 @@ class MoneyUtil
         switch (strtoupper($currency)) {
             case 'GBP':
                 setlocale(LC_MONETARY, 'en_GB.UTF-8');
-                $format = '$ %!n';
+                $format = '£ %!n';
                 if ($hideSymbol) {
                     $format = '%!n';
                 }
                 break;
             case 'USD':
                 setlocale(LC_MONETARY, 'en_US.UTF-8');
-                $format = '£ %!n';
+                $format = '$ %!n';
                 if ($hideSymbol) {
                     $format = '%!n';
                 }
