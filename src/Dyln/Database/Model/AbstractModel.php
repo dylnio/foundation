@@ -28,10 +28,10 @@ abstract class AbstractModel implements ModelInterface
         if (isset($config['defaults'])) {
             $this->defaults = $config['defaults'];
         }
+        $this->setDefaults();
         if (isset($config['data'])) {
             $this->populateWithArray($config['data'], $config['dirty']);
         }
-        $this->setDefaults();
     }
 
     static public function fromArray(array $data = [], $dirty = false)
