@@ -42,7 +42,7 @@ class MoneyUtil
                 break;
             case 'EUR':
                 setlocale(LC_MONETARY, 'de_DE.UTF-8');
-                $format = '€ %!n';
+                $format = '%!n €';
                 if ($hideSymbol) {
                     $format = '%!n';
                 }

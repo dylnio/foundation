@@ -6,9 +6,6 @@ use Dyln\Util\MoneyUtil;
 
 class FormatCurrency extends \Twig_Extension
 {
-    const APPEND = 'append';
-    const PREPPEND = 'prepend';
-
     public function getName()
     {
         return 'formatcurrency';
