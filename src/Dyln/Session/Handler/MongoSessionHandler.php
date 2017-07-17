@@ -51,7 +51,7 @@ class MongoSessionHandler implements \SessionHandlerInterface
             $handler = self::$_instance;
         }
 
-        return session_set_save_handler(
+        $res = session_set_save_handler(
             [
                 $handler,
                 'open',
@@ -77,6 +77,8 @@ class MongoSessionHandler implements \SessionHandlerInterface
                 'gc',
             ]
         );
+
+        return $res;
     }
 
     /**
