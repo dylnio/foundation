@@ -2,6 +2,8 @@
 
 namespace Dyln\Twig\Extension;
 
+use Dyln\AppEnv;
+
 class Meta extends \Twig_Extension
 {
     private $meta = [];
@@ -22,7 +24,7 @@ class Meta extends \Twig_Extension
     public function meta($meta = [])
     {
         $this->meta = $meta;
-        $raws = $this->meta['raws']??[];
+        $raws = $this->meta['raws'] ?? [];
         $html = '';
 
         $html .= '<title>' . $this->get('title', 'Welcome') . '</title>';
@@ -51,6 +53,10 @@ class Meta extends \Twig_Extension
         $value = \Dyln\Util\ArrayUtil::getIn($this->meta, $keys, $default);
         if (is_array($value)) {
             $value = implode(', ', $value);
+        }
+
+        if ($keys == 'title' && AppEnv::isDebugEnabled()) {
+            $value .= ' [' . gethostname() . ']';
         }
 
         return $value;
