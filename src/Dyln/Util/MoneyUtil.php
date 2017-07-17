@@ -18,37 +18,43 @@ class MoneyUtil
         return number_format(round($amount, 2), 2, '.', '');
     }
 
-    static public function formatCurrency($valueInPence, $currency = null, $hideSymbol = false)
+    static public function formatCurrency($valueInPence, $currency = null)
     {
         $value = MoneyUtil::toFloat($valueInPence);
         if (!$currency) {
             return $value;
         }
-        $format = '%.2n';
-        switch (strtoupper($currency)) {
-            case 'GBP':
-                setlocale(LC_MONETARY, 'en_GB.UTF-8');
-                $format = '£ %!n';
-                if ($hideSymbol) {
-                    $format = '%!n';
-                }
-                break;
-            case 'USD':
-                setlocale(LC_MONETARY, 'en_US.UTF-8');
-                $format = '$ %!n';
-                if ($hideSymbol) {
-                    $format = '%!n';
-                }
-                break;
-            case 'EUR':
-                setlocale(LC_MONETARY, 'de_DE.UTF-8');
-                $format = '%!n €';
-                if ($hideSymbol) {
-                    $format = '%!n';
-                }
-                break;
-        }
+        $locale = \Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+//        $locale = 'fr_FR';
+        $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        $return = $formatter->formatCurrency($value, $currency);
+//        $format = '%.2n';
+//        switch (strtoupper($currency)) {
+//            case 'GBP':
+//                setlocale(LC_MONETARY, 'en_GB.UTF-8');
+//                $format = '£ %!n';
+//                if ($hideSymbol) {
+//                    $format = '%!n';
+//                }
+//                break;
+//            case 'USD':
+//                setlocale(LC_MONETARY, 'en_US.UTF-8');
+//                $format = '$ %!n';
+//                if ($hideSymbol) {
+//                    $format = '%!n';
+//                }
+//                break;
+//            case 'EUR':
+//                setlocale(LC_MONETARY, 'fr_FR.UTF-8');
+//                $format = '%!n €';
+//                if ($hideSymbol) {
+//                    $format = '%!n';
+//                }
+//                break;
+//        }
+//
+//        $return = money_format($format, $value);
 
-        return money_format($format, $value);
+        return $return;
     }
 }

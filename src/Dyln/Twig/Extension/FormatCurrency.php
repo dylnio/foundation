@@ -19,8 +19,8 @@ class FormatCurrency extends \Twig_Extension
         ];
     }
 
-    public function formatCurrency($valueInPence, $currency = null, $hideSymbol = false)
+    public function formatCurrency($valueInPence, $currency = null)
     {
-        return MoneyUtil::formatCurrency($valueInPence, $currency, $hideSymbol);
+        return MoneyUtil::formatCurrency($valueInPence, $currency);
     }
 }
