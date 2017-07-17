@@ -15,7 +15,7 @@ class MoneyUtil
     {
         $amount = (float)bcdiv($amount, 100, 2);
 
-        return number_format(round($amount, 2), 2);
+        return number_format(round($amount, 2), 2, '.', '');
     }
 
     static public function formatCurrency($valueInPence, $currency = null, $hideSymbol = false)
