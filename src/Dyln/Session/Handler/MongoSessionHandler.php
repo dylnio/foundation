@@ -8,7 +8,7 @@ use Dyln\Util\IpUtil;
 use MongoDB\Database;
 use MongoDB\Driver\Manager;
 
-class MongoSessionHandler implements \SessionHandlerInterface
+class MongoSessionHandler
 {
     /** @var MongoSessionHandler */
     protected static $_instance;
@@ -50,32 +50,13 @@ class MongoSessionHandler implements \SessionHandlerInterface
         } else {
             $handler = self::$_instance;
         }
-
         $res = session_set_save_handler(
-            [
-                $handler,
-                'open',
-            ],
-            [
-                $handler,
-                'close',
-            ],
-            [
-                $handler,
-                'read',
-            ],
-            [
-                $handler,
-                'write',
-            ],
-            [
-                $handler,
-                'destroy',
-            ],
-            [
-                $handler,
-                'gc',
-            ]
+            [$handler, "open"],
+            [$handler, "close"],
+            [$handler, "read"],
+            [$handler, "write"],
+            [$handler, "destroy"],
+            [$handler, "gc"]
         );
 
         return $res;
@@ -213,7 +194,6 @@ class MongoSessionHandler implements \SessionHandlerInterface
      */
     public function close()
     {
-        // TODO: Implement close() method.
         return true;
     }
 
@@ -230,7 +210,6 @@ class MongoSessionHandler implements \SessionHandlerInterface
      */
     public function open($save_path, $name)
     {
-        // TODO: Implement open() method.
         return true;
     }
 }
