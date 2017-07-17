@@ -2,7 +2,6 @@
 
 namespace Dyln\Util;
 
-use function Dyln\getin;
 
 class MoneyUtil
 {
@@ -26,37 +25,22 @@ class MoneyUtil
         if (!$currency) {
             return $value;
         }
-        $locale = \Locale::acceptFromHttp(getIn($_SERVER, ['HTTP_ACCEPT_LANGUAGE'], 'en_GB'));
-//        $locale = 'fr_FR';
+        $locale = self::currencyToLocale($currency);
         $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
         $return = $formatter->formatCurrency($value, $currency);
-//        $format = '%.2n';
-//        switch (strtoupper($currency)) {
-//            case 'GBP':
-//                setlocale(LC_MONETARY, 'en_GB.UTF-8');
-//                $format = '£ %!n';
-//                if ($hideSymbol) {
-//                    $format = '%!n';
-//                }
-//                break;
-//            case 'USD':
-//                setlocale(LC_MONETARY, 'en_US.UTF-8');
-//                $format = '$ %!n';
-//                if ($hideSymbol) {
-//                    $format = '%!n';
-//                }
-//                break;
-//            case 'EUR':
-//                setlocale(LC_MONETARY, 'fr_FR.UTF-8');
-//                $format = '%!n €';
-//                if ($hideSymbol) {
-//                    $format = '%!n';
-//                }
-//                break;
-//        }
-//
-//        $return = money_format($format, $value);
 
         return $return;
+    }
+
+    static public function currencyToLocale($currency)
+    {
+        switch (strtolower($currency)) {
+            case 'eur':
+                return 'fr_FR';
+            case 'gbp':
+                return 'en_GB';
+            default:
+                return 'en_US';
+        }
     }
 }
