@@ -2,6 +2,8 @@
 
 namespace Dyln\Util;
 
+use function Dyln\getin;
+
 class MoneyUtil
 {
     static public function toPence($amount)
@@ -24,7 +26,7 @@ class MoneyUtil
         if (!$currency) {
             return $value;
         }
-        $locale = \Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $locale = \Locale::acceptFromHttp(getIn($_SERVER, ['HTTP_ACCEPT_LANGUAGE'], 'en_GB'));
 //        $locale = 'fr_FR';
         $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
         $return = $formatter->formatCurrency($value, $currency);
