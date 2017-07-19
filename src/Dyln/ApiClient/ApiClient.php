@@ -55,6 +55,9 @@ class ApiClient
             $query['XDEBUG_SESSION_START'] = 'PHPSTORM';
             $query['debug'] = AppEnv::env('app.debug.url_key');
         }
+        if (AppEnv::isDebugBarEnabled()) {
+            $query['debug_bar'] = AppEnv::env('app.debug.url_key');
+        }
         $headers = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
         $requestOptions = [
             'headers' => $headers,

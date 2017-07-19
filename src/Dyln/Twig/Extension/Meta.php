@@ -56,7 +56,7 @@ class Meta extends \Twig_Extension
         }
 
         if ($keys == 'title' && AppEnv::isDebugEnabled()) {
-            $value .= ' [' . gethostname() . ']';
+            $value = '[' . gethostname() . '] ' . $value;
         }
 
         return $value;

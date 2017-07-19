@@ -166,6 +166,7 @@ class MongoDao extends AbstractDao
         if (!isset($options['w'])) {
             $options['w'] = 1;
         }
+        $model->preUpdate();
         $data = $model->getChanges();
         if (!empty($data)) {
             $data['upt'] = microtime(true);

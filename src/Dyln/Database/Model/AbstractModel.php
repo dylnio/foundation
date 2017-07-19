@@ -193,6 +193,11 @@ abstract class AbstractModel implements ModelInterface
 
     }
 
+    public function preUpdate()
+    {
+
+    }
+
     public function hasProperty($property)
     {
         return in_array($property, $this->availableProperties);
