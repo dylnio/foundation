@@ -86,6 +86,17 @@ class AppEnv
 
     static public function isDebugBarEnabled()
     {
-        return self::isDebugEnabled() && BooleanUtil::getBool(AppEnv::env('app.debugbar', false));
+        if (!self::isDebugEnabled()) {
+            return false;
+        }
+        $bar = BooleanUtil::getBool(AppEnv::env('app.debugbar', false));
+        if (!$bar) {
+            $overwrite = $_GET['debug_bar'] ?? $_COOKIE['debug_bar'] ?? null;
+            if ($overwrite) {
+                $bar = $overwrite === AppEnv::env('app.debug.url_key');
+            }
+        }
+
+        return $bar;
     }
 }
