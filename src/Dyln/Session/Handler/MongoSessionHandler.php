@@ -2,9 +2,9 @@
 
 namespace Dyln\Session\Handler;
 
+use function Dyln\getin;
 use Dyln\Util\ArrayUtil;
 use Dyln\Util\Browser;
-use Dyln\Util\IpUtil;
 use MongoDB\Database;
 use MongoDB\Driver\Manager;
 
@@ -14,9 +14,12 @@ class MongoSessionHandler
     protected static $_instance;
     protected static $memorySession = [];
     /** @var \MongoDB\Collection */
-    protected $mongo;
-    protected $doc = [];
+    protected $sessionCollection;
+    /** @var \MongoDB\Collection */
+    protected $sessionDataCollection;
     protected $sessionConfig = [];
+    protected $session = [];
+    protected $sessionData = [];
 
     protected function __construct($host, $databaseName, $collectionName, array $config)
     {
@@ -29,7 +32,16 @@ class MongoSessionHandler
                 'root'     => 'array',
             ],
         ]);
-        $this->mongo = $db->selectCollection($collectionName);
+        $this->sessionCollection = $db->selectCollection($collectionName);
+        $this->sessionDataCollection = $db->selectCollection($collectionName . '_data');
+        $serMethod = ini_get("session.serialize_handler");
+        if ($serMethod != 'igbinary') {
+            if (extension_loaded('igbinary')) {
+                ini_set('session.serialize_handler', 'igbinary');
+            } else {
+                ini_set('session.serialize_handler', 'php_serialize');
+            }
+        }
     }
 
     /**
@@ -74,7 +86,10 @@ class MongoSessionHandler
         if ($this->isIgnorableSession()) {
             return true;
         }
-        $result = $this->mongo->deleteOne(['_id' => $id], ['w' => 1]);
+        $result = $this->sessionCollection->deleteOne(['_id' => $id], ['w' => 1]);
+        $this->sessionDataCollection->deleteOne(['_id' => $id], ['w' => 1]);
+        $this->session = [];
+        $this->sessionData = [];
 
         return ($result['ok'] == 1);
     }
@@ -111,7 +126,8 @@ class MongoSessionHandler
      */
     public function gc($max)
     {
-        $this->mongo->deleteMany(['expire' => ['$lt' => time()]]);
+        $this->sessionCollection->deleteMany(['expire' => ['$lt' => time()]]);
+        $this->sessionDataCollection->deleteMany(['expire' => ['$lt' => time()]]);
 
         return true;
     }
@@ -130,19 +146,21 @@ class MongoSessionHandler
         if ($this->isIgnorableSession()) {
             return self::$memorySession;
         }
-        $this->doc = $this->mongo->findOne(['_id' => $id]);
-        if (!isset($this->doc['d'])) {
+        $session = $this->sessionCollection->findOne(['_id' => $id]);
+        if (!$session) {
             return false;
-        } else {
-            if (strpos($this->doc['d'], "__ENCODED__") === 0) {
-                $data = substr($this->doc['d'], 11);
-                $data = base64_decode($data);
-
-                return $data;
-            } else {
-                return $this->doc['d'];
-            }
         }
+        $this->session = $session;
+        $sessionData = $this->sessionDataCollection->findOne(['_id' => $id]);
+        if (!$sessionData) {
+            $this->sessionCollection->deleteOne(['_id' => $id]);
+
+            return false;
+        }
+        $this->sessionData = $sessionData;
+        $data = getin($sessionData, ['data']);
+
+        return $data ? $this->serialize($data) : false;
     }
 
     /**
@@ -163,21 +181,22 @@ class MongoSessionHandler
         if (empty($data)) {
             return true;
         } else {
-            $doc = [
-                'expire' => time() + intval(ini_get('session.gc_maxlifetime')),
-                'ip'     => IpUtil::getRealIp(),
-                'server' => [
-                    'referer'     => ArrayUtil::getIn($_SERVER, ['HTTP_REFERER'], null),
-                    'host'        => ArrayUtil::getIn($_SERVER, ['HTTP_HOST'], null),
-                    'remote_host' => ArrayUtil::getIn($_SERVER, ['REMOTE_HOST'], null),
-                    'agent'       => ArrayUtil::getIn($_SERVER, ['HTTP_USER_AGENT'], null),
-                ],
-            ];
-            if (!isset($this->doc['d']) || (isset($this->doc['d']) && $this->doc['d'] != $data)) {
-                $doc['d'] = $data;
-            }
             $options = ['upsert' => true];
-            $this->mongo->updateOne(['_id' => $id], ['$set' => $doc], $options);
+            $data = $this->unserialize($data);
+            $existingHash = md5(json_encode($this->sessionData['data'] ?? []));
+            $newHash = md5(json_encode($data));
+            $sessionData = [
+                'expire' => time() + intval(ini_get('session.gc_maxlifetime')),
+            ];
+            if ($existingHash != $newHash) {
+                $sessionData['data'] = $data;
+            }
+            $this->sessionDataCollection->updateOne(['_id' => $id], ['$set' => $sessionData], $options);
+            $session = [
+                'expire' => time() + intval(ini_get('session.gc_maxlifetime')),
+                'hash'   => $newHash,
+            ];
+            $this->sessionCollection->updateOne(['_id' => $id], ['$set' => $session], $options);
 
             return true;
         }
@@ -211,5 +230,31 @@ class MongoSessionHandler
     public function open($save_path, $name)
     {
         return true;
+    }
+
+    private function unserialize($session_data)
+    {
+        $method = ini_get("session.serialize_handler");
+        switch ($method) {
+            case "php_serialize":
+                return unserialize($session_data);
+            case "igbinary":
+                return igbinary_unserialize($session_data);
+            default:
+                throw new \Exception("Unsupported session.serialize_handler: " . $method . ". Supported: php_serialize, igbinary");
+        }
+    }
+
+    private function serialize($session_data)
+    {
+        $method = ini_get("session.serialize_handler");
+        switch ($method) {
+            case "php_serialize":
+                return serialize($session_data);
+            case "igbinary":
+                return igbinary_serialize($session_data);
+            default:
+                throw new \Exception("Unsupported session.serialize_handler: " . $method . ". Supported: php_serialize, igbinary");
+        }
     }
 }
