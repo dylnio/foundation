@@ -28,7 +28,7 @@ class Session
         return true;
     }
 
-    public static function init()
+    public static function init($cookieParams = [])
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             ini_set('session.gc_maxlifetime', 365 * 24 * 60 * 60); // 1 year
@@ -37,6 +37,9 @@ class Session
             ini_set('session.gc_divisor', 100);
             ini_set('session.cookie_secure', false);
             ini_set('session.use_only_cookies', true);
+            foreach ($cookieParams as $field => $value) {
+                ini_set('session.' . $field, $value);
+            }
             session_start();
         }
 
