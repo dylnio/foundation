@@ -2,6 +2,7 @@
 
 namespace Dyln\Slack;
 
+use Dyln\Sentry\Sentry;
 use GuzzleHttp\Client;
 
 class SimpleMessenger
@@ -26,7 +27,12 @@ class SimpleMessenger
         $options['icon_emoji'] = $options['icon_emoji'] ?? ':monkey_face:';
         $options['mrkdwn'] = $options['mrkdwn'] ?? true;
         $options['text'] = $message;
-        $response = $this->getClient()->request('POST', $this->hook, ['form_params' => ['payload' => json_encode($options)]]);
+        try {
+            $response = $this->getClient()->request('POST', $this->hook, ['form_params' => ['payload' => json_encode($options)]]);
+        } catch (\Exception $e) {
+            Sentry::exception($e);
+        }
+
     }
 
     private function getClient()
