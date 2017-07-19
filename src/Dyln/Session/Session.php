@@ -40,7 +40,10 @@ class Session
             foreach ($cookieParams as $field => $value) {
                 ini_set('session.' . $field, $value);
             }
-            session_start();
+            $res = session_start();
+            if (!$res) {
+                throw new \Exception('session_start() failed');
+            }
         }
 
         return true;
