@@ -2,11 +2,12 @@
 
 namespace Dyln\Session\Handler;
 
-use function Dyln\getin;
+use Dyln\Mongo\MongofyKeys;
 use Dyln\Util\ArrayUtil;
 use Dyln\Util\Browser;
 use MongoDB\Database;
 use MongoDB\Driver\Manager;
+use function Dyln\getin;
 
 class MongoSessionHandler
 {
@@ -160,7 +161,7 @@ class MongoSessionHandler
         $this->sessionData = $sessionData;
         $data = getin($sessionData, ['data']);
 
-        return $data ? $this->serialize($data) : false;
+        return $data ? $this->serialize(MongofyKeys::unsafe($data)) : false;
     }
 
     /**
@@ -189,7 +190,7 @@ class MongoSessionHandler
                 'expire' => time() + intval(ini_get('session.gc_maxlifetime')),
             ];
             if ($existingHash != $newHash) {
-                $sessionData['data'] = $data;
+                $sessionData['data'] = MongofyKeys::safe($data);
             }
             $this->sessionDataCollection->updateOne(['_id' => $id], ['$set' => $sessionData], $options);
             $session = [
