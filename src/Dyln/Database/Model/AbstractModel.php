@@ -166,6 +166,7 @@ abstract class AbstractModel implements ModelInterface
         foreach ($changes as $field => $value) {
             $changes[$field] = $value;
         }
+        $changes[$this->idField] = $this->getId();
 
         return $changes;
     }
