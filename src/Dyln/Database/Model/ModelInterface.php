@@ -20,8 +20,6 @@ interface ModelInterface
 
     public function preUpdate();
 
-    public function hasProperty($property);
-
     public function addTempData($field, $value);
 
     public function getTempData($field, $default = null);

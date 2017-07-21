@@ -6,7 +6,6 @@ abstract class AbstractModel implements ModelInterface
 {
     protected $idField = '_id';
     protected $availableProperties = [];
-    protected $defaults = [];
     protected $data = [];
     protected $dirty = [];
     protected $temp = [];
@@ -25,10 +24,6 @@ abstract class AbstractModel implements ModelInterface
         if (isset($config['availableProperties'])) {
             $this->availableProperties = $config['availableProperties'];
         }
-        if (isset($config['defaults'])) {
-            $this->defaults = $config['defaults'];
-        }
-        $this->setDefaults();
         if (isset($config['data'])) {
             $this->populateWithArray($config['data'], $config['dirty']);
         }
@@ -57,15 +52,6 @@ abstract class AbstractModel implements ModelInterface
     public function setIdFieldName($idFieldName)
     {
         $this->idField = $idFieldName;
-    }
-
-    private function setDefaults()
-    {
-        foreach ($this->defaults as $field => $value) {
-            if (!isset($this->data[$field]) && !isset($this->dirty[$field])) {
-                $this->setProperty($field, $value);
-            }
-        }
     }
 
     public function setProperty($fieldName, $value)
@@ -124,17 +110,6 @@ abstract class AbstractModel implements ModelInterface
         }
 
         return $id;
-    }
-
-    public function isPartial()
-    {
-        foreach ($this->availableProperties as $fieldName) {
-            if (!isset($this->data[$fieldName])) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public function toArray($includeTemp = true, $secure = true)
@@ -199,13 +174,15 @@ abstract class AbstractModel implements ModelInterface
 
     }
 
-    public function hasProperty($property)
-    {
-        return in_array($property, $this->availableProperties);
-    }
-
     public function __set($name, $value)
     {
         $this->setProperty($name, $value);
+    }
+
+    public function makeAllDirty()
+    {
+        $this->dirty = $this->data;
+
+        return $this;
     }
 }
