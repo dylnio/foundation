@@ -22,7 +22,8 @@ class App extends \Slim\App
         if (!defined('CACHED_SERVICES_FILE')) {
             define('CACHED_SERVICES_FILE', '/tmp/__services.cache.php');
         }
-        $containerBuilder = new ContainerBuilder(Container::class);
+        $containerClass = $params['container_class'] ?? Container::class;
+        $containerBuilder = new ContainerBuilder($containerClass);
         $config = $this->enhanceConfig($params);
         $services = ArrayUtil::getIn($config, ['services'], []);
         $params = array_merge($params, ArrayUtil::getIn($config, ['params'], []));
@@ -40,7 +41,7 @@ class App extends \Slim\App
 
     private function enhanceConfig($params = [])
     {
-        $purge = $_REQUEST['purge']??false;
+        $purge = $_REQUEST['purge'] ?? false;
         if ($purge && file_exists(CACHED_SERVICES_FILE)) {
             unlink(CACHED_SERVICES_FILE);
         }
