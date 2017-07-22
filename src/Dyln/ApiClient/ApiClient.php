@@ -7,6 +7,7 @@ use Dyln\ApiClient\ResponseBodyMiddleware\DebugbarMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\JsonDecodeMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\ResponseBodyMiddlewareInterface;
 use Dyln\AppEnv;
+use Dyln\Collection\Collection;
 use Dyln\Guzzle\Cookie\SessionCookieJar;
 use Dyln\Message\Message;
 use Dyln\Message\MessageFactory;
@@ -32,6 +33,7 @@ class ApiClient
     ];
     /** @var ResponseBodyMiddlewareInterface[] */
     protected $responseBodyMiddlewares = [];
+    protected $calls = [];
 
     /**
      * ApiService constructor.
@@ -152,5 +154,51 @@ class ApiClient
         }
 
         return $body;
+    }
+
+    public function addCall($path, array $query = null, array $data = null, $method = 'GET', $id = null)
+    {
+        $id = $id ?? uniqid();
+        $this->calls[$id] = [
+            'path'   => $path,
+            'query'  => $query,
+            'data'   => $data,
+            'method' => $method,
+        ];
+
+        return $id;
+    }
+
+    public function bulkCall()
+    {
+        if (!$this->calls) {
+            throw new \Exception('Empty calls');
+        }
+        $request = [];
+        foreach ($this->calls as $id => $call) {
+            $request[] = [
+                'id'         => $id,
+                'path'       => $call['path'],
+                'method'     => $call['method'],
+                'url_params' => $call['query'] ?? [],
+                'body'       => $call['data'] ?? [],
+            ];
+        }
+
+        $response = $this->call('/', null, ['requests' => $request], 'POST', ['headers' => ['X-SHOPCADE-MULTI' => true]]);
+        if ($response->isSuccess()) {
+            $payload = $response->getData()['payload'];
+            $bulkResponse = new Collection();
+            foreach ($payload as $id => $_payload) {
+                if ($_payload['success']) {
+                    $bulkResponse->add(MessageFactory::success($_payload), (string)$id);
+                } else {
+                    $bulkResponse->add(MessageFactory::error($_payload), (string)$id);
+                }
+            }
+            $response->addData('bulk_response', $bulkResponse);
+        }
+
+        return $response;
     }
 }   
