@@ -33,7 +33,6 @@ class ApiClient
     ];
     /** @var ResponseBodyMiddlewareInterface[] */
     protected $responseBodyMiddlewares = [];
-    protected $calls = [];
 
     /**
      * ApiService constructor.
@@ -156,33 +155,15 @@ class ApiClient
         return $body;
     }
 
-    public function addCall($path, array $query = null, array $data = null, $method = 'GET', $id = null)
+    public function bulkCall($calls = [])
     {
-        $id = $id ?? uniqid();
-        $this->calls[$id] = [
-            'path'   => $path,
-            'query'  => $query,
-            'data'   => $data,
-            'method' => $method,
-        ];
-
-        return $id;
-    }
-
-    public function bulkCall()
-    {
-        if (!$this->calls) {
+        if (!$calls) {
             throw new \Exception('Empty calls');
         }
         $request = [];
-        foreach ($this->calls as $id => $call) {
-            $request[] = [
-                'id'         => $id,
-                'path'       => $call['path'],
-                'method'     => $call['method'],
-                'url_params' => $call['query'] ?? [],
-                'body'       => $call['data'] ?? [],
-            ];
+        /** @var ApiRequest $call */
+        foreach ($calls as $call) {
+            $request[] = $call->toArray();
         }
 
         $response = $this->call('/', null, ['requests' => $request], 'POST', ['headers' => ['X-SHOPCADE-MULTI' => true]]);
