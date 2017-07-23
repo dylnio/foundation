@@ -25,8 +25,8 @@ class JsonResponse extends Response
     {
         $this->isError = true;
         if (is_array($message)) {
-            $code = $message['code']??null;
-            $extra = $message['extra']??[];
+            $code = $message['code'] ?? null;
+            $extra = $message['extra'] ?? [];
             $message = $message['message'] ?? null;
         }
         $response = $this->withJson([
