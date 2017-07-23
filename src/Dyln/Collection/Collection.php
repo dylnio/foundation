@@ -367,7 +367,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return array_values($this->toArray());
     }
 
-    public function trim()
+    public function trim(): Collection
     {
         $data = [];
         foreach ($this->data as $key => $value) {
@@ -391,7 +391,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return false;
     }
 
-    public function slice($offset = 0, $length = 1)
+    public function slice($offset = 0, $length = 1): Collection
     {
         $sliced = array_slice($this->data, $offset, $length);
 
@@ -410,8 +410,17 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return implode($glue, $this->data);
     }
 
-    public function reindex()
+    public function reindex(callable $callback = null): Collection
     {
+        if ($callback) {
+            $return = [];
+            foreach ($this->data as $row) {
+                $return[$callback($row)] = $row;
+            }
+
+            return new static($return);
+        }
+
         return new static($this->toArrayValues());
 
     }

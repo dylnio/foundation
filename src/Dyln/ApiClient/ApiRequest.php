@@ -13,6 +13,7 @@ class ApiRequest
     protected $body = [];
     protected $priority = 100;
     protected $stopOnError = true;
+    protected $dependsOn = null;
 
     static public function fromArray($array = [])
     {
@@ -38,7 +39,9 @@ class ApiRequest
         if (isset($array['stopOnError'])) {
             $request = $request->withStopOnError($array['stopOnError']);
         }
-
+        if (isset($array['dependsOn'])) {
+            $request = $request->withDependsOn($array['dependsOn']);
+        }
         return $request;
     }
 
@@ -98,6 +101,14 @@ class ApiRequest
         return $clone;
     }
 
+    public function withDependsOn($requestId)
+    {
+        $clone = clone $this;
+        $clone->dependsOn = $requestId;
+
+        return $clone;
+    }
+
     public function toArray()
     {
         return [
@@ -108,6 +119,7 @@ class ApiRequest
             'method'      => $this->getMethod(),
             'priority'    => $this->getPriority(),
             'stopOnError' => $this->isStopOnError(),
+            'dependsOn'   => $this->getDependsOn(),
         ];
     }
 
@@ -165,6 +177,11 @@ class ApiRequest
     public function isStopOnError(): bool
     {
         return BooleanUtil::getBool($this->stopOnError);
+    }
+
+    public function getDependsOn()
+    {
+        return $this->dependsOn;
     }
 
 }

@@ -60,6 +60,9 @@ class FirewallGuard
         if ($callable instanceof \Closure) {
             $resource = $route->getName();
             $privilege = '~';
+        } elseif (is_array($callable)) {
+            $resource = get_class($callable[0]);
+            $privilege = $callable[1];
         } else {
             list($resource, $privilege) = explode(':', $callable);
         }
