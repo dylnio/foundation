@@ -2,9 +2,11 @@
 
 namespace Dyln\Database\Repository;
 
+use Doctrine\Common\Cache\CacheProvider;
 use Dyln\Collection\Collection;
 use Dyln\Database\Dao\DaoInterface;
 use Dyln\Database\Model\ModelInterface;
+use Dyln\Doctrine\Common\Cache\CollectionCache;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Driver\Cursor;
 use MongoDB\Model\BSONDocument;
@@ -14,6 +16,8 @@ abstract class AbstractRepository implements RepositoryInterface
     /** @var  DaoInterface[] */
     protected $daos = [];
     protected $entityClassName;
+    /** @var CacheProvider */
+    protected $cache;
 
     private function __construct(array $daos, $entityClassName)
     {
@@ -29,6 +33,7 @@ abstract class AbstractRepository implements RepositoryInterface
             $this->daos[$key] = $this->daos[$target];
         }
         $this->entityClassName = $entityClassName;
+        $this->cache = new CollectionCache();
     }
 
     static public function factory($daos, $entityClassName)
@@ -54,17 +59,9 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public function fetch($id, $fields = [], $daoKey = 'default')
     {
-        /** @var BSONDocument $result */
-        $result = $this->getDao()->fetch($id, $fields);
-        if ($result) {
-            if ($result instanceof BSONDocument) {
-                $result = $result->getArrayCopy();
-            }
+        $condition = ['_id' => $id];
 
-            return $this->hydrate($result);
-        }
-
-        return null;
+        return $this->fetchBy($condition, $fields, 1, 0, null, $daoKey)->first();
     }
 
     public function getById($id, $fields = [], $daoKey = 'default')
@@ -74,10 +71,18 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public function fetchBy($condition = [], $fields = [], $limit = null, $skip = null, $sort = null, $daoKey = 'default')
     {
+        $key = json_encode(func_get_args());
+        $key = md5($key);
+        if ($this->cache->contains($key)) {
+            return $this->cache->fetch($key);
+        }
         /** @var Cursor $cursor */
         $cursor = $this->getDao($daoKey)->fetchBy($condition, $fields, $limit, $skip, $sort);
 
-        return $this->hydrateCursor($cursor);
+        $result = $this->hydrateCursor($cursor);
+        $this->cache->save($key, $result);
+
+        return $result;
     }
 
     public function fetchOneBy($condition = [], $fields = [], $daoKey = 'default')
