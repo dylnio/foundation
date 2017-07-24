@@ -10,9 +10,9 @@ class Session
     protected $segments = [];
     protected $session;
 
-    public function __construct()
+    public function __construct($cookieParams = [])
     {
-        self::init();
+        self::init($cookieParams);
         $this->session = &$_SESSION;
         $this->extend();
     }
