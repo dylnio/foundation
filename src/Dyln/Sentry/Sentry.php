@@ -47,6 +47,9 @@ class Sentry
             });
             $data['tags'] = $tags;
             self::getInstance()->client->captureMessage($message, $params, $data, $stack, $vars);
+            if (extension_loaded('newrelic')) {
+                newrelic_notice_error($message);
+            }
         }
     }
 
