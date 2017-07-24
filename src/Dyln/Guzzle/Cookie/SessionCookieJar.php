@@ -10,28 +10,14 @@ class SessionCookieJar extends CookieJar
 {
     protected $key;
     /**
-     * @var bool
-     */
-    private $storeSessionCookies;
-    /**
      * @var Session
      */
     private $session;
 
-    /**
-     * RedisCookieJar constructor.
-     * @param Session $session
-     * @param null $key
-     * @param bool $storeSessionCookies
-     */
-    public function __construct(Session $session, $key = null, $storeSessionCookies = false)
+    public function __construct(Session $session)
     {
         $this->session = $session;
-        if (!$key) {
-            $key = session_id();
-        }
-        $this->key = $key;
-        $this->storeSessionCookies = $storeSessionCookies;
+        $this->key = $this->session->id();
         $this->load();
     }
 
@@ -45,25 +31,18 @@ class SessionCookieJar extends CookieJar
         $json = [];
         foreach ($this as $cookie) {
             /** @var SetCookie $cookie */
-            if (CookieJar::shouldPersist($cookie, $this->storeSessionCookies)) {
+            if (CookieJar::shouldPersist($cookie, true)) {
                 $json[] = $cookie->toArray();
             }
         }
 
-        $jsonStr = \GuzzleHttp\json_encode($json);
+        $jsonStr = json_encode($json);
         $res = $this->session->getSegment('__cookiejar')->set($this->key, $jsonStr);
         if (!$res) {
-            throw new \RuntimeException("Unable to save redis {$this->key}");
+            throw new \RuntimeException("Unable to save session {$this->key}");
         }
     }
 
-    /**
-     * Load cookies from a JSON formatted file.
-     *
-     * Old cookies are kept unless overwritten by newly loaded ones.
-     *
-     * @throws \RuntimeException if the file cannot be loaded.
-     */
     public function load()
     {
         $json = $this->session->getSegment('__cookiejar')->get($this->key, '');
@@ -73,9 +52,9 @@ class SessionCookieJar extends CookieJar
             return;
         }
 
-        $data = \GuzzleHttp\json_decode($json, true);
+        $data = json_decode($json, true);
         if (is_array($data)) {
-            foreach (json_decode($json, true) as $cookie) {
+            foreach ($data as $cookie) {
                 $this->setCookie(new SetCookie($cookie));
             }
         } elseif (strlen($data)) {
