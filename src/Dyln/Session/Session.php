@@ -38,6 +38,9 @@ class Session
             ini_set('session.cookie_secure', false);
             ini_set('session.use_only_cookies', true);
             foreach ($cookieParams as $field => $value) {
+                if ($field == 'name' && !trim($value)) {
+                    $value = 'PHPSESSID';
+                }
                 ini_set('session.' . $field, $value);
             }
             $res = session_start();
