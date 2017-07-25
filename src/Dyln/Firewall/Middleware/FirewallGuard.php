@@ -80,11 +80,6 @@ class FirewallGuard
         if (!$route) {
             $routeInfo = $this->router->dispatch($request);
             if ($routeInfo[0] === Dispatcher::FOUND) {
-                $routeArguments = [];
-                foreach ($routeInfo[2] as $k => $v) {
-                    $routeArguments[$k] = urldecode($v);
-                }
-
                 $route = $this->router->lookupRoute($routeInfo[1]);
             }
         }

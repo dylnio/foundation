@@ -35,6 +35,13 @@ class TransactionMiddleware
                     }
                     newrelic_add_custom_parameter($field, $value);
                 }
+                $params = $route->getArguments();
+                foreach ($params as $field => $value) {
+                    if (is_array($value)) {
+                        $value = json_encode($value);
+                    }
+                    newrelic_add_custom_parameter($field, $value);
+                }
             }
         }
 
@@ -54,6 +61,9 @@ class TransactionMiddleware
                 }
 
                 $route = $this->router->lookupRoute($routeInfo[1]);
+                if ($route) {
+                    $route->setArguments($routeArguments);
+                }
             }
         }
 
