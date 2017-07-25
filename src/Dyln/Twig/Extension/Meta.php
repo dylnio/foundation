@@ -28,7 +28,9 @@ class Meta extends \Twig_Extension
         $html = '';
 
         $html .= '<title>' . $this->get('title', 'Welcome') . '</title>';
-        $html .= '<link rel="canonical" href="' . $this->get('canonical', '') . '">';
+        if ($this->get('canonical')) {
+            $html .= '<link rel="canonical" href="' . $this->get('canonical', '') . '">';
+        }
         $html .= '<meta name="description" content="' . $this->get('description', 'Welcome') . '" />';
         $html .= '<meta name="keywords" content="' . $this->get('keywords', '') . '" />';
         $html .= '<meta property="og:title" content="' . $this->get('og_title', $this->get('title', 'Welcome')) . '" />';
