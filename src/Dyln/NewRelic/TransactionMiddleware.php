@@ -30,6 +30,9 @@ class TransactionMiddleware
                 newrelic_name_transaction($route->getPattern());
                 $params = $request->getParams();
                 foreach ($params as $field => $value) {
+                    if (is_array($value)) {
+                        $value = json_encode($value);
+                    }
                     newrelic_add_custom_parameter($field, $value);
                 }
             }
