@@ -57,9 +57,9 @@ class Session
         return session_id();
     }
 
-    public function set($key, $value)
+    public function set($key, $value, int $ttl = 0)
     {
-        $this->getDefaultSegment()->set($key, $value);
+        $this->getDefaultSegment()->set($key, $value, $ttl);
 
         return true;
     }
