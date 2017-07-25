@@ -8,7 +8,7 @@ use Slim\Http\Response;
 use Slim\Route;
 use Slim\Router;
 
-class NameTransactionMiddleware
+class TransactionMiddleware
 {
     /** @var  Router */
     protected $router;
@@ -28,6 +28,10 @@ class NameTransactionMiddleware
             $route = $this->getRoute($request);
             if ($route) {
                 newrelic_name_transaction($route->getPattern());
+                $params = $request->getParams();
+                foreach ($params as $field => $value) {
+                    newrelic_add_custom_parameter($field, $value);
+                }
             }
         }
 
