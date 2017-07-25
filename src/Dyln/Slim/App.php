@@ -6,6 +6,7 @@ use DI\ContainerBuilder;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\RedisCache;
+use Dyln\Config\Config;
 use Dyln\DI\Container;
 use Dyln\Slim\Module\ModuleInterface;
 use Dyln\Util\ArrayUtil;
@@ -35,6 +36,7 @@ class App extends \Slim\App
         $container->set('app', $this);
         $container->set(App::class, $this);
         $container->set('app_params', $params);
+        $container->set('app_config', new Config($params));
         parent::__construct($container);
         $this->registerModules($container);
     }
