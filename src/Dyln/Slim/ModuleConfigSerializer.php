@@ -16,9 +16,8 @@ class ModuleConfigSerializer
         /** @noinspection PhpIncludeInspection */
         $params = array_merge($params, include ROOT_DIR . '/app/config/params.php');
         foreach ($moduleClasses as $moduleClass) {
-            $reflectionClass = new \ReflectionClass($moduleClass);
-            $file = $reflectionClass->getFileName();
-            $dir = dirname($file);
+            $bits = explode('\\', $moduleClass);
+            $dir = ROOT_DIR . '/app/src/Modules/' . $bits[2];
             $configFile = $dir . '/_config.php';
             if (file_exists($configFile)) {
                 /** @noinspection PhpIncludeInspection */

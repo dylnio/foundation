@@ -58,9 +58,15 @@ class AppEnv
 
     static public function env($key, $default = null)
     {
-        $value = getenv($key);
-        if (!$value) {
+        if (!self::hasEnv($key)) {
             return $default;
+        }
+        $value = $_ENV[$key];
+        if ($value === 'true') {
+            return true;
+        }
+        if ($value === 'false') {
+            return false;
         }
         if (strpos($value, '{{') !== false) {
             foreach (self::$placeholders as $placeholder) {
@@ -69,6 +75,11 @@ class AppEnv
         }
 
         return $value;
+    }
+
+    static public function hasEnv($key)
+    {
+        return isset($_ENV[$key]);
     }
 
     static public function isDebugEnabled()
