@@ -7,14 +7,12 @@ use SuperClosure\SerializableClosure;
 
 class ModuleConfigSerializer
 {
-    static public function combineModuleConfig($moduleClasses = [])
+    static public function combineModuleConfig($moduleClasses = [], $doSerialize = true)
     {
         $services = [];
         $params = [];
         /** @noinspection PhpIncludeInspection */
-        $services = array_merge($services, include ROOT_DIR . '/app/config/services.php');
-        /** @noinspection PhpIncludeInspection */
-        $services = array_merge($services, include ROOT_DIR . '/app/config/config.php');
+        $services = array_merge($services, include ROOT_DIR . '/app/config/services.php', include ROOT_DIR . '/app/config/config.php');
         /** @noinspection PhpIncludeInspection */
         $params = array_merge($params, include ROOT_DIR . '/app/config/params.php');
         foreach ($moduleClasses as $moduleClass) {
@@ -31,9 +29,11 @@ class ModuleConfigSerializer
                 $params = array_merge($params, $moduleParams);
             }
         }
-        foreach ($services as $key => $value) {
-            if ($value instanceof \Closure) {
-                $services[$key] = new SerializableClosure($value);
+        if ($doSerialize) {
+            foreach ($services as $key => $value) {
+                if ($value instanceof \Closure) {
+                    $services[$key] = new SerializableClosure($value);
+                }
             }
         }
 

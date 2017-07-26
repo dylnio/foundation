@@ -8,6 +8,7 @@ use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\RedisCache;
 use Dyln\Config\Config;
 use Dyln\DI\Container;
+use function Dyln\getin;
 use Dyln\Slim\Module\ModuleInterface;
 use Dyln\Util\ArrayUtil;
 use Interop\Container\ContainerInterface;
@@ -43,27 +44,32 @@ class App extends \Slim\App
 
     private function enhanceConfig($params = [])
     {
-        $purge = $_REQUEST['purge'] ?? false;
-        if ($purge && file_exists(CACHED_SERVICES_FILE)) {
-            unlink(CACHED_SERVICES_FILE);
-        }
-        if (file_exists(CACHED_SERVICES_FILE)) {
-            $serialized = file_get_contents(CACHED_SERVICES_FILE);
-        } else {
-            $modules = ArrayUtil::getIn($params, ['modules'], []);
-            $merged = ModuleConfigSerializer::combineModuleConfig($modules);
-            $serialized = serialize($merged);
-            file_put_contents(CACHED_SERVICES_FILE, $serialized);
-        }
-        if (!$serialized) {
-            $serialized = [];
-        }
-
-        $data = unserialize($serialized);
-        foreach ($data['services'] as $key => $value) {
-            if ($value instanceof SerializableClosure) {
-                $data['services'][$key] = $value->getClosure();
+        $doSerialize = getin($params, 'serialize_container', true);
+        $modules = ArrayUtil::getIn($params, ['modules'], []);
+        $merged = ModuleConfigSerializer::combineModuleConfig($modules, $doSerialize);
+        if ($doSerialize) {
+            $purge = $_REQUEST['purge'] ?? false;
+            if ($purge && file_exists(CACHED_SERVICES_FILE)) {
+                unlink(CACHED_SERVICES_FILE);
             }
+            if (file_exists(CACHED_SERVICES_FILE)) {
+                $serialized = file_get_contents(CACHED_SERVICES_FILE);
+            } else {
+                $serialized = serialize($merged);
+                file_put_contents(CACHED_SERVICES_FILE, $serialized);
+            }
+            if (!$serialized) {
+                $serialized = [];
+            }
+
+            $data = unserialize($serialized);
+            foreach ($data['services'] as $key => $value) {
+                if ($value instanceof SerializableClosure) {
+                    $data['services'][$key] = $value->getClosure();
+                }
+            }
+        } else {
+            $data = $merged;
         }
 
         return $data;
