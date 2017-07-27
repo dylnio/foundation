@@ -3,16 +3,17 @@
 namespace Dyln\Slim;
 
 use DI\ContainerBuilder;
+use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\RedisCache;
 use Dyln\Config\Config;
 use Dyln\DI\Container;
-use function Dyln\getin;
 use Dyln\Slim\Module\ModuleInterface;
 use Dyln\Util\ArrayUtil;
 use Interop\Container\ContainerInterface;
 use SuperClosure\SerializableClosure;
+use function Dyln\getin;
 
 class App extends \Slim\App
 {
@@ -88,6 +89,8 @@ class App extends \Slim\App
             $cache->setNamespace($params['di']['cache'][RedisCache::class]['prefix']);
 
             return $cache;
+        } elseif ($adapter == ApcuCache::class) {
+            return new ApcuCache();
         } elseif ($adapter == FilesystemCache::class) {
             return new FilesystemCache($params['di']['cache'][FilesystemCache::class]['dir']);
         } else {
