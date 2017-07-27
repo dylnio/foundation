@@ -77,6 +77,11 @@ class AppEnv
         return $value;
     }
 
+    static public function option($key, $default = null)
+    {
+        return self::env('_option.' . $key, $default);
+    }
+
     static public function hasEnv($key)
     {
         return isset($_ENV[$key]);
