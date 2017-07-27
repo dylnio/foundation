@@ -95,7 +95,7 @@ class App extends \Slim\App
         } else {
             $cache = new ArrayCache();
         }
-        $namespace = AppEnv::option('id');
+        $namespace = AppEnv::option('app_id');
         $cache->setNamespace($namespace);
 
         return $cache;
