@@ -88,8 +88,6 @@ class App extends \Slim\App
             $redis->select($params['di']['cache'][RedisCache::class]['db']);
             $cache->setRedis($redis);
             $cache->setNamespace($params['di']['cache'][RedisCache::class]['prefix']);
-
-            return $cache;
         } elseif ($adapter == ApcuCache::class) {
             $cache = new ApcuCache();
         } elseif ($adapter == FilesystemCache::class) {
