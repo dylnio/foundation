@@ -63,6 +63,15 @@ class Message
         return null;
     }
 
+    public function getErrorExrtra()
+    {
+        if ($this->isError()) {
+            return $this->errorExtra;
+        }
+
+        return [];
+    }
+
     public function setError($message, $code = 0)
     {
         $this->isError = true;
@@ -114,8 +123,8 @@ class Message
         }
 
         $this->errorMessage = $error['message'];
-        $this->errorCode = $error['code']??null;
-        $this->errorExtra = $error['extra']??null;
+        $this->errorCode = $error['code'] ?? null;
+        $this->errorExtra = $error['extra'] ?? null;
 
         return $this;
     }
