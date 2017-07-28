@@ -39,7 +39,7 @@ class Client
             return false;
         }
         $this->getRedis()->sAdd('queues', $element->getQueueName());
-        $length = $this->redis->rpush('queue:' . $element->getQueueName() . ':' . $element->getId(), $encodedItem);
+        $length = $this->redis->rpush('queue:' . $element->getQueueName(), $encodedItem);
         if ($length < 1) {
             return false;
         }
