@@ -35,6 +35,10 @@ class RedisSessionHandler implements \SessionHandlerInterface
         $this->host = $host;
         $this->port = $port;
         $this->db = $db;
+        $this->redis = new \Redis();
+        $this->redis->connect($host, $port);
+        $this->redis->setOption(\Redis::OPT_SERIALIZER, defined('Redis::SERIALIZER_IGBINARY') ? \Redis::SERIALIZER_IGBINARY : \Redis::SERIALIZER_PHP);
+        $this->redis->select($db);
     }
 
     /**
