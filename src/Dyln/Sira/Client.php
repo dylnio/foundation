@@ -47,6 +47,35 @@ class Client
         return true;
     }
 
+    public function fail(Element $element, $errorMessage)
+    {
+        $element->setError($errorMessage);
+        $encodedItem = $element->encode();
+        if ($encodedItem === false) {
+            return false;
+        }
+        $length = $this->getRedis()->rpush('queue:' . $element->getQueueName() . ':failed', $encodedItem);
+        if ($length < 1) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function success(Element $element)
+    {
+        $encodedItem = $element->encode();
+        if ($encodedItem === false) {
+            return false;
+        }
+        $length = $this->getRedis()->rpush('queue:' . $element->getQueueName() . ':success', $encodedItem);
+        if ($length < 1) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function remove(Element $element)
     {
         $counter = 0;
@@ -79,7 +108,35 @@ class Client
         $this->getRedis()->del($tempQueue);
 
         return $counter;
+    }
 
+    public function requeueFailed(Element $element)
+    {
+        $originalQueue = 'queue:' . $element->getQueueName() . ':failed';
+        $tempQueue = 'queue:' . $element->getQueueName() . ':temp_failed';
+        $requeueQueue = 'queue:' . $element->getQueueName() . ':requeue_failed';
+        $finished = false;
+        while (!$finished) {
+            $string = $this->getRedis()->rpoplpush($originalQueue, $tempQueue);
+            if (!empty($string)) {
+                if ($this->matchItem($string, $element)) {
+                    $this->push($element);
+                    $finished = true;
+                } else {
+                    $this->getRedis()->rpoplpush($tempQueue, $requeueQueue);
+                }
+            }
+        }
+        $finished = false;
+        while (!$finished) {
+            $string = $this->getRedis()->rpoplpush($requeueQueue, $originalQueue);
+            if (empty($string)) {
+                $finished = true;
+            }
+        }
+        // remove temp queue and requeue queue
+        $this->getRedis()->del($requeueQueue);
+        $this->getRedis()->del($tempQueue);
     }
 
     private function matchItem($string, Element $element)
@@ -102,6 +159,7 @@ class Client
         }
         $item = json_decode($item, true);
         $element = Element::fromArray($item);
+        $element->incTry();
         $element->start();
 
         return $element;
