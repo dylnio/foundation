@@ -39,7 +39,7 @@ class Client
             return false;
         }
         $this->getRedis()->sAdd('queues', $element->getQueueName());
-        $length = $this->redis->rpush('queue:' . $element->getQueueName(), $encodedItem);
+        $length = $this->getRedis()->rpush('queue:' . $element->getQueueName() . ':waiting', $encodedItem);
         if ($length < 1) {
             return false;
         }
@@ -47,18 +47,67 @@ class Client
         return true;
     }
 
-    public function pop($queue)
+    public function remove(Element $element)
     {
-        $item = $this->getRedis()->lPop('queue:' . $queue);
-        if (!$item) {
-            return false;
+        $counter = 0;
+        $originalQueue = 'queue:' . $element->getQueueName() . ':waiting';
+        $tempQueue = 'queue:' . $element->getQueueName() . ':temp';
+        $requeueQueue = 'queue:' . $element->getQueueName() . ':requeue';
+        $finished = false;
+        while (!$finished) {
+            $string = $this->getRedis()->rpoplpush($originalQueue, $tempQueue);
+            if (!empty($string)) {
+                if ($this->matchItem($string, $element)) {
+                    $this->getRedis()->rpop($tempQueue);
+                    $counter++;
+                } else {
+                    $this->getRedis()->rpoplpush($tempQueue, $requeueQueue);
+                }
+            } else {
+                $finished = true;
+            }
         }
-        $item = json_decode($item, true);
+        $finished = false;
+        while (!$finished) {
+            $string = $this->getRedis()->rpoplpush($requeueQueue, $originalQueue);
+            if (empty($string)) {
+                $finished = true;
+            }
+        }
+        // remove temp queue and requeue queue
+        $this->getRedis()->del($requeueQueue);
+        $this->getRedis()->del($tempQueue);
 
-        return Element::fromArray($item);
+        return $counter;
+
     }
 
-    private function getRedis()
+    private function matchItem($string, Element $element)
+    {
+        $decoded = json_decode($string, true);
+        $readElement = Element::fromArray($decoded);
+
+        return $element->getId() == $readElement->getId();
+    }
+
+    /**
+     * @param $queue
+     * @return null|Element
+     */
+    public function pop($queue)
+    {
+        $item = $this->getRedis()->lPop('queue:' . $queue . ':waiting');
+        if (!$item) {
+            return null;
+        }
+        $item = json_decode($item, true);
+        $element = Element::fromArray($item);
+        $element->start();
+
+        return $element;
+    }
+
+    public function getRedis()
     {
         if (!$this->redis) {
             $this->redis = new \Redis();

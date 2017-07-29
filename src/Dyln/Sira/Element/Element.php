@@ -8,6 +8,8 @@ class Element
     protected $data = [];
     protected $queueName;
     protected $callable;
+    protected $startTime;
+    protected $endTime;
 
     /**
      * Element constructor.
@@ -16,7 +18,7 @@ class Element
      * @param $callable
      * @param array $data
      */
-    public function __construct($id, $queueName, array $callable, $data = [])
+    public function __construct($id, $queueName, $callable, $data = [])
     {
         $this->id = $id;
         $this->queueName = $queueName;
@@ -43,6 +45,16 @@ class Element
     public function getId()
     {
         return $this->id;
+    }
+
+    public function start()
+    {
+        $this->startTime = time();
+    }
+
+    public function end()
+    {
+        $this->endTime = time();
     }
 
     static public function fromArray($data)
