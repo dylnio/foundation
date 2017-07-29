@@ -9,6 +9,7 @@ use Dyln\ApiClient\ResponseBodyMiddleware\ResponseBodyMiddlewareInterface;
 use Dyln\AppEnv;
 use Dyln\Collection\Collection;
 use Dyln\Guzzle\Cookie\SessionCookieJar;
+use Dyln\Http\Header\ExtraHeaderMiddleware;
 use Dyln\Message\Message;
 use Dyln\Message\MessageFactory;
 use Dyln\Util\ArrayUtil;
@@ -71,6 +72,13 @@ class ApiClient
         }
         try {
             $res = $this->request($method, $path, $requestOptions);
+            $responseHeaders = $res->getHeaders();
+            foreach ($responseHeaders as $key => $value) {
+                if (strpos($key, '__') === 0) {
+                    $key .= '_API';
+                    ExtraHeaderMiddleware::$headers[$key] = $value[0];
+                }
+            }
             $body = (string)$res->getBody();
             $body = $this->applyResponseBodyMiddlewares($body);
 
