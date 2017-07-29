@@ -47,9 +47,8 @@ class Client
         return true;
     }
 
-    public function fail(Element $element, $errorMessage)
+    public function fail(Element $element)
     {
-        $element->setError($errorMessage);
         $encodedItem = $element->encode();
         if ($encodedItem === false) {
             return false;

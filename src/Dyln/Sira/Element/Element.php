@@ -108,4 +108,9 @@ class Element
     {
         return $this->try < $this->maxTry;
     }
+
+    public function isError()
+    {
+        return isset($this->error[$this->try]);
+    }
 }
