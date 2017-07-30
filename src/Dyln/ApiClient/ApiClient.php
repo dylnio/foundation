@@ -8,6 +8,7 @@ use Dyln\ApiClient\ResponseBodyMiddleware\JsonDecodeMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\ResponseBodyMiddlewareInterface;
 use Dyln\AppEnv;
 use Dyln\Collection\Collection;
+use Dyln\Debugbar\Debugbar;
 use Dyln\Guzzle\Cookie\SessionCookieJar;
 use Dyln\Http\Header\ExtraHeaderMiddleware;
 use Dyln\Message\Message;
@@ -18,6 +19,8 @@ use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Cookie\SetCookie;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Psr7\Request;
+use Namshi\Cuzzle\Formatter\CurlFormatter;
 
 class ApiClient
 {
@@ -145,7 +148,9 @@ class ApiClient
     private function request($method, $path, $options)
     {
         $options['cookies'] = $this->getCookieJar();
-        $res = $this->getHttpClient()->request($method, $this->prepareUri($path), $options);
+        $request = new Request($method, $this->prepareUri($path), $options['headers'] ?? [], $options['body'] ?? null);
+        Debugbar::add('ApiRequest', ['curl' => (new CurlFormatter())->format($request, $options)]);
+        $res = $this->getHttpClient()->send($request);
         $cookieString = $res->getHeaderLine('Set-Cookie');
         $cookie = SetCookie::fromString($cookieString);
         $cookie->setDomain('0');
