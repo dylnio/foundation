@@ -79,7 +79,9 @@ abstract class AbstractModel implements ModelInterface
         if (isset($this->data[$fieldName])) {
             return $this->data[$fieldName];
         }
-
+        if ($default instanceof \Closure) {
+            return $default();
+        }
         return $default;
     }
 
