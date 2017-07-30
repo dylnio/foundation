@@ -68,6 +68,9 @@ class AppEnv
         if ($value === 'false') {
             return false;
         }
+        if ($value === 'null') {
+            return null;
+        }
         if (strpos($value, '{{') !== false) {
             foreach (self::$placeholders as $placeholder) {
                 $value = str_replace('{{' . $placeholder . '}}', self::env($placeholder), $value);
