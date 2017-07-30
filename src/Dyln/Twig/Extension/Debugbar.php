@@ -45,6 +45,12 @@ class Debugbar extends \Twig_Extension
                         'time'  => 0,
                         'data'  => $sectionData,
                     ];
+                } elseif ($sectionName == 'ApiRequest') {
+                    $data[$sectionName] = [
+                        'count' => 1,
+                        'time'  => 0,
+                        'data'  => $sectionData,
+                    ];
                 } else {
                     $sectionData = Collection::create($sectionData);
                     $data[$sectionName] = [
