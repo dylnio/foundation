@@ -16,7 +16,7 @@ class Segment
         $this->name = $this->cleanKey($name);
         $this->session = &$session;
         $this->session[$this->name] = isset($this->session[$this->name]) ? $this->session[$this->name] : [];
-        $this->session[$this->name][self::EXPIRY_KEY_NAME] = [];
+        $this->session[$this->name][self::EXPIRY_KEY_NAME] = $this->session[$this->name][self::EXPIRY_KEY_NAME] ?? [];
     }
 
     private function cleanKey($key)

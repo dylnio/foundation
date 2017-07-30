@@ -192,7 +192,7 @@ class MongoSessionHandler
 //            if ($existingHash != $newHash) {
             $sessionData['data'] = MongofyKeys::safe($data);
 //            }
-            $this->sessionDataCollection->updateOne(['_id' => $id], ['$set' => $sessionData], $options);
+            $res = $this->sessionDataCollection->updateOne(['_id' => $id], ['$set' => $sessionData], $options);
             $session = [
                 'expire' => time() + intval(ini_get('session.gc_maxlifetime')),
                 'hash'   => $newHash,
