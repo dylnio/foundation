@@ -50,10 +50,6 @@ class App extends \Slim\App
         $modules = ArrayUtil::getIn($params, ['modules'], []);
         $merged = ModuleConfigSerializer::combineModuleConfig($modules, $doSerialize);
         if ($doSerialize) {
-            $purge = $_REQUEST['purge'] ?? false;
-            if ($purge && file_exists(CACHED_SERVICES_FILE)) {
-                unlink(CACHED_SERVICES_FILE);
-            }
             if (file_exists(CACHED_SERVICES_FILE)) {
                 $serialized = file_get_contents(CACHED_SERVICES_FILE);
             } else {
@@ -141,5 +137,4 @@ class App extends \Slim\App
     {
         return $this->delete($pattern, $actionClassName . ':dispatch');
     }
-
 }
