@@ -132,10 +132,13 @@ class ApiClient
         return $this->httpClient;
     }
 
-    private function prepareUri($path)
+    private function prepareUri($path, $query = [])
     {
         $baseUrl = rtrim(str_replace(['http://', 'https://'], '', $this->baseUrl), '/');
         $path = ltrim($path, '/');
+        if ($query) {
+            $path .= '?' . http_build_query($query);
+        }
 
         return $baseUrl . '/' . $path;
     }
@@ -148,7 +151,8 @@ class ApiClient
     private function request($method, $path, $options)
     {
         $options['cookies'] = $this->getCookieJar();
-        $request = new Request($method, $this->prepareUri($path), $options['headers'] ?? [], $options['body'] ?? null);
+        $query = $options['query'] ?? [];
+        $request = new Request($method, $this->prepareUri($path, $query), $options['headers'] ?? [], $options['body'] ?? null);
         Debugbar::add('ApiRequest', ['curl' => (new CurlFormatter())->format($request, $options)]);
         $res = $this->getHttpClient()->send($request);
         $cookieString = $res->getHeaderLine('Set-Cookie');
