@@ -23,7 +23,9 @@
     "m6web/firewall": "^1.0",
     "monolog/monolog": "^1.22",
     "html2text/html2text": "^4.0",
-    "jeremeamia/superclosure": "^2.3"
+    "jeremeamia/superclosure": "^2.3",
+    "namshi/cuzzle": "^2.0@dev",
+    "guzzlehttp/guzzle": "^6.2@dev"
   },
   "require-dev": {},
   "autoload": {
