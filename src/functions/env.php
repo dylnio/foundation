@@ -31,6 +31,15 @@ if (!function_exists('Dyln\_load_env_')) {
             $name = $prefix . '.' . $name;
         }
         $value = trim($value);
+        if (strtolower($value) == 'true') {
+            $value = true;
+        }
+        if (strtolower($value) == 'false') {
+            $value = false;
+        }
+        if (strtolower($value) == 'null') {
+            $value = null;
+        }
         if (function_exists('apache_getenv') && function_exists('apache_setenv') && apache_getenv($name)) {
             apache_setenv($name, $value);
         }
