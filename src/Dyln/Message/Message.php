@@ -63,7 +63,7 @@ class Message
         return null;
     }
 
-    public function getErrorExrtra()
+    public function getErrorExtra()
     {
         if ($this->isError()) {
             return $this->errorExtra;
