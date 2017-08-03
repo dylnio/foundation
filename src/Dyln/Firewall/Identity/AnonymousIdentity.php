@@ -65,4 +65,9 @@ class AnonymousIdentity implements IdentityInterface
     {
         return null;
     }
+
+    public function getUser()
+    {
+        return null;
+    }
 }
