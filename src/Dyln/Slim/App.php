@@ -28,7 +28,7 @@ class App extends \Slim\App
         $containerBuilder = new ContainerBuilder($containerClass);
         $config = $this->mergeModuleConfigs();
         $services = array_merge($services, getin($config, ['services'], []));
-        Config::overwrite(getin($config, ['params'], []));
+        Config::merge(getin($config, ['params'], []));
 
         $containerBuilder->addDefinitions($services);
         $cache = $this->getDiCache(Config::get(['di.cache']));

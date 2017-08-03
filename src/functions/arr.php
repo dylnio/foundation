@@ -9,4 +9,9 @@ if (!function_exists('Dyln\getin')) {
     {
         return ArrayUtil::getIn($array, $keys, $default);
     }
+
+    function has($array, $key)
+    {
+        return ArrayUtil::has($array, $key);
+    }
 }

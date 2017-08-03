@@ -53,6 +53,27 @@ class ArrayUtil
         return is_null($current) ? $default : $current;
     }
 
+    static public function has($array, $key)
+    {
+        if (is_array($key)) {
+            $key = implode('.', $key);
+        }
+        if (empty($array) || is_null($key)) {
+            return false;
+        }
+        if (array_key_exists($key, $array)) {
+            return true;
+        }
+        foreach (explode('.', $key) as $segment) {
+            if (!is_array($array) || !array_key_exists($segment, $array)) {
+                return false;
+            }
+            $array = $array[$segment];
+        }
+
+        return true;
+    }
+
     static public function isAssoc(array $array)
     {
         if ([] === $array) return false;
