@@ -6,34 +6,26 @@ use function Dyln\getin;
 
 class Config
 {
-    protected $config;
+    static protected $config;
 
-    /**
-     * Config constructor.
-     * @param $config
-     */
-    public function __construct($config)
+    static public function load($config = [])
     {
-        $this->config = $config;
+        self::$config = $config;
     }
 
-    public function get($key, $default = null)
+    static public function overwrite($overwrite = [])
     {
-        return getin($this->config, $key, $default);
+        self::$config = array_merge(self::$config, $overwrite);
     }
 
-    public function getSub($key)
+    static public function get($key, $default = null)
     {
-        $value = $this->get($key, []);
-        if (!is_array($value)) {
-            throw new \Exception('new value is not array');
-        }
-        return new self($value);
+        return getin(self::$config, $key, $default);
     }
 
-    public function toArray()
+    static public function toArray()
     {
-        return $this->config;
+        return self::$config;
     }
 
 }

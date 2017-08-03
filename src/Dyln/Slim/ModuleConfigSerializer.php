@@ -2,19 +2,14 @@
 
 namespace Dyln\Slim;
 
-use Dyln\Util\ArrayUtil;
-use SuperClosure\SerializableClosure;
+use function Dyln\getin;
 
 class ModuleConfigSerializer
 {
-    static public function combineModuleConfig($moduleClasses = [], $doSerialize = true)
+    static public function combineModuleConfig($moduleClasses = [])
     {
         $services = [];
         $params = [];
-        /** @noinspection PhpIncludeInspection */
-        $services = array_merge($services, include ROOT_DIR . '/app/config/services.php', include ROOT_DIR . '/app/config/config.php');
-        /** @noinspection PhpIncludeInspection */
-        $params = array_merge($params, include ROOT_DIR . '/app/config/params.php');
         foreach ($moduleClasses as $moduleClass) {
             $ref = new \ReflectionClass($moduleClass);
             $dir = dirname($ref->getFileName());
@@ -23,21 +18,17 @@ class ModuleConfigSerializer
                 /** @noinspection PhpIncludeInspection */
                 $config = include $configFile;
                 if ($config) {
-                    $moduleServices = ArrayUtil::getIn($config, ['services'], []);
-                    $moduleParams = ArrayUtil::getIn($config, ['params'], []);
+                    $moduleServices = getin($config, ['services'], []);
+                    $moduleParams = getin($config, ['params'], []);
                     $services = array_merge($services, $moduleServices);
                     $params = array_merge($params, $moduleParams);
                 }
             }
         }
-        if ($doSerialize) {
-            foreach ($services as $key => $value) {
-                if ($value instanceof \Closure) {
-                    $services[$key] = new SerializableClosure($value);
-                }
-            }
-        }
 
-        return ['services' => $services, 'params' => $params];
+        return [
+            'services' => $services,
+            'params'   => $params,
+        ];
     }
 }

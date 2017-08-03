@@ -11,9 +11,7 @@ use Dyln\AppEnv;
 use Dyln\Config\Config;
 use Dyln\DI\Container;
 use Dyln\Slim\Module\ModuleInterface;
-use Dyln\Util\ArrayUtil;
 use Interop\Container\ContainerInterface;
-use SuperClosure\SerializableClosure;
 use function Dyln\getin;
 
 class App extends \Slim\App
@@ -21,73 +19,50 @@ class App extends \Slim\App
     /** @var ModuleInterface[] */
     protected $modules = [];
 
-    public function __construct($params = [])
+    public function __construct($services = [])
     {
         if (!defined('CACHED_SERVICES_FILE')) {
             define('CACHED_SERVICES_FILE', '/tmp/__services.cache.php');
         }
-        $containerClass = $params['container_class'] ?? Container::class;
+        $containerClass = Config::get('container_class', Container::class);
         $containerBuilder = new ContainerBuilder($containerClass);
-        $config = $this->enhanceConfig($params);
-        $services = ArrayUtil::getIn($config, ['services'], []);
-        $params = array_merge($params, ArrayUtil::getIn($config, ['params'], []));
+        $config = $this->mergeModuleConfigs();
+        $services = array_merge($services, getin($config, ['services'], []));
+        Config::overwrite(getin($config, ['params'], []));
 
         $containerBuilder->addDefinitions($services);
-        $cache = $this->getDiCache($params);
+        $cache = $this->getDiCache(Config::get(['di.cache']));
         $containerBuilder->setDefinitionCache($cache);
         $container = $containerBuilder->build();
         $container->set('app', $this);
         $container->set(App::class, $this);
-        $container->set('app_params', $params);
-        $container->set('app_config', new Config($params));
         parent::__construct($container);
         $this->registerModules($container);
     }
 
-    private function enhanceConfig($params = [])
+    private function mergeModuleConfigs()
     {
-        $doSerialize = getin($params, 'serialize_container', true);
-        $modules = ArrayUtil::getIn($params, ['modules'], []);
-        $merged = ModuleConfigSerializer::combineModuleConfig($modules, $doSerialize);
-        if ($doSerialize) {
-            if (file_exists(CACHED_SERVICES_FILE)) {
-                $serialized = file_get_contents(CACHED_SERVICES_FILE);
-            } else {
-                $serialized = serialize($merged);
-                file_put_contents(CACHED_SERVICES_FILE, $serialized);
-            }
-            if (!$serialized) {
-                $serialized = [];
-            }
+        $modules = Config::get('modules', []);
+        $merged = ModuleConfigSerializer::combineModuleConfig($modules);
 
-            $data = unserialize($serialized);
-            foreach ($data['services'] as $key => $value) {
-                if ($value instanceof SerializableClosure) {
-                    $data['services'][$key] = $value->getClosure();
-                }
-            }
-        } else {
-            $data = $merged;
-        }
-
-        return $data;
+        return $merged;
     }
 
     private function getDiCache($params = [])
     {
-        $adapter = $params['di']['cache']['adapter'];
+        $adapter = $params['adapter'];
         if ($adapter == RedisCache::class) {
             $cache = new RedisCache();
             $redis = new \Redis();
-            $redis->connect($params['di']['cache'][RedisCache::class]['host'], $params['di']['cache'][RedisCache::class]['port']);
+            $redis->connect($params[RedisCache::class]['host'], $params[RedisCache::class]['port']);
             $redis->setOption(\Redis::OPT_SERIALIZER, defined('Redis::SERIALIZER_IGBINARY') ? \Redis::SERIALIZER_IGBINARY : \Redis::SERIALIZER_PHP);
-            $redis->select($params['di']['cache'][RedisCache::class]['db']);
+            $redis->select($params[RedisCache::class]['db']);
             $cache->setRedis($redis);
-            $cache->setNamespace($params['di']['cache'][RedisCache::class]['prefix']);
+            $cache->setNamespace($params[RedisCache::class]['prefix']);
         } elseif ($adapter == ApcuCache::class) {
             $cache = new ApcuCache();
         } elseif ($adapter == FilesystemCache::class) {
-            $cache = new FilesystemCache($params['di']['cache'][FilesystemCache::class]['dir']);
+            $cache = new FilesystemCache($params[FilesystemCache::class]['dir']);
         } else {
             $cache = new ArrayCache();
         }
@@ -99,8 +74,7 @@ class App extends \Slim\App
 
     private function registerModules(ContainerInterface $container)
     {
-        $modules = $container->get('app_params')['modules'];
-        $modules = array_values(array_unique($modules));
+        $modules = array_values(array_unique(Config::get('modules', [])));
         foreach ($modules as $moduleClass) {
             /** @var ModuleInterface $module */
             $module = $container->get($moduleClass);
@@ -108,10 +82,10 @@ class App extends \Slim\App
         }
     }
 
-    public function boot($params = [])
+    public function boot()
     {
         foreach ($this->modules as $module) {
-            $module->init($params);
+            $module->init();
         }
         foreach ($this->modules as $module) {
             $module->boot();
