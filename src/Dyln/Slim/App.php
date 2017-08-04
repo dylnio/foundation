@@ -24,7 +24,7 @@ class App extends \Slim\App
         if (!defined('CACHED_SERVICES_FILE')) {
             define('CACHED_SERVICES_FILE', '/tmp/__services.cache.php');
         }
-        $containerClass = Config::get('container_class', Container::class);
+        $containerClass = Config::get('di.container_class', Container::class);
         $containerBuilder = new ContainerBuilder($containerClass);
         $config = $this->mergeModuleConfigs();
         $services = array_merge($services, getin($config, ['services'], []));
