@@ -7,7 +7,7 @@ use function Dyln\has;
 
 class Config
 {
-    static protected $config;
+    static protected $config = [];
     static protected $overwrite = [];
 
     static public function load($config = [])
