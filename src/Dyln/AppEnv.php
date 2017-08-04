@@ -2,6 +2,7 @@
 
 namespace Dyln;
 
+use Dyln\Config\Config;
 use Dyln\Util\BooleanUtil;
 
 class AppEnv
@@ -92,11 +93,11 @@ class AppEnv
 
     static public function isDebugEnabled()
     {
-        $debug = BooleanUtil::getBool(AppEnv::env('app.debug', false));
+        $debug = BooleanUtil::getBool(Config::get('app.debug.enabled', false));
         if (!$debug) {
             $overwrite = $_GET['debug'] ?? $_COOKIE['debug'] ?? null;
             if ($overwrite) {
-                $debug = $overwrite === AppEnv::env('app.debug.url_key');
+                $debug = $overwrite === Config::get('app.debug.url_key');
             }
         }
 
@@ -108,11 +109,11 @@ class AppEnv
         if (!self::isDebugEnabled()) {
             return false;
         }
-        $bar = BooleanUtil::getBool(AppEnv::env('app.debugbar', false));
+        $bar = BooleanUtil::getBool(Config::get('app.debug.debugbar', false));
         if (!$bar) {
             $overwrite = $_GET['debug_bar'] ?? $_COOKIE['debug_bar'] ?? null;
             if ($overwrite) {
-                $bar = $overwrite === AppEnv::env('app.debug.url_key');
+                $bar = $overwrite === Config::get('app.debug.url_key');
             }
         }
 

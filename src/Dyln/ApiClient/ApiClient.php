@@ -8,6 +8,7 @@ use Dyln\ApiClient\ResponseBodyMiddleware\JsonDecodeMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\ResponseBodyMiddlewareInterface;
 use Dyln\AppEnv;
 use Dyln\Collection\Collection;
+use Dyln\Config\Config;
 use Dyln\Debugbar\Debugbar;
 use Dyln\Guzzle\Cookie\SessionCookieJar;
 use Dyln\Http\Header\ExtraHeaderMiddleware;
@@ -58,10 +59,10 @@ class ApiClient
         $this->addResponseBodyMiddleware(new ConvertToMessageMiddleware());
         if (AppEnv::isDebugEnabled()) {
             $query['XDEBUG_SESSION_START'] = 'PHPSTORM';
-            $query['debug'] = AppEnv::env('app.debug.url_key');
+            $query['debug'] = Config::get('app.debug.url_key');
         }
         if (AppEnv::isDebugBarEnabled()) {
-            $query['debug_bar'] = AppEnv::env('app.debug.url_key');
+            $query['debug_bar'] = Config::get('app.debug.url_key');
         }
         $headers = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
         $requestOptions = [

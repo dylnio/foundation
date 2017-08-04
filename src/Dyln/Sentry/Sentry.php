@@ -3,6 +3,7 @@
 namespace Dyln\Sentry;
 
 use Dyln\AppEnv;
+use Dyln\Config\Config;
 use Dyln\Sentry\Exception\NotLoggableException;
 
 class Sentry
@@ -20,7 +21,7 @@ class Sentry
 
     static public function getInstance()
     {
-        $sentryUrl = AppEnv::env('sentry.url');
+        $sentryUrl = Config::get('sentry.url');
         if (!self::$instance) {
             $client = new \Raven_Client($sentryUrl);
             self::$instance = new self($client, $sentryUrl ? true : false);
