@@ -7,7 +7,7 @@ use Dyln\Util\BooleanUtil;
 
 class AppEnv
 {
-    const DEFAULT_ENV = 'default';
+    const DEFAULT_ENV = 'development';
     const LIVE_ENV = 'production';
 
     static private $placeholders = [
@@ -26,7 +26,7 @@ class AppEnv
         if (!defined('APPLICATION_ENV')) {
             $env = getenv('APPLICATION_ENV') ?? get_cfg_var('APPLICATION_ENV') ?? self::getAppEnvFromServerName();
             if (!$env) {
-                throw new \Exception('APPLICATION_ENV is not set');
+                $env = self::DEFAULT_ENV;
             }
             define('APPLICATION_ENV', $env);
         }

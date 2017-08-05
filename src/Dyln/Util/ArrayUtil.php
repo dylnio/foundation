@@ -22,12 +22,6 @@ class ArrayUtil
         return array_pop(array_values($array));
     }
 
-    /**
-     * @param array $array
-     * @param $keys
-     * @param null $default
-     * @return mixed
-     */
     static public function getIn(array $array, $keys, $default = null)
     {
         if (is_null($keys)) {
