@@ -38,10 +38,10 @@ class Config
         $value = getin(self::$config, $key, $default);
         if (has(self::$manual, $key)) {
             $manualValue = getin(self::$manual, $key, $default);
-            $value = is_array($value) ? array_replace_recursive($value, $manualValue) : $value;
+            $value = is_array($value) ? array_replace_recursive($value, $manualValue) : $manualValue;
         } else if (has(self::$overwrite, $key)) {
             $overwriteValue = getin(self::$overwrite, $key, $default);
-            $value = is_array($value) ? array_replace_recursive($value, $overwriteValue) : $value;
+            $value = is_array($value) ? array_replace_recursive($value, $overwriteValue) : $overwriteValue;
         }
 
         return $value;
