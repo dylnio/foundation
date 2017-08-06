@@ -9,10 +9,18 @@ class Config
 {
     static protected $config = [];
     static protected $overwrite = [];
+    static protected $manual = [];
 
     static public function load($config = [])
     {
         self::$config = $config;
+    }
+
+    static public function loadFromFiles($files = [])
+    {
+        foreach ($files as $file) {
+            self::merge(require_once $file);
+        }
     }
 
     static public function overwrite($overwrite = [])
@@ -28,16 +36,20 @@ class Config
     static public function get($key, $default = null)
     {
         $value = getin(self::$config, $key, $default);
-        if (has(self::$overwrite, $key)) {
+        if (has(self::$manual, $key)) {
+            $manualValue = getin(self::$manual, $key, $default);
+            $value = is_array($value) ? array_replace_recursive($value, $manualValue) : $value;
+        } else if (has(self::$overwrite, $key)) {
             $overwriteValue = getin(self::$overwrite, $key, $default);
-            if (is_array($value)) {
-                $value = array_replace_recursive($value, $overwriteValue);
-            } else {
-                $value = $overwriteValue;
-            }
+            $value = is_array($value) ? array_replace_recursive($value, $overwriteValue) : $value;
         }
 
         return $value;
+    }
+
+    static public function set($key, $value)
+    {
+        self::$manual[$key] = $value;
     }
 
     static public function toArray()
@@ -45,4 +57,8 @@ class Config
         array_replace_recursive(self::$config, self::$overwrite);
     }
 
+    static public function value($value)
+    {
+
+    }
 }
