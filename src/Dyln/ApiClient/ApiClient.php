@@ -154,7 +154,7 @@ class ApiClient
         $options['cookies'] = $this->getCookieJar();
         $query = $options['query'] ?? [];
         $request = new Request($method, $this->prepareUri($path, $query), $options['headers'] ?? [], $options['body'] ?? null);
-        Debugbar::add('ApiRequest', ['curl' => (new CurlFormatter())->format($request, $options)]);
+        Debugbar::add('ApiRequest', ['curl' => (new CurlFormatter(9999))->format($request, $options)]);
         $res = $this->getHttpClient()->send($request);
         $cookieString = $res->getHeaderLine('Set-Cookie');
         $cookie = SetCookie::fromString($cookieString);
