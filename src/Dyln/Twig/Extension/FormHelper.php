@@ -32,6 +32,7 @@ class FormHelper extends \Twig_Extension
             new \Twig_SimpleFunction('getFormFieldValue', [$this, 'getValue']),
             new \Twig_SimpleFunction('getFormFieldError', [$this, 'getError']),
             new \Twig_SimpleFunction('isFormValid', [$this, 'isValid']),
+            new \Twig_SimpleFunction('getFormValues', [$this, 'getValues']),
         ];
     }
 
@@ -49,6 +50,16 @@ class FormHelper extends \Twig_Extension
         $formHelper = $this->getHelper($formname);
         if ($formHelper) {
             return $formHelper->getValue($field, $default);
+        }
+
+        return $default;
+    }
+
+    public function getValues($default = [], $formname = 'form')
+    {
+        $formHelper = $this->getHelper($formname);
+        if ($formHelper) {
+            return $formHelper->getValues();
         }
 
         return $default;
