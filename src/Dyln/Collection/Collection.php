@@ -312,7 +312,9 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         usort($data, function ($a, $b) use ($key) {
             $valA = ArrayUtil::getIn($a, $key);
             $valB = ArrayUtil::getIn($b, $key);
-            if ($valA == $valB) return 0;
+            if ($valA == $valB) {
+                return 0;
+            }
 
             return $valA > $valB ? -1 : 1;
         });
@@ -326,7 +328,9 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         usort($data, function ($a, $b) use ($key) {
             $valA = ArrayUtil::getIn($a, $key);
             $valB = ArrayUtil::getIn($b, $key);
-            if ($valA == $valB) return 0;
+            if ($valA == $valB) {
+                return 0;
+            }
 
             return $valA > $valB ? 1 : -1;
         });
@@ -398,7 +402,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return new static($sliced);
     }
 
-    public function forEach (callable $callback)
+    public function forEach(callable $callback)
     {
         foreach ($this->data as $index => $item) {
             $callback($item, $index);

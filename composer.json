@@ -27,7 +27,9 @@
     "namshi/cuzzle": "^2.0@dev",
     "guzzlehttp/guzzle": "^6.2@dev"
   },
-  "require-dev": {},
+  "require-dev": {
+    "squizlabs/php_codesniffer": "^3.0"
+  },
   "autoload": {
     "files": [
       "src/functions/init.php"

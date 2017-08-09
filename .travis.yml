@@ -6,4 +6,5 @@ php:
 before_script:
   - pecl -q install mongodb && echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
   - composer install -o
+  - vender/bin/phpcs --standard=./phpcs.xml ./src
 script: echo '1'

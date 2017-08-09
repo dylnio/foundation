@@ -70,7 +70,9 @@ class ArrayUtil
 
     static public function isAssoc(array $array)
     {
-        if ([] === $array) return false;
+        if ([] === $array) {
+            return false;
+        }
 
         return array_keys($array) !== range(0, count($array) - 1);
     }

@@ -148,7 +148,6 @@ class RedisSessionHandler implements \SessionHandlerInterface
             }
         }
 
-
         return false;
     }
 

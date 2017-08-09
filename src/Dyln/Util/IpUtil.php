@@ -16,7 +16,7 @@ class IpUtil
         $location = false;
         if (function_exists('geoip_record_by_name')) {
             $oe = set_error_handler('process_error_backtrace_null');
-            $location = @geoip_record_by_name($ipAddress);
+            $location = geoip_record_by_name($ipAddress);
             set_error_handler($oe);
         }
         if ($location && !empty($location['city'])) {

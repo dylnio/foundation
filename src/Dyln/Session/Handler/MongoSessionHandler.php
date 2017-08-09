@@ -109,7 +109,6 @@ class MongoSessionHandler
             }
         }
 
-
         return false;
     }
 

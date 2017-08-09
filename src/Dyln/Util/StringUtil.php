@@ -88,8 +88,9 @@ class StringUtil
         foreach ($namespaces as $prefix => $namespace) {
             foreach ($xml->attributes($namespace) as $attributeName => $attribute) {
                 //replace characters in attribute name
-                if ($options['keySearch']) $attributeName =
-                    str_replace($options['keySearch'], $options['keyReplace'], $attributeName);
+                if ($options['keySearch']) {
+                    $attributeName = str_replace($options['keySearch'], $options['keyReplace'], $attributeName);
+                }
                 $attributeKey = $options['attributePrefix']
                     . ($prefix ? $prefix . $options['namespaceSeparator'] : '')
                     . $attributeName;
@@ -104,10 +105,13 @@ class StringUtil
                 $childArray = self::xmlToArray($childXml, $options);
                 list($childTagName, $childProperties) = each($childArray);
                 //replace characters in tag name
-                if ($options['keySearch']) $childTagName =
-                    str_replace($options['keySearch'], $options['keyReplace'], $childTagName);
+                if ($options['keySearch']) {
+                    $childTagName = str_replace($options['keySearch'], $options['keyReplace'], $childTagName);
+                }
                 //add namespace prefix, if any
-                if ($prefix) $childTagName = $prefix . $options['namespaceSeparator'] . $childTagName;
+                if ($prefix) {
+                    $childTagName = $prefix . $options['namespaceSeparator'] . $childTagName;
+                }
                 if (!isset($tagsArray[$childTagName])) {
                     //only entry with this key
                     //test if tags of this type should always be arrays, no matter the element count
@@ -129,7 +133,9 @@ class StringUtil
         //get text content of node
         $textContentArray = [];
         $plainText = trim((string)$xml);
-        if ($plainText !== '') $textContentArray[$options['textContent']] = $plainText;
+        if ($plainText !== '') {
+            $textContentArray[$options['textContent']] = $plainText;
+        }
         //stick it all together
         $propertiesArray = !$options['autoText'] || $attributesArray || $tagsArray || ($plainText === '')
             ? array_merge($attributesArray, $tagsArray, $textContentArray) : $plainText;
