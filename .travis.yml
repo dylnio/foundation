@@ -4,4 +4,4 @@ dist: trusty
 php:
   - '7.0'
 before_script:
-  - ./composer.phar install -o
+  - composer install -o
