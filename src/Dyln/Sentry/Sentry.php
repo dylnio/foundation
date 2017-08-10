@@ -48,9 +48,6 @@ class Sentry
             });
             $data['tags'] = $tags;
             self::getInstance()->client->captureMessage($message, $params, $data, $stack, $vars);
-            if (extension_loaded('newrelic')) {
-                newrelic_notice_error($message);
-            }
         }
     }
 
@@ -82,9 +79,6 @@ class Sentry
     {
         if ($e instanceof NotLoggableException) {
             return;
-        }
-        if (extension_loaded('newrelic')) {
-            newrelic_notice_error($e->getMessage(), $e);
         }
         if (self::getInstance()->enabled) {
             self::getInstance()->client->captureException($e);
