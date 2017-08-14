@@ -43,4 +43,25 @@ class JsonResponse extends Response
     {
         return $this->isError;
     }
+
+    public function getErrorMessage()
+    {
+        $body = json_decode((string)$this->body, true);
+
+        return $body['message'] ?? null;
+    }
+
+    public function getErrorCode()
+    {
+        $body = json_decode((string)$this->body, true);
+
+        return $body['code'] ?? null;
+    }
+
+    public function getErrorExtra()
+    {
+        $body = json_decode((string)$this->body, true);
+
+        return $body['extra'] ?? [];
+    }
 }
