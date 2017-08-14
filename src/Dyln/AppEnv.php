@@ -9,6 +9,7 @@ class AppEnv
 {
     const DEFAULT_ENV = 'development';
     const LIVE_ENV = 'production';
+    const TEST_ENV = 'test';
 
     static private $placeholders = [
         'ROOT_DIR',
@@ -55,6 +56,11 @@ class AppEnv
     static public function isLive()
     {
         return self::getAppEnv() == self::LIVE_ENV;
+    }
+
+    static public function isTest()
+    {
+        return self::getAppEnv() == self::TEST_ENV;
     }
 
     static public function env($key, $default = null)
