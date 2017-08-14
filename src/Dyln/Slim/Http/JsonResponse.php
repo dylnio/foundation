@@ -41,12 +41,15 @@ class JsonResponse extends Response
 
     public function isError()
     {
-        return $this->isError;
+        return $this->isError || ($this->getStatusCode() == 500);
     }
 
     public function getErrorMessage()
     {
         $body = json_decode((string)$this->body, true);
+        if ($this->getStatusCode() == 500) {
+            return $body['message'] ?? 'No error message';
+        }
 
         return $body['message'] ?? null;
     }
@@ -54,6 +57,9 @@ class JsonResponse extends Response
     public function getErrorCode()
     {
         $body = json_decode((string)$this->body, true);
+        if ($this->getStatusCode() == 500) {
+            return 500;
+        }
 
         return $body['code'] ?? null;
     }
@@ -61,6 +67,9 @@ class JsonResponse extends Response
     public function getErrorExtra()
     {
         $body = json_decode((string)$this->body, true);
+        if ($this->getStatusCode() == 500) {
+            return $body['error'] ?? $body['exception'] ?? [];
+        }
 
         return $body['extra'] ?? [];
     }
