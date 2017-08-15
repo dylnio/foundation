@@ -105,7 +105,7 @@ abstract class AbstractRepository implements RepositoryInterface
         return $model;
     }
 
-    public function hydrateCursor(Cursor $cursor = null)
+    public function hydrateCursor($cursor = null)
     {
         $collection = new Collection();
         if (!$cursor) {

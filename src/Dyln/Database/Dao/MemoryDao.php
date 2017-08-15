@@ -157,7 +157,12 @@ class MemoryDao extends AbstractDao
                         }
                     }
                 } else {
-                    if (isset($row[$key]) && $row[$key] == $value) {
+                    if (isset($row[$key])) {
+                        if (is_array($row[$key])) {
+                            $result = in_array($value, $row[$key]);
+                        } else {
+                            $result = $row[$key] == $value;
+                        }
                         $result = $result && true;
                     } else {
                         $result = $result && false;
