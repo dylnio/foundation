@@ -4,6 +4,7 @@ namespace Dyln\Database\Dao;
 
 use Dyln\Collection\Collection;
 use Dyln\Database\Model\ModelInterface;
+use MongoDB\BSON\Regex;
 
 /**
  * Class MemoryDao
@@ -161,7 +162,12 @@ class MemoryDao extends AbstractDao
                         if (is_array($row[$key])) {
                             $result = in_array($value, $row[$key]);
                         } else {
-                            $result = $row[$key] == $value;
+                            if ($value instanceof Regex) {
+                                preg_match('/' . $value->getPattern() . '/' . $value->getFlags(), $row[$key], $matches);
+                                $result = $matches;
+                            } else {
+                                $result = $row[$key] == $value;
+                            }
                         }
                         $result = $result && true;
                     } else {
