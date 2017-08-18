@@ -2,7 +2,6 @@
 
 namespace Dyln\Event;
 
-
 class Emitter extends \League\Event\Emitter
 {
 
