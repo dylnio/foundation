@@ -73,15 +73,16 @@ abstract class AbstractModel implements ModelInterface
 
     public function getProperty($fieldName, $default = null)
     {
-        if (isset($this->dirty[$fieldName])) {
+        if (array_key_exists($fieldName, $this->dirty)) {
             return $this->dirty[$fieldName];
         }
-        if (isset($this->data[$fieldName])) {
+        if (array_key_exists($fieldName, $this->data)) {
             return $this->data[$fieldName];
         }
         if ($default instanceof \Closure) {
             return $default();
         }
+
         return $default;
     }
 

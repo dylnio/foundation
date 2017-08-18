@@ -4,6 +4,7 @@ namespace Dyln\Config;
 
 use function Dyln\getin;
 use function Dyln\has;
+use function Dyln\set;
 
 class Config
 {
@@ -39,7 +40,7 @@ class Config
         if (has(self::$manual, $key)) {
             $manualValue = getin(self::$manual, $key, $default);
             $value = is_array($value) ? array_replace_recursive($value, $manualValue) : $manualValue;
-        } else if (has(self::$overwrite, $key)) {
+        } elseif (has(self::$overwrite, $key)) {
             $overwriteValue = getin(self::$overwrite, $key, $default);
             $value = is_array($value) ? array_replace_recursive($value, $overwriteValue) : $overwriteValue;
         }
@@ -49,7 +50,9 @@ class Config
 
     static public function set($key, $value)
     {
-        self::$manual[$key] = $value;
+        $array = self::$manual;
+        set($array, $key, $value);
+        self::$manual = $array;
     }
 
     static public function toArray()
