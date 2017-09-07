@@ -2,6 +2,7 @@
 
 namespace Dyln;
 
+use Dyln\Collection\Collection;
 use Dyln\Util\ArrayUtil;
 
 if (!function_exists('Dyln\getin')) {
@@ -24,5 +25,19 @@ if (!function_exists('Dyln\getin')) {
         }
 
         $arr = $value;
+    }
+
+    function isassoc($arr)
+    {
+        return ArrayUtil::isAssoc($arr);
+    }
+
+    function makearr($string, $delimiter = ',')
+    {
+        if (is_array($string)) {
+            return $string;
+        }
+
+        return Collection::create(explode($delimiter, $string))->trim()->filter()->toArrayValues();
     }
 }
