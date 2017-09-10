@@ -4,52 +4,24 @@ namespace Dyln\Firewall\Identity;
 
 use Dyln\Firewall\Enum\Roles;
 
-class AnonymousIdentity implements IdentityInterface
+class AnonymousIdentity extends Identity
 {
-    protected $uuid;
-
-    public function __construct()
+    /**
+     * Identity constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = [])
     {
-        $this->uuid = uniqid('_x_', true);
-    }
-
-    public function getDisplayName()
-    {
-        return '~ANON~';
+        parent::__construct($data);
+        $this->data = [
+            'display_name' => null,
+            'roles'        => [Roles::GUEST],
+        ];
     }
 
     public function isLoggedIn()
     {
         return false;
-    }
-
-    public function hasRole($role)
-    {
-        if (in_array($role, $this->getRoles())) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public function getRoles()
-    {
-        return [Roles::GUEST];
-    }
-
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-    public function getEmailAddress()
-    {
-        return 'anon@identity';
-    }
-
-    public function getAuthToken()
-    {
-        return null;
     }
 
     public function getSerializeIdentityData($options = [])
@@ -59,15 +31,5 @@ class AnonymousIdentity implements IdentityInterface
             'roles'     => $this->getRoles(),
             '__class__' => get_class($this),
         ];
-    }
-
-    public function getId()
-    {
-        return null;
-    }
-
-    public function getUser()
-    {
-        return null;
     }
 }
