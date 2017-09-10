@@ -14,6 +14,7 @@ class AnonymousIdentity extends Identity
     {
         parent::__construct($data);
         $this->data = [
+            '_id'          => null,
             'display_name' => null,
             'roles'        => [Roles::GUEST],
         ];
