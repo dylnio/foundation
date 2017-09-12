@@ -23,4 +23,6 @@ interface ModelInterface
     public function addTempData($field, $value);
 
     public function getTempData($field, $default = null);
+
+    public function with($field, $value);
 }

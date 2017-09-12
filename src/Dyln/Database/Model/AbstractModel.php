@@ -29,29 +29,23 @@ abstract class AbstractModel implements ModelInterface
         }
     }
 
-    static public function fromArray(array $data = [], $dirty = false)
-    {
-        return new static([
-            'dirty' => $dirty,
-            'data'  => $data,
-        ]);
-    }
-
-    public function addTempData($field, $value)
-    {
-        $this->temp[$field] = $value;
-
-        return $this;
-    }
-
-    public function getTempData($field, $default = null)
-    {
-        return isset($this->temp[$field]) ? $this->temp[$field] : $default;
-    }
-
     public function setIdFieldName($idFieldName)
     {
         $this->idField = $idFieldName;
+    }
+
+    public function populateWithArray($data = [], $dirty = false)
+    {
+        unset($data['__meta__']);
+        if ($dirty) {
+            foreach ($data as $field => $value) {
+                $this->setProperty($field, $value);
+            }
+        } else {
+            $this->data = array_merge($this->data, $data);
+        }
+
+        return $this;
     }
 
     public function setProperty($fieldName, $value)
@@ -86,33 +80,29 @@ abstract class AbstractModel implements ModelInterface
         return $default;
     }
 
-    public function populateWithArray($data = [], $dirty = false)
+    public static function fromArray(array $data = [], $dirty = false)
     {
-        unset($data['__meta__']);
-        if ($dirty) {
-            foreach ($data as $field => $value) {
-                $this->setProperty($field, $value);
-            }
-        } else {
-            $this->data = array_merge($this->data, $data);
-        }
+        return new static([
+            'dirty' => $dirty,
+            'data'  => $data,
+        ]);
+    }
+
+    public function addTempData($field, $value)
+    {
+        $this->temp[$field] = $value;
 
         return $this;
+    }
+
+    public function getTempData($field, $default = null)
+    {
+        return isset($this->temp[$field]) ? $this->temp[$field] : $default;
     }
 
     public function isModified()
     {
         return !empty($this->dirty);
-    }
-
-    public function getId($asString = false)
-    {
-        $id = $this->getProperty($this->idField);
-        if ($asString) {
-            $id = (string)$id;
-        }
-
-        return $id;
     }
 
     public function toArray($includeTemp = true, $secure = true)
@@ -138,6 +128,19 @@ abstract class AbstractModel implements ModelInterface
         return $merged;
     }
 
+    public function getClassName()
+    {
+        return get_class($this);
+    }
+
+    public function commitChanges()
+    {
+        foreach ($this->getChanges() as $field => $value) {
+            $this->data[$field] = $value;
+        }
+        $this->dirty = [];
+    }
+
     public function getChanges()
     {
         $changes = $this->dirty;
@@ -149,12 +152,14 @@ abstract class AbstractModel implements ModelInterface
         return $changes;
     }
 
-    public function commitChanges()
+    public function getId($asString = false)
     {
-        foreach ($this->getChanges() as $field => $value) {
-            $this->data[$field] = $value;
+        $id = $this->getProperty($this->idField);
+        if ($asString) {
+            $id = (string)$id;
         }
-        $this->dirty = [];
+
+        return $id;
     }
 
     public function getCreationTime()
@@ -162,19 +167,12 @@ abstract class AbstractModel implements ModelInterface
         return $this->getProperty('CreatedTime');
     }
 
-    public function getClassName()
-    {
-        return get_class($this);
-    }
-
     public function preSave()
     {
-
     }
 
     public function preUpdate()
     {
-
     }
 
     public function __set($name, $value)
@@ -187,5 +185,10 @@ abstract class AbstractModel implements ModelInterface
         $this->dirty = $this->data;
 
         return $this;
+    }
+
+    public function with($field, $value)
+    {
+        return $this->setProperty($field, $value);
     }
 }
