@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+SCRIPTPATH=`pwd -P`
+docker run --rm --interactive --tty --volume ${SCRIPTPATH}:/app --volume ~/.composer:/root/.composer --workdir /app dyln/sc_mp_php composer "$@"
