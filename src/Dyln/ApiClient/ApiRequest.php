@@ -179,6 +179,9 @@ class ApiRequest
         return BooleanUtil::getBool($this->stopOnError);
     }
 
+    /**
+     * @return string
+     */
     public function getDependsOn()
     {
         return $this->dependsOn;

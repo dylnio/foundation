@@ -41,8 +41,15 @@ class Meta extends \Twig_Extension
         if ($ogImage = $this->get('og_image')) {
             $html .= '<meta property="og:image" content="' . $ogImage . '" />';
         }
-
-        $html .= '<meta name="robots" content="INDEX,FOLLOW" />';
+        if ($robots = $this->get('robots')) {
+            $html .= '<meta name="robots" content="' . $robots . '" />';
+        }
+        if ($prev = $this->get('prev')) {
+            $html .= '<link rel="prev" href="' . $prev . '" />';
+        }
+        if ($next = $this->get('next')) {
+            $html .= '<link rel="next" href="' . $next . '" />';
+        }
         foreach ($raws as $raw) {
             $html .= $raw;
         }

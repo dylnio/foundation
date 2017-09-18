@@ -2,6 +2,7 @@
 
 namespace Dyln\Session;
 
+use Dyln\AppEnv;
 use Dyln\Util\StringUtil;
 
 class Session
@@ -13,12 +14,20 @@ class Session
     public function __construct($cookieParams = [])
     {
         self::init($cookieParams);
-        $this->session = &$_SESSION;
+        if (AppEnv::isTest()) {
+            return $this->session = [];
+        } else {
+            $this->session = &$_SESSION;
+        }
+
         $this->extend();
     }
 
     public function extend()
     {
+        if (AppEnv::isTest()) {
+            return true;
+        }
         $cookieName = ini_get('session.name');
         if (!empty($_COOKIE[$cookieName])) {
             $cookieParams = session_get_cookie_params();
@@ -30,6 +39,9 @@ class Session
 
     public static function init($cookieParams = [])
     {
+        if (AppEnv::isTest()) {
+            return true;
+        }
         if (session_status() !== PHP_SESSION_ACTIVE) {
             ini_set('session.gc_maxlifetime', 365 * 24 * 60 * 60); // 1 year
             ini_set('session.cookie_lifetime', 365 * 24 * 60 * 60); // 1 year
@@ -54,6 +66,10 @@ class Session
 
     public function id()
     {
+        if (AppEnv::isTest()) {
+            return uniqid();
+        }
+
         return session_id();
     }
 

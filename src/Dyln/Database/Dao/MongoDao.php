@@ -6,7 +6,6 @@ use Dyln\AppEnv;
 use Dyln\Database\Model\ModelInterface;
 use Dyln\Debugbar\Debugbar;
 use Dyln\Util\Timer;
-use MongoDB\BSON\ObjectID;
 use MongoDB\Database;
 use function Dyln\_retry;
 
@@ -122,7 +121,7 @@ class MongoDao extends AbstractDao
         } else {
             $data = $model->getChanges();
             $data['upt'] = microtime(true);
-            if (empty($data[$this->getIdFieldName()]) || !$data[$this->getIdFieldName()] instanceof ObjectID) {
+            if (empty($data[$this->getIdFieldName()])) {
                 unset($data['_id']);
             }
             Timer::start();

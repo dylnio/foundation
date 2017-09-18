@@ -1,10 +1,10 @@
 <?php
 
-namespace Dyln\Csv;
+namespace Dyln\Util\Csv;
 
 class CsvUtil
 {
-    static public function getDelimiter($handle)
+    public static function getDelimiter($handle)
     {
         if (!is_resource($handle)) {
             throw new \InvalidArgumentException('$handle must be a resource');

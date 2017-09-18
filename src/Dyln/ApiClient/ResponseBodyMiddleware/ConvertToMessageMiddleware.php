@@ -18,7 +18,8 @@ class ConvertToMessageMiddleware implements ResponseBodyMiddlewareInterface
         }
         $message = ArrayUtil::getIn($body, 'message');
         $code = ArrayUtil::getIn($body, 'code');
+        $extra = ArrayUtil::getIn($body, 'extra', []);
 
-        return MessageFactory::error(['message' => $message, 'code' => $code]);
+        return MessageFactory::error(['message' => $message, 'code' => $code, 'extra' => $extra]);
     }
 }

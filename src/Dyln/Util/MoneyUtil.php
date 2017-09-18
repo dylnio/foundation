@@ -2,24 +2,23 @@
 
 namespace Dyln\Util;
 
-
 class MoneyUtil
 {
-    static public function toPence($amount)
+    public static function toPence($amount)
     {
         $amount = round($amount, 2);
 
         return (int)bcmul($amount, 100);
     }
 
-    static public function toFloat($amount)
+    public static function toFloat($amount)
     {
         $amount = (float)bcdiv($amount, 100, 2);
 
         return number_format(round($amount, 2), 2, '.', '');
     }
 
-    static public function formatCurrency($valueInPence, $currency = null)
+    public static function formatCurrency($valueInPence, $currency = null)
     {
         $value = MoneyUtil::toFloat($valueInPence);
         if (!$currency) {
@@ -32,7 +31,7 @@ class MoneyUtil
         return $return;
     }
 
-    static public function currencyToLocale($currency)
+    public static function currencyToLocale($currency)
     {
         switch (strtolower($currency)) {
             case 'eur':

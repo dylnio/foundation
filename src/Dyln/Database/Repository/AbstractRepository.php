@@ -19,7 +19,7 @@ abstract class AbstractRepository implements RepositoryInterface
     /** @var CacheProvider */
     protected $cache;
 
-    private function __construct(array $daos, $entityClassName)
+    private function __construct(array $daos, $entityClassName, $cache = null)
     {
         $aliases = [];
         foreach ($daos as $key => $dao) {
@@ -33,7 +33,7 @@ abstract class AbstractRepository implements RepositoryInterface
             $this->daos[$key] = $this->daos[$target];
         }
         $this->entityClassName = $entityClassName;
-        $this->cache = new CollectionCache();
+        $this->cache = ($cache) ?: new CollectionCache();
     }
 
     static public function factory($daos, $entityClassName)
@@ -73,14 +73,14 @@ abstract class AbstractRepository implements RepositoryInterface
     {
         $key = json_encode(func_get_args());
         $key = md5($key);
-        if ($this->cache->contains($key)) {
-            return $this->cache->fetch($key);
+        if ($this->isInCache($key)) {
+            return $this->getFromCache($key);
         }
         /** @var Cursor $cursor */
         $cursor = $this->getDao($daoKey)->fetchBy($condition, $fields, $limit, $skip, $sort);
 
         $result = $this->hydrateCursor($cursor);
-        $this->cache->save($key, $result);
+        $this->saveToCache($key, $result);
 
         return $result;
     }
@@ -105,7 +105,7 @@ abstract class AbstractRepository implements RepositoryInterface
         return $model;
     }
 
-    public function hydrateCursor(Cursor $cursor = null)
+    public function hydrateCursor($cursor = null)
     {
         $collection = new Collection();
         if (!$cursor) {
@@ -170,5 +170,30 @@ abstract class AbstractRepository implements RepositoryInterface
             throw new \Exception('Empty condition is not allowed');
         }
         $this->getDao($daoKey)->deleteBy($condition);
+    }
+
+    private function isInCache($key)
+    {
+        if ($this->cache) {
+            return $this->cache->contains($key);
+        }
+
+        return false;
+    }
+
+    private function getFromCache($key)
+    {
+        if ($this->cache) {
+            return $this->cache->fetch($key);
+        }
+
+        return null;
+    }
+
+    private function saveToCache($key, $data)
+    {
+        if ($this->cache) {
+            $this->cache->save($key, $data);
+        }
     }
 }
