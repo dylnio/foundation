@@ -11,18 +11,18 @@ class AppEnv
     const LIVE_ENV = 'production';
     const TEST_ENV = 'test';
 
-    static private $placeholders = [
+    private static $placeholders = [
         'ROOT_DIR',
         'APPLICATION_ENV',
     ];
-    static public $serverToEnvMap = [];
+    public static $serverToEnvMap = [];
 
-    static public function isDev()
+    public static function isDev()
     {
         return self::getAppEnv() !== self::LIVE_ENV;
     }
 
-    static public function getAppEnv()
+    public static function getAppEnv()
     {
         if (!defined('APPLICATION_ENV')) {
             $env = getenv('APPLICATION_ENV') ?? get_cfg_var('APPLICATION_ENV') ?? self::getAppEnvFromServerName();
@@ -38,7 +38,7 @@ class AppEnv
         return APPLICATION_ENV;
     }
 
-    static public function getAppEnvFromServerName()
+    public static function getAppEnvFromServerName()
     {
         if (php_sapi_name() == 'cli') {
             $servername = gethostname();
@@ -53,17 +53,17 @@ class AppEnv
         return self::DEFAULT_ENV;
     }
 
-    static public function isLive()
+    public static function isLive()
     {
         return self::getAppEnv() == self::LIVE_ENV;
     }
 
-    static public function isTest()
+    public static function isTest()
     {
         return self::getAppEnv() == self::TEST_ENV;
     }
 
-    static public function env($key, $default = null)
+    public static function env($key, $default = null)
     {
         if (!self::hasEnv($key)) {
             return $default;
@@ -87,17 +87,17 @@ class AppEnv
         return $value;
     }
 
-    static public function option($key, $default = null)
+    public static function option($key, $default = null)
     {
         return self::env('_option.' . $key, $default);
     }
 
-    static public function hasEnv($key)
+    public static function hasEnv($key)
     {
         return isset($_ENV[$key]);
     }
 
-    static public function isDebugEnabled()
+    public static function isDebugEnabled()
     {
         $debug = BooleanUtil::getBool(Config::get('app.debug.enabled', false));
         if (!$debug) {
@@ -110,7 +110,7 @@ class AppEnv
         return $debug;
     }
 
-    static public function isDebugBarEnabled()
+    public static function isDebugBarEnabled()
     {
         if (!self::isDebugEnabled()) {
             return false;
