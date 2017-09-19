@@ -31,11 +31,16 @@ class AppEnv
             }
             define('APPLICATION_ENV', $env);
         }
-        putenv('APPLICATION_ENV=' . APPLICATION_ENV);
-        $_ENV['APPLICATION_ENV'] = APPLICATION_ENV;
-        $_SERVER['APPLICATION_ENV'] = APPLICATION_ENV;
+        self::putEnv('APPLICATION_ENV', APPLICATION_ENV);
 
         return APPLICATION_ENV;
+    }
+
+    public static function putEnv($key, $value)
+    {
+        putenv($key . '=' . $value);
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
     }
 
     public static function getAppEnvFromServerName()
