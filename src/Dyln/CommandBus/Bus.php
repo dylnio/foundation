@@ -7,9 +7,9 @@ use Dyln\CommandBus\Command\Handler\Handler;
 use Dyln\CommandBus\Command\Handler\HandlerWithEmitter;
 use Dyln\CommandBus\Command\Handler\Resolver\HandlerResolver;
 use Dyln\CommandBus\Exception\HandlerNotFoundException;
+use Dyln\Event\Emitter;
 use Dyln\Message\Message;
 use Interop\Container\ContainerInterface;
-use League\Event\Emitter;
 
 class Bus
 {
@@ -59,7 +59,7 @@ class Bus
             if ($handlerClassName = $resolver->getHandlerClassName($command)) {
                 $handler = $this->container->get($handlerClassName);
                 if ($handler instanceof HandlerWithEmitter) {
-                    $handler->setEmitter($this->container->get(\Dyln\Event\Emitter::class));
+                    $handler->setEmitter($this->emitter);
                 }
             }
         }

@@ -4,16 +4,17 @@ namespace Dyln\CommandBus\Command\Handler;
 
 use Dyln\CommandBus\Command\Command;
 use Dyln\Event\Emitter;
+use Dyln\Message\Message;
 use League\Event\Event;
 
 abstract class AbstractHandler implements Handler, HandlerWithEmitter
 {
     /** @var  Emitter */
-    private $emitter;
+    protected $emitter;
     /** @var Event[] */
     protected $eventsTriggered = [];
 
-    abstract public function handle(Command $command);
+    abstract public function handle(Command $command): Message;
 
     public function getEventsTriggered()
     {
