@@ -8,7 +8,8 @@ class UrlValidator extends AbstractValidator
 {
     public function isValid($value)
     {
-        if (!filter_var($value, FILTER_VALIDATE_URL)) {
+        $urlPattern = '/(?:https?:\/\/)?(?:[a-zA-Z0-9.-]+?\.(?:[a-zA-Z])|\d+\.\d+\.\d+\.\d+)/i';
+        if (!preg_match($urlPattern, $value)) {
             return MessageFactory::error(['message' => 'value is not valid url']);
         }
 
