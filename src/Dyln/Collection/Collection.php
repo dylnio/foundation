@@ -15,7 +15,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
      * @param array|null $items
      * @return Collection
      */
-    static public function create($items = null)
+    public static function create($items = null)
     {
         return new self($items);
     }
@@ -28,7 +28,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         if ($items !== null) {
             if (is_array($items)) {
                 $this->data = $items;
-            } else if ($items instanceof Collection) {
+            } elseif ($items instanceof Collection) {
                 $this->data = $items->toArray();
             }
         }
@@ -173,7 +173,6 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
     {
         return new self(array_values(array_unique($this->data)));
     }
-
 
     public function removeLast()
     {
@@ -426,6 +425,5 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         }
 
         return new static($this->toArrayValues());
-
     }
 }
