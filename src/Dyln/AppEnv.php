@@ -130,4 +130,11 @@ class AppEnv
 
         return $bar;
     }
+
+    public static function isCacheResetEnabled()
+    {
+        $resetKey = $_GET['reset'] ?? null;
+
+        return $resetKey == Config::get('app.debug.url_key');
+    }
 }

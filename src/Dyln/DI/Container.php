@@ -4,7 +4,6 @@ namespace Dyln\DI;
 
 class Container extends \DI\Container implements \ArrayAccess
 {
-
     /**
      * Whether a offset exists
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
@@ -65,5 +64,18 @@ class Container extends \DI\Container implements \ArrayAccess
     public function offsetUnset($offset)
     {
         // TODO: Implement offsetUnset() method.
+    }
+
+    public function get($name)
+    {
+        $obj = parent::get($name);
+        if (is_string($obj) && class_exists($obj)) {
+            $obj = $this->get($obj);
+        }
+        if ($obj instanceof InitableInterface) {
+            $this->call([$obj, 'init']);
+        }
+
+        return $obj;
     }
 }

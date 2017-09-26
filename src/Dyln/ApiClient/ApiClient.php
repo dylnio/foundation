@@ -64,6 +64,9 @@ class ApiClient
         if (AppEnv::isDebugBarEnabled()) {
             $query['debug_bar'] = Config::get('app.debug.url_key');
         }
+        if (AppEnv::isCacheResetEnabled()) {
+            $query['reset'] = Config::get('app.debug.url_key');
+        }
         $headers = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
         $requestOptions = [
             'headers' => $headers,
@@ -93,7 +96,7 @@ class ApiClient
             if (!$responseBody) {
                 if ($e->getCode() == 401) {
                     $responseBody = ['message' => '401 Unauthorized'];
-                } else if ($e->getCode() == 403) {
+                } elseif ($e->getCode() == 403) {
                     $responseBody = ['message' => '403 Unauthorized'];
                 } else {
                     $responseBody = ['message' => 'Unkown error'];
