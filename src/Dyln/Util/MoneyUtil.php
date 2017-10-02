@@ -26,6 +26,7 @@ class MoneyUtil
         }
         $locale = self::currencyToLocale($currency);
         $formatter = new \NumberFormatter($locale, \NumberFormatter::CURRENCY);
+        $formatter->setAttribute(\NumberFormatter::ROUNDING_MODE, \NumberFormatter::ROUND_HALFUP);
         $return = $formatter->formatCurrency($value, $currency);
 
         return $return;
