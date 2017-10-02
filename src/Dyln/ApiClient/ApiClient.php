@@ -56,6 +56,9 @@ class ApiClient
 
     public function call($path, array $query = null, array $data = null, $method = 'GET', $options = []): Message
     {
+        if (!$query) {
+            $query = [];
+        }
         $this->addResponseBodyMiddleware(new ConvertToMessageMiddleware());
         if (AppEnv::isDebugEnabled()) {
             $query['XDEBUG_SESSION_START'] = 'PHPSTORM';
@@ -77,6 +80,7 @@ class ApiClient
         if ($data) {
             $requestOptions['body'] = json_encode($data);
         }
+
         try {
             $res = $this->request($method, $path, $requestOptions);
             $responseHeaders = $res->getHeaders();
