@@ -22,6 +22,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Psr7\Request;
 use Namshi\Cuzzle\Formatter\CurlFormatter;
+use function Dyln\getin;
 
 class ApiClient
 {
@@ -38,6 +39,9 @@ class ApiClient
     ];
     /** @var ResponseBodyMiddlewareInterface[] */
     protected $responseBodyMiddlewares = [];
+    protected $clientToken = null;
+    protected $clientSecret = null;
+    protected $userToken = null;
 
     /**
      * ApiService constructor.
@@ -52,6 +56,9 @@ class ApiClient
         $this->cookieJar = $cookieJar;
         $this->addResponseBodyMiddleware(new JsonDecodeMiddleware());
         $this->addResponseBodyMiddleware(new DebugbarMiddleware());
+        $this->clientToken = getin($options, 'client.token');
+        $this->clientSecret = getin($options, 'client.secret');
+        $this->userToken = getin($options, 'user.token');
     }
 
     public function call($path, array $query = null, array $data = null, $method = 'GET', $options = []): Message
@@ -71,6 +78,11 @@ class ApiClient
             $query['reset'] = Config::get('app.debug.url_key');
         }
         $headers = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
+        if ($this->clientToken) {
+            $headers['X-SHOPCADE-CLIENT-TOKEN'] = $this->clientToken;
+            $headers['X-SHOPCADE-CLIENT-SIGNATURE'] = $this->calculateSecret($path, $method, $this->clientSecret);
+            $headers['X-SHOPCADE-USER-TOKEN'] = $this->userToken;
+        }
         $requestOptions = [
             'headers' => $headers,
         ];
@@ -80,7 +92,6 @@ class ApiClient
         if ($data) {
             $requestOptions['body'] = json_encode($data);
         }
-
         try {
             $res = $this->request($method, $path, $requestOptions);
             $responseHeaders = $res->getHeaders();
@@ -190,7 +201,6 @@ class ApiClient
         foreach ($calls as $call) {
             $request[] = $call->toArray();
         }
-
         $response = $this->call('/', null, ['requests' => $request], 'POST', ['headers' => ['X-SHOPCADE-MULTI' => true]]);
         if ($response->isSuccess()) {
             $payload = $response->getData()['payload'];
@@ -206,5 +216,15 @@ class ApiClient
         }
 
         return $response;
+    }
+
+    private function calculateSecret($path, $method, $secret)
+    {
+        $time = time();
+        $nonce = random_int(10000, 90000);
+        $message = $method . '+' . trim($path, '/') . '+' . (string)$time . '+' . (string)$nonce;
+        $digest = hash_hmac('sha256', $message, $secret) . ':' . $time . ':' . $nonce;
+
+        return $digest;
     }
 }
