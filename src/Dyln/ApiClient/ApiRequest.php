@@ -15,7 +15,11 @@ class ApiRequest
     protected $stopOnError = true;
     protected $dependsOn = null;
 
-    static public function fromArray($array = [])
+    /**
+     * @param array $array
+     * @return mixed
+     */
+    public static function fromArray($array = [])
     {
         $request = new static();
         if (isset($array['id'])) {
