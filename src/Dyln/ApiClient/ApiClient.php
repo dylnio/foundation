@@ -206,6 +206,9 @@ class ApiClient
             $payload = $response->getData()['payload'];
             $bulkResponse = new Collection();
             foreach ($payload as $id => $_payload) {
+                if (!isset($_payload['success'])) {
+                    $payload['success'] = false;
+                }
                 if ($_payload['success']) {
                     $bulkResponse->add(MessageFactory::success($_payload), (string)$id);
                 } else {
