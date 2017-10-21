@@ -4,14 +4,14 @@ namespace Dyln\Message;
 
 class MessageFactory
 {
-    static public function success(array $data = []): Message
+    public static function success(array $data = []): Message
     {
         $message = new Message();
 
         return $message->success()->withData($data);
     }
 
-    static public function error(array $error = []): Message
+    public static function error(array $error = []): Message
     {
         $message = new Message();
 

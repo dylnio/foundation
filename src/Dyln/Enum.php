@@ -22,4 +22,11 @@ class Enum
 
         return array_values($refl->getConstants());
     }
+
+    public static function getAsAssocArray()
+    {
+        $refl = new ReflectionClass(get_called_class());
+
+        return $refl->getConstants();
+    }
 }
