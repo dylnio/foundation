@@ -6,6 +6,7 @@ use Dyln\Firewall\Exception\RouteNotFoundException;
 use Dyln\Firewall\Firewall;
 use Dyln\Session\Session;
 use Dyln\Slim\CallableResolver;
+use Dyln\Slim\Http\JsonResponse;
 use FastRoute\Dispatcher;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -44,6 +45,9 @@ class FirewallGuard
         $url = $this->firewall->getRoute(Firewall::ROUTE_LOGIN);
         if ($url) {
             return $response->withRedirect($url);
+        }
+        if ($response instanceof JsonResponse) {
+            $response = $response->withError('unauthorized');
         }
 
         return $response->withStatus(401);
