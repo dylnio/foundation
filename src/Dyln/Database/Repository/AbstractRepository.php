@@ -78,7 +78,6 @@ abstract class AbstractRepository implements RepositoryInterface
         }
         /** @var Cursor $cursor */
         $cursor = $this->getDao($daoKey)->fetchBy($condition, $fields, $limit, $skip, $sort);
-
         $result = $this->hydrateCursor($cursor);
         $this->saveToCache($key, $result);
 
@@ -92,7 +91,7 @@ abstract class AbstractRepository implements RepositoryInterface
 
     public function count($condition = [], $daoKey = 'default')
     {
-        return (int)$this->getDao($daoKey)->count($condition);
+        return (int) $this->getDao($daoKey)->count($condition);
     }
 
     public function hydrate($data)
