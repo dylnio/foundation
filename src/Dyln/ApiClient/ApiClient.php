@@ -61,8 +61,8 @@ class ApiClient
         $this->userToken = getin($options, 'user.token');
     }
 
-    public function call($path, array $query = null, array $data = null, $method = 'GET', $options = []): Message
-    {
+    public function call($path, array $query = null, array $data = null, $method = 'GET', $options = [])
+    : Message {
         if (!$query) {
             $query = [];
         }
@@ -101,7 +101,7 @@ class ApiClient
                     ExtraHeaderMiddleware::$headers[$key] = $value[0];
                 }
             }
-            $body = (string)$res->getBody();
+            $body = (string) $res->getBody();
             $body = $this->applyResponseBodyMiddlewares($body);
 
             return $body;
@@ -111,7 +111,7 @@ class ApiClient
             if (!$responseBody) {
                 if ($e->getCode() == 401) {
                     $responseBody = ['message' => '401 Unauthorized'];
-                } elseif ($e->getCode() == 403) {
+                } else if ($e->getCode() == 403) {
                     $responseBody = ['message' => '403 Unauthorized'];
                 } else {
                     $responseBody = ['message' => 'Unkown error'];
@@ -210,9 +210,9 @@ class ApiClient
                     $payload['success'] = false;
                 }
                 if ($_payload['success']) {
-                    $bulkResponse->add(MessageFactory::success($_payload), (string)$id);
+                    $bulkResponse->add(MessageFactory::success($_payload), (string) $id);
                 } else {
-                    $bulkResponse->add(MessageFactory::error($_payload), (string)$id);
+                    $bulkResponse->add(MessageFactory::error($_payload), (string) $id);
                 }
             }
             $response->addData('bulk_response', $bulkResponse);
@@ -225,7 +225,7 @@ class ApiClient
     {
         $time = time();
         $nonce = random_int(10000, 90000);
-        $message = $method . '+' . trim($path, '/') . '+' . (string)$time . '+' . (string)$nonce;
+        $message = $method . '+' . urlencode(urldecode(trim($path, '/'))) . '+' . (string) $time . '+' . (string) $nonce;
         $digest = hash_hmac('sha256', $message, $secret) . ':' . $time . ':' . $nonce;
 
         return $digest;
