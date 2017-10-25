@@ -115,6 +115,13 @@ class AppEnv
         return $debug;
     }
 
+    public static function isApiSignatureCheckDisabled()
+    {
+        $check = $_GET['debug_sign'] ?? $_COOKIE['debug_sign'] ?? null;
+
+        return $check === Config::get('app.debug.url_key');
+    }
+
     public static function isDebugBarEnabled()
     {
         if (!self::isDebugEnabled()) {
