@@ -191,7 +191,7 @@ class ApiClient
         return $body;
     }
 
-    public function bulkCall($calls = [])
+    public function bulkCall($calls = []) : Message
     {
         if (!$calls) {
             throw new \Exception('Empty calls');
