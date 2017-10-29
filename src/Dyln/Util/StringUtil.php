@@ -30,7 +30,7 @@ class StringUtil
     {
         if (PHP_MAJOR_VERSION >= 7) {
             $bytes = random_bytes($length);
-        } elseif (function_exists('openssl_random_pseudo_bytes')) {
+        } else if (function_exists('openssl_random_pseudo_bytes')) {
             $bytes = openssl_random_pseudo_bytes($length, $strong);
             if ($bytes === false || $strong === false) {
                 throw new \RuntimeException('Unable to generate random string.');
@@ -42,14 +42,21 @@ class StringUtil
         return $bytes;
     }
 
-    public static function slug($title, $separator = '-')
+    public static function slug($title, $separator = '-', $ignore = [])
     {
         $title = static::ascii($title);
         // Convert all dashes/underscores into separator
         $flip = $separator == '-' ? '_' : '-';
         $title = preg_replace('![' . preg_quote($flip) . ']+!u', $separator, $title);
         // Remove all characters that are not the separator, letters, numbers, or whitespace.
-        $title = preg_replace('![^' . preg_quote($separator) . '\pL\pN\s]+!u', '', mb_strtolower($title));
+        $pattern = '![^' . preg_quote($separator);
+        if ($ignore) {
+            foreach ($ignore as $value) {
+                $pattern .= preg_quote($value);
+            }
+        }
+        $pattern .= '\pL\pN\s]+!u';
+        $title = preg_replace($pattern, '', mb_strtolower($title));
         // Replace all separator characters and whitespace by a single separator
         $title = preg_replace('![' . preg_quote($separator) . '\s]+!u', $separator, $title);
 
@@ -58,7 +65,7 @@ class StringUtil
 
     public static function ascii($value)
     {
-        return (string)StaticStringy::toAscii($value);
+        return (string) StaticStringy::toAscii($value);
     }
 
     public static function explodeCamelCase($string)
@@ -94,7 +101,7 @@ class StringUtil
                 $attributeKey = $options['attributePrefix']
                     . ($prefix ? $prefix . $options['namespaceSeparator'] : '')
                     . $attributeName;
-                $attributesArray[$attributeKey] = (string)$attribute;
+                $attributesArray[$attributeKey] = (string) $attribute;
             }
         }
         //get child nodes from all namespaces
@@ -118,7 +125,7 @@ class StringUtil
                     $tagsArray[$childTagName] =
                         in_array($childTagName, $options['alwaysArray']) || !$options['autoArray']
                             ? [$childProperties] : $childProperties;
-                } elseif (
+                } else if (
                     is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName])
                     === range(0, count($tagsArray[$childTagName]) - 1)
                 ) {
@@ -132,7 +139,7 @@ class StringUtil
         }
         //get text content of node
         $textContentArray = [];
-        $plainText = trim((string)$xml);
+        $plainText = trim((string) $xml);
         if ($plainText !== '') {
             $textContentArray[$options['textContent']] = $plainText;
         }
