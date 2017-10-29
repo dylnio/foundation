@@ -12,7 +12,9 @@ class RequestInfoMiddleware
     {
         if (php_sapi_name() !== 'cli') {
             Sentry::addExtraContext('_path_', $request->getUri()->getPath());
-            Sentry::addExtraContext('_query_', json_encode($request->getQueryParams()));
+            if ($request->getQueryParams()) {
+                Sentry::addExtraContext('_query_', http_build_query($request->getQueryParams()));
+            }
             $body = (string) $request->getBody();
             Sentry::addExtraContext('_body_', $body);
         }
