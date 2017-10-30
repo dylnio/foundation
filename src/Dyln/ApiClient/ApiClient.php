@@ -61,8 +61,8 @@ class ApiClient
         $this->userToken = getin($options, 'user.token');
     }
 
-    public function call($path, array $query = null, array $data = null, $method = 'GET', $options = [])
-    : Message {
+    public function call($path, array $query = null, array $data = null, $method = 'GET', $options = []) : Message
+    {
         if (!$query) {
             $query = [];
         }
@@ -191,7 +191,7 @@ class ApiClient
         return $body;
     }
 
-    public function bulkCall($calls = [])
+    public function bulkCall($calls = []) : Message
     {
         if (!$calls) {
             throw new \Exception('Empty calls');
