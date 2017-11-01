@@ -124,9 +124,6 @@ class AppEnv
 
     public static function isDebugBarEnabled()
     {
-        if (!self::isDebugEnabled()) {
-            return false;
-        }
         $bar = BooleanUtil::getBool(Config::get('app.debug.debugbar', false));
         if (!$bar) {
             $overwrite = $_GET['debug_bar'] ?? $_COOKIE['debug_bar'] ?? null;
