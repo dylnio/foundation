@@ -17,6 +17,7 @@ class Env extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('getAppEnv', [$this, 'getAppEnv']),
             new \Twig_SimpleFunction('isAppLive', [$this, 'isAppLive']),
+            new \Twig_SimpleFunction('isAppDev', [$this, 'isAppDev']),
             new \Twig_SimpleFunction('env', [$this, 'env']),
         ];
     }
@@ -34,5 +35,10 @@ class Env extends \Twig_Extension
     public function isAppLive()
     {
         return AppEnv::isLive();
+    }
+
+    public function isAppDev()
+    {
+        return !AppEnv::isLive();
     }
 }
