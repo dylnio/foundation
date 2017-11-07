@@ -93,6 +93,7 @@ class MongoStorage extends Storage
     public function store(Request $request)
     {
         $data = $this->applyFilter($request->toArray());
+        $data = $this->replaceKeys($data, '.', '_dot_');
         $this->collection->insertOne($data);
         $this->cleanup();
     }
@@ -119,6 +120,22 @@ class MongoStorage extends Storage
     // Returns a Request instance from a single database record
     protected function dataToRequest($data)
     {
+        $data = $this->replaceKeys($data, '_dot_', '.');
         return new Request($data);
+    }
+
+    private function replaceKeys(array $input, $find, $replace)
+    {
+
+        $return = [];
+        foreach ($input as $key => $value) {
+            $key = str_replace("\0", '', $key);
+            $key = str_replace($find, $replace, $key);
+            if (is_array($value)) {
+                $value = $this->replaceKeys($value, $find, $replace);
+            }
+            $return[$key] = $value;
+        }
+        return $return;
     }
 }

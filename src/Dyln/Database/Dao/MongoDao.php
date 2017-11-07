@@ -201,12 +201,13 @@ class MongoDao extends AbstractDao
 
     /**
      * @param array $condition
+     * @param array $options
      * @return int
      */
-    public function count($condition = [])
+    public function count($condition = [], $options = [])
     {
         Timer::start();
-        $result = $this->getDbAdapter()->selectCollection($this->getTableName())->count($condition);
+        $result = $this->getDbAdapter()->selectCollection($this->getTableName())->count($condition, $options);
         $time = Timer::result();
         if (AppEnv::isDebugBarEnabled()) {
             $bt = [];
@@ -225,7 +226,6 @@ class MongoDao extends AbstractDao
                 'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.count',
                 'options'   => json_encode([]),
                 'query'     => json_encode($condition),
-                'operation' => json_encode([]),
                 'time'      => $time,
                 'start'     => Timer::getStart(),
                 'end'       => Timer::getEnd(),
@@ -239,11 +239,11 @@ class MongoDao extends AbstractDao
      * @param $id
      * @return \MongoDB\DeleteResult
      */
-    public function delete($id)
+    public function delete($id, $options = [])
     {
         Timer::start();
         $condition = [$this->getIdFieldName() => $id];
-        $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteOne($condition);
+        $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteOne($condition, $options);
         $time = Timer::result();
         if (AppEnv::isDebugBarEnabled()) {
             $bt = [];
@@ -262,7 +262,6 @@ class MongoDao extends AbstractDao
                 'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.deleteOne',
                 'options'   => json_encode([]),
                 'query'     => json_encode($condition),
-                'operation' => json_encode([]),
                 'time'      => $time,
                 'start'     => Timer::getStart(),
                 'end'       => Timer::getEnd(),
@@ -274,12 +273,13 @@ class MongoDao extends AbstractDao
 
     /**
      * @param $condition
+     * @param array $options
      * @return \MongoDB\DeleteResult
      */
-    public function deleteBy($condition)
+    public function deleteBy($condition, $options = [])
     {
         Timer::start();
-        $options = ['multi' => true];
+        $options['multi'] = true;
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteMany($condition, $options);
         $time = Timer::result();
         if (AppEnv::isDebugBarEnabled()) {
@@ -299,7 +299,6 @@ class MongoDao extends AbstractDao
                 'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.deleteMany',
                 'options'   => json_encode($options),
                 'query'     => json_encode($condition),
-                'operation' => json_encode([]),
                 'time'      => $time,
                 'start'     => Timer::getStart(),
                 'end'       => Timer::getEnd(),

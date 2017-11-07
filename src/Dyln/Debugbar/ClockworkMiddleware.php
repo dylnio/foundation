@@ -37,7 +37,11 @@ class ClockworkMiddleware
             $databaseSource = $this->getDatabaseSource();
             foreach ($mongo as $row) {
                 $timeline->addEvent(uniqid(), '[MONGO] ' . $row['command'] . '(' . $row['query'] . ',' . $row['options'] . ')', $row['start'], $row['end']);
-                $databaseSource->addMongoQuery($row['command'] . '(' . $row['query'] . ',' . $row['options'] . ')', $row['start'], $row['end']);
+                if (!empty($row['operation'])) {
+                    $databaseSource->addMongoQuery($row['command'] . '(' . $row['query'] . ',' . $row['operation'] . ',' . $row['options'] . ')', $row['start'], $row['end']);
+                } else {
+                    $databaseSource->addMongoQuery($row['command'] . '(' . $row['query'] . ',' . $row['options'] . ')', $row['start'], $row['end']);
+                }
             }
         }
         if ($elastic) {
