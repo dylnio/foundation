@@ -31,7 +31,6 @@ class MongoDao extends AbstractDao
         if (count($result) === 0) {
             return false;
         }
-
         return $result[0];
     }
 
@@ -80,11 +79,12 @@ class MongoDao extends AbstractDao
                 'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.find',
                 'options'   => json_encode($options),
                 'query'     => json_encode($condition),
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
                 'time'      => $time,
                 'backtrace' => $bt,
             ]);
         }
-
         return $cursor;
     }
 
@@ -109,11 +109,9 @@ class MongoDao extends AbstractDao
             $forceInsert = $options['forceInsert'];
             unset($options['forceInsert']);
         }
-
         if (!isset($options['w'])) {
             $options['w'] = 1;
         }
-
         $model->preSave();
         $id = $model->getId();
         if ($id && !$forceInsert) {
@@ -150,7 +148,6 @@ class MongoDao extends AbstractDao
             }
             $model->setProperty($this->getIdFieldName(), $result->getInsertedId());
             $model->commitChanges();
-
             return $model;
         }
     }
@@ -198,7 +195,6 @@ class MongoDao extends AbstractDao
             }
         }
         $model->commitChanges();
-
         return $model;
     }
 
@@ -233,7 +229,6 @@ class MongoDao extends AbstractDao
                 'backtrace' => $bt,
             ]);
         }
-
         return $result;
     }
 
@@ -269,7 +264,6 @@ class MongoDao extends AbstractDao
                 'backtrace' => $bt,
             ]);
         }
-
         return $result;
     }
 
@@ -305,7 +299,6 @@ class MongoDao extends AbstractDao
                 'backtrace' => $bt,
             ]);
         }
-
         return $result;
     }
 }

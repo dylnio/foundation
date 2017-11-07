@@ -31,9 +31,10 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
                 'query'     => json_encode(['id' => $id]),
                 'time'      => $time,
                 'backtrace' => $bt,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
             ]);
         }
-
         return $result;
     }
 
@@ -60,9 +61,10 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
                 'query'     => json_encode(['keys' => $keys]),
                 'time'      => $time,
                 'backtrace' => $bt,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
             ]);
         }
-
         return $result;
     }
 
@@ -89,9 +91,10 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
                 'query'     => json_encode(['keysAndValues' => $keysAndValues, 'lifetime' => $lifetime]),
                 'time'      => $time,
                 'backtrace' => $bt,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
             ]);
         }
-
         return $result;
     }
 
@@ -118,9 +121,10 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
                 'query'     => json_encode(['id' => $id]),
                 'time'      => $time,
                 'backtrace' => $bt,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
             ]);
         }
-
         return $result;
     }
 
@@ -147,9 +151,10 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
                 'query'     => json_encode(['id' => $id, 'data' => $data, 'lifetime' => $lifeTime]),
                 'time'      => $time,
                 'backtrace' => $bt,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
             ]);
         }
-
         return $result;
     }
 
@@ -176,9 +181,10 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
                 'query'     => json_encode(['id' => $id]),
                 'time'      => $time,
                 'backtrace' => $bt,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
             ]);
         }
-
         return $result;
     }
 
@@ -205,9 +211,10 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
                 'query'     => null,
                 'time'      => $time,
                 'backtrace' => $bt,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
             ]);
         }
-
         return $result;
     }
 
@@ -234,9 +241,10 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
                 'query'     => null,
                 'time'      => $time,
                 'backtrace' => $bt,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
             ]);
         }
-
         return $result;
     }
 }

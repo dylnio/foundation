@@ -107,7 +107,6 @@ class ApiClient
             $eventParams['request_options'] = $requestOptions;
             $this->emitEvent(Events::BEFORE_CALL_SEND, $eventParams);
             $res = $this->request($method, $path, $requestOptions);
-            $this->emitEvent(Events::AFTER_CALL_SEND, $eventParams);
             $responseHeaders = $res->getHeaders();
             foreach ($responseHeaders as $key => $value) {
                 if (strpos($key, '__') === 0) {
@@ -118,7 +117,7 @@ class ApiClient
             $body = (string) $res->getBody();
             $body = $this->applyResponseBodyMiddlewares($body);
             $eventParams['body'] = $body instanceof Message ? $body->toArray() : $body;
-            $this->emitEvent(Events::CALL_END, $eventParams);
+            $this->emitEvent(Events::AFTER_CALL_SEND, $eventParams);
             return $body;
         } catch (ClientException $e) {
             $responseBody = $e->getResponse()->getBody()->getContents();
