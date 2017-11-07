@@ -13,7 +13,7 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
         Timer::start();
         $result = parent::fetch($id);
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {
@@ -43,7 +43,7 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
         Timer::start();
         $result = parent::fetchMultiple($keys);
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {
@@ -73,7 +73,7 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
         Timer::start();
         $result = parent::saveMultiple($keysAndValues, $lifetime);
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {
@@ -103,7 +103,7 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
         Timer::start();
         $result = parent::contains($id);
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {
@@ -133,7 +133,7 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
         Timer::start();
         $result = parent::save($id, $data, $lifeTime);
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {
@@ -163,7 +163,7 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
         Timer::start();
         $result = parent::delete($id);
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {
@@ -193,7 +193,7 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
         Timer::start();
         $result = parent::flushAll();
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {
@@ -223,7 +223,7 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache
         Timer::start();
         $result = parent::getStats();
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {

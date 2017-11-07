@@ -59,7 +59,7 @@ class MongoDao extends AbstractDao
         Timer::start();
         $cursor = $this->getDbAdapter()->selectCollection($this->tableName)->find($condition, $options);
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {
@@ -122,7 +122,7 @@ class MongoDao extends AbstractDao
             Timer::start();
             $result = $this->getDbAdapter()->selectCollection($this->getTableName())->insertOne($data, $options);
             $time = Timer::result();
-            if (AppEnv::isDebugBarEnabled()) {
+            if (AppEnv::isDebugEnabled()) {
                 $bt = [];
                 $traces = debug_backtrace();
                 for ($i = 15; $i > 0; $i--) {
@@ -170,7 +170,7 @@ class MongoDao extends AbstractDao
             Timer::start();
             $this->getDbAdapter()->selectCollection($this->getTableName())->updateOne($condition, $operation, $options);
             $time = Timer::result();
-            if (AppEnv::isDebugBarEnabled()) {
+            if (AppEnv::isDebugEnabled()) {
                 $bt = [];
                 $traces = debug_backtrace();
                 for ($i = 15; $i > 0; $i--) {
@@ -209,7 +209,7 @@ class MongoDao extends AbstractDao
         Timer::start();
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->count($condition, $options);
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {
@@ -245,7 +245,7 @@ class MongoDao extends AbstractDao
         $condition = [$this->getIdFieldName() => $id];
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteOne($condition, $options);
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {
@@ -282,7 +282,7 @@ class MongoDao extends AbstractDao
         $options['multi'] = true;
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteMany($condition, $options);
         $time = Timer::result();
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             $bt = [];
             $traces = debug_backtrace();
             for ($i = 15; $i > 0; $i--) {

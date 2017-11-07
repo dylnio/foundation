@@ -12,7 +12,7 @@ class DebugbarMiddleware
     {
         /** @var JsonResponse $response */
         $response = $next($request, $response);
-        if (AppEnv::isDebugBarEnabled()) {
+        if (AppEnv::isDebugEnabled()) {
             if (!$request->getAttribute('ignore_debug', false)) {
                 $body = (string)$response->getBody();
                 if (!$body) {

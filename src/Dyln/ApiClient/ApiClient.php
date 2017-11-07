@@ -82,9 +82,6 @@ class ApiClient
             $query['XDEBUG_SESSION_START'] = 'PHPSTORM';
             $query['debug'] = Config::get('app.debug.url_key');
         }
-        if (AppEnv::isDebugBarEnabled()) {
-            $query['debug_bar'] = Config::get('app.debug.url_key');
-        }
         if (AppEnv::isCacheResetEnabled()) {
             $query['reset'] = Config::get('app.debug.url_key');
         }
