@@ -73,7 +73,9 @@ class SlimDataSource extends DataSource
         $req = $this->app->getContainer()->get(\Slim\Http\Request::class);
         $headers = [];
         foreach ($_SERVER as $key => $value) {
-            if (substr($key, 0, 5) !== 'HTTP_') continue;
+            if (substr($key, 0, 5) !== 'HTTP_') {
+                continue;
+            }
             $header = substr($key, 5);
             $header = str_replace('_', ' ', $header);
             $header = ucwords(strtolower($header));
