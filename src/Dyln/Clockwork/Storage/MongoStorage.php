@@ -99,7 +99,9 @@ class MongoStorage extends Storage
 
     public function cleanup()
     {
-        if ($this->expiration === false) return;
+        if ($this->expiration === false) {
+            return;
+        }
         $this->collection->deleteMany(['time' => ['$lt' => time() - ($this->expiration * 60)]]);
     }
 
