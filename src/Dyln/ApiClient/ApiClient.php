@@ -2,6 +2,7 @@
 
 namespace Dyln\ApiClient;
 
+use Dyln\ApiClient\Enum\Events;
 use Dyln\ApiClient\ResponseBodyMiddleware\ConvertToMessageMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\DebugbarMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\JsonDecodeMiddleware;
@@ -10,6 +11,8 @@ use Dyln\AppEnv;
 use Dyln\Collection\Collection;
 use Dyln\Config\Config;
 use Dyln\Debugbar\Debugbar;
+use Dyln\Event\Emitter;
+use Dyln\Event\Event;
 use Dyln\Guzzle\Cookie\SessionCookieJar;
 use Dyln\Http\Header\ExtraHeaderMiddleware;
 use Dyln\Message\Message;
@@ -42,14 +45,19 @@ class ApiClient
     protected $clientToken = null;
     protected $clientSecret = null;
     protected $userToken = null;
+    /**
+     * @var Emitter|null
+     */
+    protected $emitter;
 
     /**
      * ApiService constructor.
      * @param $baseUrl
      * @param CookieJarInterface|null $cookieJar
+     * @param Emitter|null $emitter
      * @param array $options
      */
-    public function __construct($baseUrl, CookieJarInterface $cookieJar = null, array $options = [])
+    public function __construct($baseUrl, CookieJarInterface $cookieJar = null, Emitter $emitter = null, array $options = [])
     {
         $this->baseUrl = $baseUrl;
         $this->defaultHeaders = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
@@ -59,10 +67,13 @@ class ApiClient
         $this->clientToken = getin($options, 'client.token');
         $this->clientSecret = getin($options, 'client.secret');
         $this->userToken = getin($options, 'user.token');
+        $this->emitter = $emitter;
     }
 
     public function call($path, array $query = null, array $data = null, $method = 'GET', $options = []) : Message
     {
+        $eventParams = ['path' => $path, 'query' => $query, 'data' => $data, 'method' => $method, 'options' => $options];
+        $this->emitter->emit(Events::CALL_BEGIN, $eventParams);
         if (!$query) {
             $query = [];
         }
@@ -93,7 +104,10 @@ class ApiClient
             $requestOptions['body'] = json_encode($data);
         }
         try {
+            $eventParams['request_options'] = $requestOptions;
+            $this->emitEvent(Events::BEFORE_CALL_SEND, $eventParams);
             $res = $this->request($method, $path, $requestOptions);
+            $this->emitEvent(Events::AFTER_CALL_SEND, $eventParams);
             $responseHeaders = $res->getHeaders();
             foreach ($responseHeaders as $key => $value) {
                 if (strpos($key, '__') === 0) {
@@ -103,7 +117,8 @@ class ApiClient
             }
             $body = (string) $res->getBody();
             $body = $this->applyResponseBodyMiddlewares($body);
-
+            $eventParams['body'] = $body instanceof Message ? $body->toArray() : $body;
+            $this->emitEvent(Events::CALL_END, $eventParams);
             return $body;
         } catch (ClientException $e) {
             $responseBody = $e->getResponse()->getBody()->getContents();
@@ -121,7 +136,6 @@ class ApiClient
             $extra = [
                 'exception' => $responseBody['exception'] ?? null,
             ];
-
             return MessageFactory::error(['message' => $message, 'extra' => $extra]);
         } catch (ServerException $e) {
             $responseBody = $e->getResponse()->getBody()->getContents();
@@ -130,7 +144,6 @@ class ApiClient
             $extra = [
                 'exception' => $responseBody['exception'] ?? $responseBody['error'] ?? null,
             ];
-
             return MessageFactory::error(['message' => $message, 'extra' => $extra]);
         } catch (\Exception $e) {
             return MessageFactory::error(['message' => $e->getMessage()]);
@@ -147,7 +160,6 @@ class ApiClient
         if (!$this->httpClient) {
             $this->httpClient = new Client([]);
         }
-
         return $this->httpClient;
     }
 
@@ -158,7 +170,6 @@ class ApiClient
         if ($query) {
             $path .= '?' . http_build_query($query);
         }
-
         return $baseUrl . '/' . $path;
     }
 
@@ -178,7 +189,6 @@ class ApiClient
         $cookie = SetCookie::fromString($cookieString);
         $cookie->setDomain('0');
         $this->getCookieJar()->setCookie($cookie);
-
         return $res;
     }
 
@@ -187,7 +197,6 @@ class ApiClient
         foreach ($this->responseBodyMiddlewares as $middleware) {
             $body = $middleware->execute($body);
         }
-
         return $body;
     }
 
@@ -217,7 +226,6 @@ class ApiClient
             }
             $response->addData('bulk_response', $bulkResponse);
         }
-
         return $response;
     }
 
@@ -227,7 +235,13 @@ class ApiClient
         $nonce = random_int(10000, 90000);
         $message = $method . '+' . urlencode(urldecode(trim($path, '/'))) . '+' . (string) $time . '+' . (string) $nonce;
         $digest = hash_hmac('sha256', $message, $secret) . ':' . $time . ':' . $nonce;
-
         return $digest;
+    }
+
+    private function emitEvent($eventName, $params = [])
+    {
+        if ($this->emitter) {
+            $this->emitter->emit(Event::named($eventName), $params);
+        }
     }
 }
