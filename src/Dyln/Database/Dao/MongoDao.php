@@ -7,7 +7,6 @@ use Dyln\Database\Model\ModelInterface;
 use Dyln\Debugbar\Debugbar;
 use Dyln\Util\Timer;
 use MongoDB\Database;
-use function Dyln\_retry;
 
 /**
  * Class MongoDao
@@ -58,9 +57,7 @@ class MongoDao extends AbstractDao
             $options['sort'] = $sort;
         }
         Timer::start();
-        $cursor = _retry(function () use ($condition, $options) {
-            return $this->getDbAdapter()->selectCollection($this->tableName)->find($condition, $options);
-        }, 5);
+        $cursor = $this->getDbAdapter()->selectCollection($this->tableName)->find($condition, $options);
         $time = Timer::result();
         if (AppEnv::isDebugBarEnabled()) {
             $bt = [];
@@ -143,6 +140,8 @@ class MongoDao extends AbstractDao
                     'options'   => json_encode($options),
                     'query'     => json_encode($data),
                     'time'      => $time,
+                    'start'     => Timer::getStart(),
+                    'end'       => Timer::getEnd(),
                     'backtrace' => $bt,
                 ]);
             }
@@ -190,6 +189,8 @@ class MongoDao extends AbstractDao
                     'query'     => json_encode($condition),
                     'operation' => json_encode($operation),
                     'time'      => $time,
+                    'start'     => Timer::getStart(),
+                    'end'       => Timer::getEnd(),
                     'backtrace' => $bt,
                 ]);
             }
@@ -226,6 +227,8 @@ class MongoDao extends AbstractDao
                 'query'     => json_encode($condition),
                 'operation' => json_encode([]),
                 'time'      => $time,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
                 'backtrace' => $bt,
             ]);
         }
@@ -261,6 +264,8 @@ class MongoDao extends AbstractDao
                 'query'     => json_encode($condition),
                 'operation' => json_encode([]),
                 'time'      => $time,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
                 'backtrace' => $bt,
             ]);
         }
@@ -296,6 +301,8 @@ class MongoDao extends AbstractDao
                 'query'     => json_encode($condition),
                 'operation' => json_encode([]),
                 'time'      => $time,
+                'start'     => Timer::getStart(),
+                'end'       => Timer::getEnd(),
                 'backtrace' => $bt,
             ]);
         }
