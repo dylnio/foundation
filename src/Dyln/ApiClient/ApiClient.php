@@ -12,12 +12,12 @@ use Dyln\Collection\Collection;
 use Dyln\Config\Config;
 use Dyln\Debugbar\Debugbar;
 use Dyln\Event\Emitter;
-use Dyln\Event\Event;
 use Dyln\Guzzle\Cookie\SessionCookieJar;
 use Dyln\Http\Header\ExtraHeaderMiddleware;
 use Dyln\Message\Message;
 use Dyln\Message\MessageFactory;
 use Dyln\Util\ArrayUtil;
+use Dyln\Util\Timer;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJarInterface;
 use GuzzleHttp\Cookie\SetCookie;
@@ -104,8 +104,6 @@ class ApiClient
             $requestOptions['body'] = json_encode($data);
         }
         try {
-            $eventParams['request_options'] = $requestOptions;
-            $this->emitEvent(Events::BEFORE_CALL_SEND, $eventParams);
             $res = $this->request($method, $path, $requestOptions);
             $responseHeaders = $res->getHeaders();
             foreach ($responseHeaders as $key => $value) {
@@ -116,8 +114,6 @@ class ApiClient
             }
             $body = (string) $res->getBody();
             $body = $this->applyResponseBodyMiddlewares($body);
-            $eventParams['body'] = $body instanceof Message ? $body->toArray() : $body;
-            $this->emitEvent(Events::AFTER_CALL_SEND, $eventParams);
             return $body;
         } catch (ClientException $e) {
             $responseBody = $e->getResponse()->getBody()->getContents();
@@ -181,9 +177,20 @@ class ApiClient
     {
         $options['cookies'] = $this->getCookieJar();
         $query = $options['query'] ?? [];
+        Timer::start();
         $request = new Request($method, $this->prepareUri($path, $query), $options['headers'] ?? [], $options['body'] ?? null);
-        Debugbar::add('ApiRequest', ['curl' => (new CurlFormatter(9999))->format($request, $options)]);
         $res = $this->getHttpClient()->send($request);
+        $time = Timer::result();
+        Debugbar::add('ApiRequest', [
+            'curl'  => (new CurlFormatter(9999))->format($request, $options),
+            'start' => Timer::getStart(),
+            'end'   => Timer::getEnd(),
+            'time'  => $time,
+        ]);
+        $body = (string) $res->getBody();
+        Debugbar::add('ApiResponse', [
+            'body' => $body,
+        ]);
         $cookieString = $res->getHeaderLine('Set-Cookie');
         $cookie = SetCookie::fromString($cookieString);
         $cookie->setDomain('0');
@@ -235,12 +242,5 @@ class ApiClient
         $message = $method . '+' . urlencode(urldecode(trim($path, '/'))) . '+' . (string) $time . '+' . (string) $nonce;
         $digest = hash_hmac('sha256', $message, $secret) . ':' . $time . ':' . $nonce;
         return $digest;
-    }
-
-    private function emitEvent($eventName, $params = [])
-    {
-        if ($this->emitter) {
-            $this->emitter->emit(Event::named($eventName), $params);
-        }
     }
 }

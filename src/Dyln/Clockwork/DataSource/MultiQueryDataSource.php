@@ -36,6 +36,15 @@ class MultiQueryDataSource extends DataSource
         ];
     }
 
+    public function addApiRequest($query, $start, $end)
+    {
+        $this->queries[] = [
+            'query'    => $query,
+            'duration' => ($end - $start) * 1000,
+            'model'    => 'API REQUEST',
+        ];
+    }
+
     public function resolve(Request $request)
     {
         $request->databaseQueries = $this->queries;
