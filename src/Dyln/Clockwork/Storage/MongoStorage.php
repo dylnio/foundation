@@ -126,7 +126,6 @@ class MongoStorage extends Storage
 
     private function replaceKeys(array $input, $find, $replace)
     {
-
         $return = [];
         foreach ($input as $key => $value) {
             $key = str_replace("\0", '', $key);
