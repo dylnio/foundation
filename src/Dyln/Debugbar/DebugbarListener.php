@@ -44,6 +44,7 @@ class DebugbarListener implements ListenerInterface
     private function parseForMongo($args = [])
     {
         $bt = [];
+        $parsed = [];
         $traces = array_reverse(debug_backtrace());
         foreach ($traces as $trace) {
             $bt[] = [
@@ -52,19 +53,15 @@ class DebugbarListener implements ListenerInterface
                 'function' => isset($trace['function']) ? $trace['function'] : false,
             ];
         }
-        switch (strtolower($args['command'])) {
-            case 'find':
-                $args['command'] = "{$args['database']}.{$args['collection']}.find";
-                break;
-            case 'findone':
-                $args['command'] = "{$args['database']}.{$args['collection']}.findOne";
-                break;
-        }
-        $args['time'] = $args['duration'];
-        $args['filter'] = getin($args, 'args.filter', []);
-        $args['options'] = getin($args, 'args.options', []);
+        $parsed['command'] = "{$args['database']}.{$args['collection']}.{$args['command']}";
+        $parsed['time'] = $args['duration'];
+        $parsed['start'] = $args['start'];
+        $parsed['end'] = $args['end'];
+        $parsed['duration'] = $args['duration'];
+        $parsed['filter'] = getin($args, 'args.filter', []);
+        $parsed['options'] = getin($args, 'args.options', []);
 
-        return $args;
+        return $parsed;
     }
 
     public function isListener($listener)

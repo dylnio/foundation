@@ -12,7 +12,7 @@ class MultiQueryDataSource extends DataSource
     public function addMongoQuery($query, $start, $end)
     {
         $this->queries[] = [
-            'query'    => $query,
+            'query'    => str_replace('[]', '{}', $query),
             'duration' => ($end - $start) * 1000,
             'model'    => 'MONGO',
         ];
@@ -48,6 +48,7 @@ class MultiQueryDataSource extends DataSource
     public function resolve(Request $request)
     {
         $request->databaseQueries = $this->queries;
+
         return $request;
     }
 }
