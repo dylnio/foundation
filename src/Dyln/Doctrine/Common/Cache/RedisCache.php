@@ -17,8 +17,9 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache implements EventEmitt
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command' => __FUNCTION__,
@@ -42,8 +43,9 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache implements EventEmitt
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command' => __FUNCTION__,
@@ -67,8 +69,9 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache implements EventEmitt
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command' => __FUNCTION__,
@@ -92,8 +95,9 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache implements EventEmitt
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command' => __FUNCTION__,
@@ -117,8 +121,9 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache implements EventEmitt
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command' => __FUNCTION__,
@@ -142,8 +147,9 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache implements EventEmitt
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command' => __FUNCTION__,
@@ -167,8 +173,9 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache implements EventEmitt
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command' => __FUNCTION__,
@@ -192,8 +199,9 @@ class RedisCache extends \Doctrine\Common\Cache\RedisCache implements EventEmitt
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command' => __FUNCTION__,
