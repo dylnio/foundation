@@ -141,7 +141,9 @@ class Database extends \MongoDB\Database implements EventEmitterAwareInterface
             'writeConcern'   => $this->writeConcern,
         ];
         $collection = new Collection($this->manager, $this->databaseName, $collectionName, $options);
-        $collection->setEmitter($this->emitter);
+        if ($this->getEmitter()) {
+            $collection->setEmitter($this->getEmitter());
+        }
 
         return $collection;
     }
