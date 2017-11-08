@@ -41,7 +41,7 @@ class ClockworkMiddleware
                 } else {
                     $text = $row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['options']) . ')';
                 }
-                $text = str_replace('[]]', '{}', $text);
+                $text = str_replace('[]', '{}', $text);
                 $timeline->addEvent(uniqid(), $text, $row['start'], $row['end']);
                 $databaseSource->addMongoQuery($text, $row['start'], $row['end']);
             }
