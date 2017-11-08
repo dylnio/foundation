@@ -16,6 +16,7 @@ class Debugbar
 
     public static function add($section, $data)
     {
+        $data['app'] = defined('PROJECT_NAME') ? PROJECT_NAME : 'No project name';
         $section = str_replace(' ', '_', $section);
         $existing = ArrayUtil::getIn(self::$data, $section, []);
         $existing[] = $data;

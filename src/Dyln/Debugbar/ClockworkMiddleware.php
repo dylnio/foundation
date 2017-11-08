@@ -52,22 +52,46 @@ class ClockworkMiddleware
                 }
                 $text = $row['command'] . '(' . implode(', ', $params) . ')';
                 $text = str_replace('[]', '{}', $text);
-                $timeline->addEvent(uniqid(), $text, $row['start'], $row['end']);
+                if (!empty($row['app'])) {
+                    $text = ' (' . $row['app'] . ') ' . $text;
+                }
+                $timeline->addEvent(uniqid(), '[MONGO] ' . $text, $row['start'], $row['end']);
                 $databaseSource->addMongoQuery($text, $row['start'], $row['end']);
             }
         }
         if ($elastic) {
             $databaseSource = $this->getDatabaseSource();
             foreach ($elastic as $row) {
-                $timeline->addEvent(uniqid(), '[ELASTIC] ' . $row['command'] . '(' . $row['filter'] . ',' . $row['options'] . ')', $row['start'], $row['end']);
-                $databaseSource->addElasticQuery($row['command'] . ' (' . $row['filter'] . ')', $row['start'], $row['end']);
+                $params = [];
+                if (!empty($row['filter'])) {
+                    $params[] = json_encode($row['filter']);
+                }
+                if (!empty($row['options'])) {
+                    $params[] = json_encode($row['options']);
+                }
+                $text = $row['command'] . '(' . implode(', ', $params) . ')';
+                $text = str_replace('[]', '{}', $text);
+                if (!empty($row['app'])) {
+                    $text = ' (' . $row['app'] . ') ' . $text;
+                }
+                $timeline->addEvent(uniqid(), '[ELASTIC] ' . $text, $row['start'], $row['end']);
+                $databaseSource->addElasticQuery($text, $row['start'], $row['end']);
             }
         }
         if ($redis) {
             $databaseSource = $this->getDatabaseSource();
             foreach ($redis as $row) {
-                $timeline->addEvent(uniqid(), '[REDIS] ' . $row['command'] . '(' . $row['filter'] . ')', $row['start'], $row['end']);
-                $databaseSource->addRedisQuery($row['command'] . ' (' . $row['filter'] . ')', $row['start'], $row['end']);
+                $params = [];
+                if (!empty($row['filter'])) {
+                    $params[] = json_encode($row['filter']);
+                }
+                $text = $row['command'] . '(' . implode(', ', $params) . ')';
+                $text = str_replace('[]', '{}', $text);
+                if (!empty($row['app'])) {
+                    $text = ' (' . $row['app'] . ') ' . $text;
+                }
+                $timeline->addEvent(uniqid(), '[REDIS] ' . $text, $row['start'], $row['end']);
+                $databaseSource->addRedisQuery($text, $row['start'], $row['end']);
             }
         }
         if ($apiRequest) {
