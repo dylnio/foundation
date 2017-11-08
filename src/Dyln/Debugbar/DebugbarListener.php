@@ -59,6 +59,7 @@ class DebugbarListener implements ListenerInterface
         $parsed['end'] = $args['end'];
         $parsed['duration'] = $args['duration'];
         $parsed['filter'] = getin($args, 'args.filter', []);
+        $parsed['update'] = getin($args, 'args.update', []);
         $parsed['options'] = getin($args, 'args.options', []);
 
         return $parsed;

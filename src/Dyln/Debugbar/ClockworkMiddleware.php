@@ -37,11 +37,20 @@ class ClockworkMiddleware
         if ($mongo) {
             $databaseSource = $this->getDatabaseSource();
             foreach ($mongo as $row) {
-                if (!empty($row['operation'])) {
-                    $text = $row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['operation']) . ',' . json_encode($row['options']) . ')';
-                } else {
-                    $text = $row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['options']) . ')';
+                $params = [];
+                if (!empty($row['filter'])) {
+                    $params[] = json_encode($row['filter']);
                 }
+                if (!empty($row['update'])) {
+                    $params[] = json_encode($row['update']);
+                }
+                if (!empty($row['operation'])) {
+                    $params[] = json_encode($row['operation']);
+                }
+                if (!empty($row['options'])) {
+                    $params[] = json_encode($row['options']);
+                }
+                $text = $row['command'] . '(' . implode(', ', $params) . ')';
                 $text = str_replace('[]', '{}', $text);
                 $timeline->addEvent(uniqid(), $text, $row['start'], $row['end']);
                 $databaseSource->addMongoQuery($text, $row['start'], $row['end']);
