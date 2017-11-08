@@ -38,11 +38,32 @@ class ClockworkMiddleware
             $databaseSource = $this->getDatabaseSource();
             foreach ($mongo as $row) {
                 $params = [];
+                if (!empty($row['fieldName'])) {
+                    $params[] = is_array($row['fieldName']) ? json_encode($row['fieldName']) : $row['fieldName'];
+                }
+                if (!empty($row['key'])) {
+                    $params[] = is_array($row['key']) ? json_encode($row['key']) : $row['key'];
+                }
+                if (!empty($row['indexName'])) {
+                    $params[] = is_array($row['indexName']) ? json_encode($row['indexName']) : $row['indexName'];
+                }
+                if (!empty($row['indexes'])) {
+                    $params[] = json_encode($row['indexes']);
+                }
+                if (!empty($row['document'])) {
+                    $params[] = json_encode($row['document']);
+                }
+                if (!empty($row['documents'])) {
+                    $params[] = json_encode($row['documents']);
+                }
                 if (!empty($row['filter'])) {
                     $params[] = json_encode($row['filter']);
                 }
                 if (!empty($row['update'])) {
                     $params[] = json_encode($row['update']);
+                }
+                if (!empty($row['replacement'])) {
+                    $params[] = json_encode($row['replacement']);
                 }
                 if (!empty($row['operation'])) {
                     $params[] = json_encode($row['operation']);
@@ -82,8 +103,8 @@ class ClockworkMiddleware
             $databaseSource = $this->getDatabaseSource();
             foreach ($redis as $row) {
                 $params = [];
-                if (!empty($row['filter'])) {
-                    $params[] = json_encode($row['filter']);
+                if (!empty($row['args'])) {
+                    $params[] = json_encode($row['args']);
                 }
                 $text = $row['command'] . '(' . implode(', ', $params) . ')';
                 $text = str_replace('[]', '{}', $text);

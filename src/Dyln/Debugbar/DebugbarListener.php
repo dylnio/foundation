@@ -28,6 +28,7 @@ class DebugbarListener implements ListenerInterface
     private function parseForRedis($args = [])
     {
         $bt = [];
+        $parsed = [];
         $traces = array_reverse(debug_backtrace());
         foreach ($traces as $trace) {
             $bt[] = [
@@ -36,9 +37,14 @@ class DebugbarListener implements ListenerInterface
                 'function' => isset($trace['function']) ? $trace['function'] : false,
             ];
         }
-        $args['time'] = $args['duration'];
+        $parsed['command'] = "{$args['command']}";
+        $parsed['time'] = $args['duration'];
+        $parsed['start'] = $args['start'];
+        $parsed['end'] = $args['end'];
+        $parsed['duration'] = $args['duration'];
+        $parsed['args'] = getin($args, 'args', []);
 
-        return $args;
+        return $parsed;
     }
 
     private function parseForMongo($args = [])
@@ -61,6 +67,13 @@ class DebugbarListener implements ListenerInterface
         $parsed['filter'] = getin($args, 'args.filter', []);
         $parsed['update'] = getin($args, 'args.update', []);
         $parsed['options'] = getin($args, 'args.options', []);
+        $parsed['replacement'] = getin($args, 'args.replacement', []);
+        $parsed['document'] = getin($args, 'args.document', []);
+        $parsed['documents'] = getin($args, 'args.documents', []);
+        $parsed['fieldName'] = getin($args, 'args.fieldName', []);
+        $parsed['key'] = getin($args, 'args.key', []);
+        $parsed['indexName'] = getin($args, 'args.indexName', []);
+        $parsed['indexes'] = getin($args, 'args.indexes', []);
 
         return $parsed;
     }
