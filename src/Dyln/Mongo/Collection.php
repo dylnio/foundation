@@ -383,7 +383,7 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
             'start'      => $start,
         ];
         $this->emit(CollectionEvents::BEFORE_COMMAND, $eventParams);
-        $res = parent::findOneAndDelete($filter, $options);
+        $res = parent::findOneAndReplace($filter, $replacement, $options);
         $end = microtime(true);
         $this->emit(CollectionEvents::AFTER_COMMAND, $eventParams + [
                 'end'      => $end,
@@ -410,7 +410,7 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
             'start'      => $start,
         ];
         $this->emit(CollectionEvents::BEFORE_COMMAND, $eventParams);
-        $res = parent::findOneAndUpdate($filter, $options);
+        $res = parent::findOneAndUpdate($filter, $update, $options);
         $end = microtime(true);
         $this->emit(CollectionEvents::AFTER_COMMAND, $eventParams + [
                 'end'      => $end,
