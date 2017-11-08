@@ -2,10 +2,7 @@
 
 namespace Dyln\Database\Dao;
 
-use Dyln\AppEnv;
 use Dyln\Database\Model\ModelInterface;
-use Dyln\Debugbar\Debugbar;
-use Dyln\Util\Timer;
 use MongoDB\Database;
 
 /**
@@ -58,32 +55,7 @@ class MongoDao extends AbstractDao
         if (is_array($sort) && !empty($sort)) {
             $options['sort'] = $sort;
         }
-        Timer::start();
         $cursor = $this->getDbAdapter()->selectCollection($this->tableName)->find($condition, $options);
-        $time = Timer::result();
-        if (AppEnv::isDebugEnabled()) {
-            $bt = [];
-            $traces = debug_backtrace();
-            for ($i = 15; $i > 0; $i--) {
-                if (isset($traces[$i])) {
-                    $t = $traces[$i];
-                    $bt[] = [
-                        'file'     => isset($t['file']) ? $t['file'] : false,
-                        'line'     => isset($t['line']) ? $t['line'] : false,
-                        'function' => isset($t['function']) ? $t['function'] : false,
-                    ];
-                }
-            }
-            Debugbar::add('Mongo', [
-                'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.find',
-                'options'   => json_encode($options),
-                'query'     => json_encode($condition),
-                'start'     => Timer::getStart(),
-                'end'       => Timer::getEnd(),
-                'time'      => $time,
-                'backtrace' => $bt,
-            ]);
-        }
 
         return $cursor;
     }
@@ -122,32 +94,7 @@ class MongoDao extends AbstractDao
             if (empty($data[$this->getIdFieldName()])) {
                 unset($data['_id']);
             }
-            Timer::start();
             $result = $this->getDbAdapter()->selectCollection($this->getTableName())->insertOne($data, $options);
-            $time = Timer::result();
-            if (AppEnv::isDebugEnabled()) {
-                $bt = [];
-                $traces = debug_backtrace();
-                for ($i = 15; $i > 0; $i--) {
-                    if (isset($traces[$i])) {
-                        $t = $traces[$i];
-                        $bt[] = [
-                            'file'     => isset($t['file']) ? $t['file'] : false,
-                            'line'     => isset($t['line']) ? $t['line'] : false,
-                            'function' => isset($t['function']) ? $t['function'] : false,
-                        ];
-                    }
-                }
-                Debugbar::add('Mongo', [
-                    'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.insertOne',
-                    'options'   => json_encode($options),
-                    'query'     => json_encode($data),
-                    'time'      => $time,
-                    'start'     => Timer::getStart(),
-                    'end'       => Timer::getEnd(),
-                    'backtrace' => $bt,
-                ]);
-            }
             $model->setProperty($this->getIdFieldName(), $result->getInsertedId());
             $model->commitChanges();
 
@@ -171,33 +118,7 @@ class MongoDao extends AbstractDao
             $data['upt'] = microtime(true);
             $condition = [$this->getIdFieldName() => $model->getProperty($this->getIdFieldName())];
             $operation = ['$set' => $data];
-            Timer::start();
             $this->getDbAdapter()->selectCollection($this->getTableName())->updateOne($condition, $operation, $options);
-            $time = Timer::result();
-            if (AppEnv::isDebugEnabled()) {
-                $bt = [];
-                $traces = debug_backtrace();
-                for ($i = 15; $i > 0; $i--) {
-                    if (isset($traces[$i])) {
-                        $t = $traces[$i];
-                        $bt[] = [
-                            'file'     => isset($t['file']) ? $t['file'] : false,
-                            'line'     => isset($t['line']) ? $t['line'] : false,
-                            'function' => isset($t['function']) ? $t['function'] : false,
-                        ];
-                    }
-                }
-                Debugbar::add('Mongo', [
-                    'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.updateOne',
-                    'options'   => json_encode($options),
-                    'query'     => json_encode($condition),
-                    'operation' => json_encode($operation),
-                    'time'      => $time,
-                    'start'     => Timer::getStart(),
-                    'end'       => Timer::getEnd(),
-                    'backtrace' => $bt,
-                ]);
-            }
         }
         $model->commitChanges();
 
@@ -211,32 +132,7 @@ class MongoDao extends AbstractDao
      */
     public function count($condition = [], $options = [])
     {
-        Timer::start();
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->count($condition, $options);
-        $time = Timer::result();
-        if (AppEnv::isDebugEnabled()) {
-            $bt = [];
-            $traces = debug_backtrace();
-            for ($i = 15; $i > 0; $i--) {
-                if (isset($traces[$i])) {
-                    $t = $traces[$i];
-                    $bt[] = [
-                        'file'     => isset($t['file']) ? $t['file'] : false,
-                        'line'     => isset($t['line']) ? $t['line'] : false,
-                        'function' => isset($t['function']) ? $t['function'] : false,
-                    ];
-                }
-            }
-            Debugbar::add('Mongo', [
-                'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.count',
-                'options'   => json_encode([]),
-                'query'     => json_encode($condition),
-                'time'      => $time,
-                'start'     => Timer::getStart(),
-                'end'       => Timer::getEnd(),
-                'backtrace' => $bt,
-            ]);
-        }
 
         return $result;
     }
@@ -248,33 +144,8 @@ class MongoDao extends AbstractDao
      */
     public function delete($id, $options = [])
     {
-        Timer::start();
         $condition = [$this->getIdFieldName() => $id];
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteOne($condition, $options);
-        $time = Timer::result();
-        if (AppEnv::isDebugEnabled()) {
-            $bt = [];
-            $traces = debug_backtrace();
-            for ($i = 15; $i > 0; $i--) {
-                if (isset($traces[$i])) {
-                    $t = $traces[$i];
-                    $bt[] = [
-                        'file'     => isset($t['file']) ? $t['file'] : false,
-                        'line'     => isset($t['line']) ? $t['line'] : false,
-                        'function' => isset($t['function']) ? $t['function'] : false,
-                    ];
-                }
-            }
-            Debugbar::add('Mongo', [
-                'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.deleteOne',
-                'options'   => json_encode([]),
-                'query'     => json_encode($condition),
-                'time'      => $time,
-                'start'     => Timer::getStart(),
-                'end'       => Timer::getEnd(),
-                'backtrace' => $bt,
-            ]);
-        }
 
         return $result;
     }
@@ -286,33 +157,8 @@ class MongoDao extends AbstractDao
      */
     public function deleteBy($condition, $options = [])
     {
-        Timer::start();
         $options['multi'] = true;
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteMany($condition, $options);
-        $time = Timer::result();
-        if (AppEnv::isDebugEnabled()) {
-            $bt = [];
-            $traces = debug_backtrace();
-            for ($i = 15; $i > 0; $i--) {
-                if (isset($traces[$i])) {
-                    $t = $traces[$i];
-                    $bt[] = [
-                        'file'     => isset($t['file']) ? $t['file'] : false,
-                        'line'     => isset($t['line']) ? $t['line'] : false,
-                        'function' => isset($t['function']) ? $t['function'] : false,
-                    ];
-                }
-            }
-            Debugbar::add('Mongo', [
-                'command'   => $this->getDbAdapter()->getDatabaseName() . '.' . $this->tableName . '.deleteMany',
-                'options'   => json_encode($options),
-                'query'     => json_encode($condition),
-                'time'      => $time,
-                'start'     => Timer::getStart(),
-                'end'       => Timer::getEnd(),
-                'backtrace' => $bt,
-            ]);
-        }
 
         return $result;
     }

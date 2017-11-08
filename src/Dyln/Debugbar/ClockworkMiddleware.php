@@ -36,26 +36,26 @@ class ClockworkMiddleware
         if ($mongo) {
             $databaseSource = $this->getDatabaseSource();
             foreach ($mongo as $row) {
-                $timeline->addEvent(uniqid(), '[MONGO] ' . $row['command'] . '(' . $row['query'] . ',' . $row['options'] . ')', $row['start'], $row['end']);
+                $timeline->addEvent(uniqid(), '[MONGO] ' . $row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['options']) . ')', $row['start'], $row['end']);
                 if (!empty($row['operation'])) {
-                    $databaseSource->addMongoQuery($row['command'] . '(' . $row['query'] . ',' . $row['operation'] . ',' . $row['options'] . ')', $row['start'], $row['end']);
+                    $databaseSource->addMongoQuery($row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['operation']) . ',' . json_encode($row['options']) . ')', $row['start'], $row['end']);
                 } else {
-                    $databaseSource->addMongoQuery($row['command'] . '(' . $row['query'] . ',' . $row['options'] . ')', $row['start'], $row['end']);
+                    $databaseSource->addMongoQuery($row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['options']) . ')', $row['start'], $row['end']);
                 }
             }
         }
         if ($elastic) {
             $databaseSource = $this->getDatabaseSource();
             foreach ($elastic as $row) {
-                $timeline->addEvent(uniqid(), '[ELASTIC] ' . $row['command'] . '(' . $row['query'] . ',' . $row['options'] . ')', $row['start'], $row['end']);
-                $databaseSource->addElasticQuery($row['command'] . ' (' . $row['query'] . ')', $row['start'], $row['end']);
+                $timeline->addEvent(uniqid(), '[ELASTIC] ' . $row['command'] . '(' . $row['filter'] . ',' . $row['options'] . ')', $row['start'], $row['end']);
+                $databaseSource->addElasticQuery($row['command'] . ' (' . $row['filter'] . ')', $row['start'], $row['end']);
             }
         }
         if ($redis) {
             $databaseSource = $this->getDatabaseSource();
             foreach ($redis as $row) {
-                $timeline->addEvent(uniqid(), '[REDIS] ' . $row['command'] . '(' . $row['query'] . ')', $row['start'], $row['end']);
-                $databaseSource->addRedisQuery($row['command'] . ' (' . $row['query'] . ')', $row['start'], $row['end']);
+                $timeline->addEvent(uniqid(), '[REDIS] ' . $row['command'] . '(' . $row['filter'] . ')', $row['start'], $row['end']);
+                $databaseSource->addRedisQuery($row['command'] . ' (' . $row['filter'] . ')', $row['start'], $row['end']);
             }
         }
         if ($apiRequest) {
@@ -70,6 +70,7 @@ class ClockworkMiddleware
                 $this->clockwork->log(LogLevel::INFO, $row);
             }
         }
+
         return $response;
     }
 
@@ -86,6 +87,7 @@ class ClockworkMiddleware
             $found = new MultiQueryDataSource();
             $this->clockwork->addDataSource($found);
         }
+
         return $found;
     }
 }
