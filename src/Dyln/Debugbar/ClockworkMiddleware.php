@@ -33,6 +33,7 @@ class ClockworkMiddleware
         $redis = getin($data, 'Redis', []);
         $apiRequest = getin($data, 'ApiRequest', []);
         $apiResponses = getin($data, 'ApiResponse', []);
+        $userLog = getin($data, 'UserLog', []);
         if ($mongo) {
             $databaseSource = $this->getDatabaseSource();
             foreach ($mongo as $row) {
@@ -70,6 +71,11 @@ class ClockworkMiddleware
         if ($apiResponses) {
             foreach ($apiResponses as $row) {
                 $this->clockwork->log(LogLevel::INFO, $row);
+            }
+        }
+        if ($userLog) {
+            foreach ($userLog as $row) {
+                $this->clockwork->log($row['level'] ?? LogLevel::INFO, $row['message']);
             }
         }
 

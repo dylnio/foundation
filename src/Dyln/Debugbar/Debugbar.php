@@ -3,12 +3,18 @@
 namespace Dyln\Debugbar;
 
 use Dyln\Util\ArrayUtil;
+use Psr\Log\LogLevel;
 
 class Debugbar
 {
-    static protected $data = [];
+    protected static $data = [];
 
-    static public function add($section, $data)
+    public static function log($message, $level = LogLevel::INFO)
+    {
+        self::add('UserLog', ['level' => $level, 'message' => $message]);
+    }
+
+    public static function add($section, $data)
     {
         $section = str_replace(' ', '_', $section);
         $existing = ArrayUtil::getIn(self::$data, $section, []);
@@ -16,7 +22,7 @@ class Debugbar
         self::$data[$section] = $existing;
     }
 
-    static public function addBulk($data)
+    public static function addBulk($data)
     {
         foreach ($data as $section => $rows) {
             $existing = ArrayUtil::getIn(self::$data, $section, []);
@@ -27,7 +33,7 @@ class Debugbar
         }
     }
 
-    static public function getData()
+    public static function getData()
     {
         return self::$data;
     }
