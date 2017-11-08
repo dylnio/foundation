@@ -32,6 +32,7 @@ class AppEnv
             define('APPLICATION_ENV', $env);
         }
         self::putEnv('APPLICATION_ENV', APPLICATION_ENV);
+
         return APPLICATION_ENV;
     }
 
@@ -53,6 +54,7 @@ class AppEnv
         if (in_array($servername, $list)) {
             return self::LIVE_ENV;
         }
+
         return self::DEFAULT_ENV;
     }
 
@@ -86,6 +88,7 @@ class AppEnv
                 $value = str_replace('{{' . $placeholder . '}}', self::env($placeholder), $value);
             }
         }
+
         return $value;
     }
 
@@ -108,18 +111,31 @@ class AppEnv
                 $debug = $overwrite === Config::get('app.debug.url_key');
             }
         }
+
         return $debug;
     }
 
     public static function isApiSignatureCheckDisabled()
     {
         $check = $_GET['debug_sign'] ?? $_COOKIE['debug_sign'] ?? null;
+
         return $check === Config::get('app.debug.url_key');
     }
 
     public static function isCacheResetEnabled()
     {
         $resetKey = $_GET['reset'] ?? null;
+
         return $resetKey == Config::get('app.debug.url_key');
+    }
+
+    public static function isUrlKeyMatch($key, $value)
+    {
+        $urlKey = $_GET[$key] ?? null;
+        if (!$urlKey) {
+            return false;
+        }
+
+        return $urlKey === $value;
     }
 }
