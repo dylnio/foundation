@@ -2,6 +2,7 @@
 
 namespace Dyln\Session\Handler;
 
+use Dyln\Event\Emitter;
 use Dyln\Mongo\Database;
 use Dyln\Mongo\MongofyKeys;
 use Dyln\Util\ArrayUtil;
@@ -14,17 +15,20 @@ class MongoSessionHandler
     /** @var MongoSessionHandler */
     protected static $_instance;
     protected static $memorySession = [];
-    /** @var \MongoDB\Collection */
+    /** @var \Dyln\Mongo\Collection|\MongoDB\Collection */
     protected $sessionCollection;
-    /** @var \MongoDB\Collection */
+    /** @var \Dyln\Mongo\Collection|\MongoDB\Collection */
     protected $sessionDataCollection;
     protected $sessionConfig = [];
     protected $session = [];
     protected $sessionData = [];
+    /** @var Emitter */
+    protected $emitter;
 
-    protected function __construct($host, $databaseName, $collectionName, array $config)
+    protected function __construct($host, $databaseName, $collectionName, array $config, Emitter $emitter)
     {
         $this->sessionConfig = ArrayUtil::getIn($config, ['session_config'], []);
+        $this->emitter = $emitter;
         $manager = new Manager($host, ArrayUtil::getIn($this->sessionConfig, ['handler', 'mongo', 'uri_options'], []), ArrayUtil::getIn($this->sessionConfig, ['handler', 'mongo', 'driver_options'], []));
         $db = new Database($manager, $databaseName, [
             'typeMap' => [
@@ -33,6 +37,7 @@ class MongoSessionHandler
                 'root'     => 'array',
             ],
         ]);
+        $db->setEmitter($emitter);
         $this->sessionCollection = $db->selectCollection($collectionName);
         $this->sessionDataCollection = $db->selectCollection($collectionName . '_data');
         $serMethod = ini_get("session.serialize_handler");
@@ -55,10 +60,10 @@ class MongoSessionHandler
         return self::$_instance;
     }
 
-    public static function register($host, $databaseName, $collectionName, array $config = [])
+    public static function register($host, $databaseName, $collectionName, array $config = [], Emitter $emitter)
     {
         if (!self::$_instance) {
-            $handler = new self($host, $databaseName, $collectionName, $config);
+            $handler = new self($host, $databaseName, $collectionName, $config, $emitter);
             self::$_instance = $handler;
         } else {
             $handler = self::$_instance;
