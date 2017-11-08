@@ -36,12 +36,14 @@ class ClockworkMiddleware
         if ($mongo) {
             $databaseSource = $this->getDatabaseSource();
             foreach ($mongo as $row) {
-                $timeline->addEvent(uniqid(), '[MONGO] ' . $row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['options']) . ')', $row['start'], $row['end']);
                 if (!empty($row['operation'])) {
-                    $databaseSource->addMongoQuery($row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['operation']) . ',' . json_encode($row['options']) . ')', $row['start'], $row['end']);
+                    $text = $row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['operation']) . ',' . json_encode($row['options']) . ')';
                 } else {
-                    $databaseSource->addMongoQuery($row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['options']) . ')', $row['start'], $row['end']);
+                    $text = $row['command'] . '(' . json_encode($row['filter']) . ',' . json_encode($row['options']) . ')';
                 }
+                $text = str_replace('[]]', '{}', $text);
+                $timeline->addEvent(uniqid(), $text, $row['start'], $row['end']);
+                $databaseSource->addMongoQuery($text, $row['start'], $row['end']);
             }
         }
         if ($elastic) {
