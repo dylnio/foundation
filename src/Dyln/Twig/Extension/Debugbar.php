@@ -45,7 +45,7 @@ class Debugbar extends \Twig_Extension
                         'time'  => 0,
                         'data'  => $sectionData,
                     ];
-                } elseif ($sectionName == 'ApiRequest') {
+                } else if ($sectionName == 'ApiRequest') {
                     $data[$sectionName] = [
                         'count' => 1,
                         'time'  => 0,
@@ -78,8 +78,8 @@ class Debugbar extends \Twig_Extension
         foreach ($payload as $sectionName => &$sectionData) {
             if ($sectionName == 'Mongo') {
                 foreach ($sectionData as &$sd) {
-                    $sd['query'] = preg_replace('/({"\$oid":"([0-9a-z]{24})"})/i', 'ObjectId("${2}")', $sd['query']);
-                    $sd['query'] = str_replace(',', ', ', $sd['query']);
+                    $sd['filter'] = preg_replace('/({"\$oid":"([0-9a-z]{24})"})/i', 'ObjectId("${2}")', json_encode($sd['filter']));
+                    $sd['filter'] = str_replace(',', ', ', $sd['filter']);
                 }
             }
         }
