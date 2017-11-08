@@ -2,6 +2,9 @@
 
 namespace Dyln\DI;
 
+use Doctrine\Common\Cache\CacheProvider;
+use Dyln\Event\Emitter;
+
 class Container extends \DI\Container implements \ArrayAccess
 {
     /**
@@ -66,14 +69,28 @@ class Container extends \DI\Container implements \ArrayAccess
         // TODO: Implement offsetUnset() method.
     }
 
-    public function get($name)
+    public function get($obj)
     {
-        $obj = parent::get($name);
-        if (is_string($obj) && class_exists($obj)) {
-            $obj = $this->get($obj);
+        if (!is_object($obj)) {
+            $obj = parent::get($obj);
+            if (is_string($obj) && class_exists($obj)) {
+                $obj = $this->get($obj);
+            }
         }
+
+        return $this->decorate($obj);
+    }
+
+    public function decorate($obj)
+    {
         if ($obj instanceof InitableInterface) {
             $this->call([$obj, 'init']);
+        }
+        if ($obj instanceof EventEmitterAwareInterface) {
+            $obj->setEmitter($this->get(Emitter::class));
+        }
+        if ($obj instanceof CacheAwareInterface) {
+            $obj->setCache($this->get(CacheProvider::class));
         }
 
         return $obj;

@@ -19,6 +19,7 @@ class MongoDao extends AbstractDao
      * @param $id
      * @param array $fields
      * @return bool|array
+     * @throws \Exception
      */
     public function fetch($id, $fields = [])
     {
@@ -30,6 +31,7 @@ class MongoDao extends AbstractDao
         if (count($result) === 0) {
             return false;
         }
+
         return $result[0];
     }
 
@@ -82,6 +84,7 @@ class MongoDao extends AbstractDao
                 'backtrace' => $bt,
             ]);
         }
+
         return $cursor;
     }
 
@@ -147,6 +150,7 @@ class MongoDao extends AbstractDao
             }
             $model->setProperty($this->getIdFieldName(), $result->getInsertedId());
             $model->commitChanges();
+
             return $model;
         }
     }
@@ -196,6 +200,7 @@ class MongoDao extends AbstractDao
             }
         }
         $model->commitChanges();
+
         return $model;
     }
 
@@ -232,11 +237,13 @@ class MongoDao extends AbstractDao
                 'backtrace' => $bt,
             ]);
         }
+
         return $result;
     }
 
     /**
      * @param $id
+     * @param array $options
      * @return \MongoDB\DeleteResult
      */
     public function delete($id, $options = [])
@@ -268,6 +275,7 @@ class MongoDao extends AbstractDao
                 'backtrace' => $bt,
             ]);
         }
+
         return $result;
     }
 
@@ -305,6 +313,7 @@ class MongoDao extends AbstractDao
                 'backtrace' => $bt,
             ]);
         }
+
         return $result;
     }
 }

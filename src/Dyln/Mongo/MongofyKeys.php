@@ -10,8 +10,8 @@ class MongofyKeys
             '.' => '{_DOT_}',
             '$' => '{_DOLLAR_}',
         ];
-
         foreach ($array as $k => $v) {
+            $k = str_replace("\0", '', $k);
             foreach ($replacements as $badKey => $substitute) {
                 if (strpos($k, $badKey) !== false) {
                     $k2 = str_replace($badKey, $substitute, $k);
@@ -34,7 +34,6 @@ class MongofyKeys
             '.' => '{_DOT_}',
             '$' => '{_DOLLAR_}',
         ];
-
         foreach ($array as $k => $v) {
             foreach ($replacements as $badKey => $substitute) {
                 if (strpos($k, $substitute) !== false) {
