@@ -83,15 +83,7 @@ class ClockworkMiddleware
         if ($elastic) {
             $databaseSource = $this->getDatabaseSource();
             foreach ($elastic as $row) {
-                $params = [];
-                if (!empty($row['filter'])) {
-                    $params[] = json_encode($row['filter']);
-                }
-                if (!empty($row['options'])) {
-                    $params[] = json_encode($row['options']);
-                }
-                $text = $row['command'] . '(' . implode(', ', $params) . ')';
-                $text = str_replace('[]', '{}', $text);
+                $text = 'GET ' . $row['args']['index'] . '/' . $row['args']['type'] . " " . json_encode($row['args']['body']);
                 if (!empty($row['app'])) {
                     $text = ' (' . $row['app'] . ') ' . $text;
                 }

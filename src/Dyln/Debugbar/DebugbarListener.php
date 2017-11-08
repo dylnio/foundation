@@ -4,6 +4,7 @@ namespace Dyln\Debugbar;
 
 use Dyln\AppEnv;
 use Dyln\Doctrine\Common\Cache\Enum\RedisCacheEvents;
+use Dyln\ElasticSearch\Enum\ElasticSearchEvents;
 use Dyln\Mongo\Enum\CollectionEvents;
 use League\Event\EventInterface;
 use League\Event\ListenerInterface;
@@ -21,11 +22,36 @@ class DebugbarListener implements ListenerInterface
                 case RedisCacheEvents::AFTER_COMMAND:
                     Debugbar::add('Redis', $this->parseForRedis($args));
                     break;
+                case ElasticSearchEvents::AFTER_COMMAND:
+                    Debugbar::add('Elastic', $this->parseForElastic($args));
+                    break;
             }
         }
     }
 
     private function parseForRedis($args = [])
+    {
+        $bt = [];
+        $parsed = [];
+        $traces = array_reverse(debug_backtrace());
+        foreach ($traces as $trace) {
+            $bt[] = [
+                'file'     => isset($trace['file']) ? $trace['file'] : false,
+                'line'     => isset($trace['line']) ? $trace['line'] : false,
+                'function' => isset($trace['function']) ? $trace['function'] : false,
+            ];
+        }
+        $parsed['command'] = "{$args['command']}";
+        $parsed['time'] = $args['duration'];
+        $parsed['start'] = $args['start'];
+        $parsed['end'] = $args['end'];
+        $parsed['duration'] = $args['duration'];
+        $parsed['args'] = getin($args, 'args', []);
+
+        return $parsed;
+    }
+
+    private function parseForElastic($args = [])
     {
         $bt = [];
         $parsed = [];
