@@ -2,10 +2,10 @@
 
 namespace Dyln\Session\Handler;
 
+use Dyln\Mongo\Database;
 use Dyln\Mongo\MongofyKeys;
 use Dyln\Util\ArrayUtil;
 use Dyln\Util\Browser;
-use MongoDB\Database;
 use MongoDB\Driver\Manager;
 use function Dyln\getin;
 
@@ -131,7 +131,6 @@ class MongoSessionHandler
 
         return true;
     }
-
 
     /**
      * A no-op function, somethings just aren't worth doing.
