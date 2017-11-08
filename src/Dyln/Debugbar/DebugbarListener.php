@@ -3,6 +3,7 @@
 namespace Dyln\Debugbar;
 
 use Dyln\AppEnv;
+use Dyln\Doctrine\Common\Cache\Enum\RedisCacheEvents;
 use Dyln\Mongo\Enum\CollectionEvents;
 use League\Event\EventInterface;
 use League\Event\ListenerInterface;
@@ -17,8 +18,27 @@ class DebugbarListener implements ListenerInterface
                 case CollectionEvents::AFTER_COMMAND:
                     Debugbar::add('Mongo', $this->parseForMongo($args));
                     break;
+                case RedisCacheEvents::AFTER_COMMAND:
+                    Debugbar::add('Redis', $this->parseForRedis($args));
+                    break;
             }
         }
+    }
+
+    private function parseForRedis($args = [])
+    {
+        $bt = [];
+        $traces = array_reverse(debug_backtrace());
+        foreach ($traces as $trace) {
+            $bt[] = [
+                'file'     => isset($trace['file']) ? $trace['file'] : false,
+                'line'     => isset($trace['line']) ? $trace['line'] : false,
+                'function' => isset($trace['function']) ? $trace['function'] : false,
+            ];
+        }
+        $args['time'] = $args['duration'];
+
+        return $args;
     }
 
     private function parseForMongo($args = [])
