@@ -27,8 +27,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -51,11 +52,18 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
     public function count($filter = [], array $options = [])
     {
         $start = microtime(true);
+        $reflector = new \ReflectionClass(__CLASS__);
+        $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
+        $args = [];
+        $funcArgs = func_get_args();
+        foreach ($parameters as $index => $param) {
+            $args[$param->name] = $funcArgs[$index] ?? null;
+        }
         $eventParams = [
             'command'    => __FUNCTION__,
             'database'   => $this->getDatabaseName(),
             'collection' => $this->getCollectionName(),
-            'args'       => func_get_args(),
+            'args'       => $args,
             'start'      => $start,
         ];
         $this->emit(CollectionEvents::BEFORE_COMMAND, $eventParams);
@@ -75,8 +83,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -102,8 +111,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -129,8 +139,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -156,8 +167,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -183,8 +195,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -210,8 +223,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -237,8 +251,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -264,8 +279,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -291,8 +307,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -318,8 +335,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -345,8 +363,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -372,8 +391,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -399,8 +419,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -426,8 +447,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -453,8 +475,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -480,8 +503,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -507,8 +531,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -534,8 +559,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
@@ -561,8 +587,9 @@ class Collection extends \MongoDB\Collection implements EventEmitterAwareInterfa
         $reflector = new \ReflectionClass(__CLASS__);
         $parameters = $reflector->getMethod(__FUNCTION__)->getParameters();
         $args = [];
+        $funcArgs = func_get_args();
         foreach ($parameters as $index => $param) {
-            $args[$param->name] = func_get_arg($index);
+            $args[$param->name] = $funcArgs[$index] ?? null;
         }
         $eventParams = [
             'command'    => __FUNCTION__,
