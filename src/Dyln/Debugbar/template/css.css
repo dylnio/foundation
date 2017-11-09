@@ -2,43 +2,42 @@ body {
     font-size: 14px !important;
 }
 
-.mongo_row .command ._command {
+.d_row .command ._command {
     font-size: 13px;
 }
 
-.mongo_row .command ._params {
+.d_row .command ._params {
     color: green;
     font-size: 12px;
 }
 
-.mongo_row .command .bt-btn {
+.d_row .command .bt-btn {
     color: #0d8ddb;
     font-size: 11px;
     padding-left: 20px;
     cursor: pointer;
 }
 
-.mongo_row .command .bt-btn:hover {
+.d_row .command .bt-btn:hover {
     text-decoration: underline;
 }
 
-.mongo_row .backtrace_row {
+.d_row .backtrace_row {
     background: rgb(240, 240, 240);
     padding: 5px;
     font-size: 12px;
 }
 
-.mongo_row .backtrace_row ul {
+.d_row .backtrace_row ul {
     padding: 0;
     list-style: none;
 }
 
-.mongo_row .backtrace_row ul li .missing {
+.d_row .backtrace_row ul li .missing {
     color: orange;
 }
 
-.mongo_row .backtrace_row ul li:hover {
+.d_row .backtrace_row ul li:hover {
     text-decoration: underline;
     cursor: pointer;
 }
-

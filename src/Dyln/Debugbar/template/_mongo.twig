@@ -1,5 +1,9 @@
-<div class="mongo_row">
-    <div class="command"><span class="_command">{{ command|raw }}({{ params|raw }})</span><span class="bt-btn _bttoggler">backtrace</span></div>
+<div class="mongo_row d_row">
+    <div class="command">
+        <span class="_command">{{ command|raw }}({{ params|raw }})</span>
+        <span class="bt-btn _bttoggler">backtrace</span>
+        <span class="small" style="padding-left:20px;">{{ app }}</span>
+    </div>
     <div class="backtrace_row" style="display: none">
         <ul>
             {% for bt in backtrace %}

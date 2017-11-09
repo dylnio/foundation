@@ -1,18 +1,20 @@
 {% for row in section %}
-    <div class="redis dt">
-        <div class="command">{{ row.command }}(<span class="query">{{ row.query }}</span>)</div>
-        {% if row.backtrace is defined %}
-            <div>
-                <div><a class="_bttoggler">backtrace</a></div>
-                <div class="backtrace" style="display: none;">
-                    <ul>
-                        {% for bt in row.backtrace %}
-                            <li>→ {{ bt.file }}:{{ bt.line }} {{ bt.function }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        {% endif %}
-        <div class="time">{{ row.time }} secs.</div>
+    <div class="redis_row d_row">
+        <div class="command">
+            <span class="_command">{{ row.command }} (<span class="_params">{{ row.args|json_encode }}</span>)</span>
+            <span class="bt-btn _bttoggler">backtrace</span>
+            <span class="small" style="padding-left:20px;">{{ row.app }}</span>
+        </div>
+        <div class="backtrace_row" style="display: none">
+            <ul>
+                {% for bt in row.bt %}
+                    {% if bt.file %}
+                        <li>{{ bt.file }}:{{ bt.line }}</li>
+                    {% else %}
+                        <li><span class="missing">< missing ></span></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
     </div>
 {% endfor %}

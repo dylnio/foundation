@@ -75,6 +75,7 @@ class MongoFormatter extends \Twig_Extension
             'command'   => $this->stringToObjectId($row['command']),
             'params'    => implode(',', $params),
             'backtrace' => getin($row, 'bt', []),
+            'app'       => getin($row, 'app', 'N/A'),
         ]);
     }
 

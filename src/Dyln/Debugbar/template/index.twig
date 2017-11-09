@@ -10,11 +10,11 @@
             <div id="{{ sectionname }}_panel" class="collapse" role="tabpanel">
                 <div class="mb-3">
                     {% if sectionname == 'Elastic' %}
-                    {#{% include 'elastic.twig' with {'section':section} %}#}
+                    {% include 'elastic.twig' with {'section':section} %}
                     {% elseif sectionname =='Mongo' %}
                     {% include 'mongo.twig' with {'section':section} %}
                     {% elseif sectionname == 'Redis' %}
-                    {#{% include 'redis.twig' with {'section':section} %}#}
+                    {% include 'redis.twig' with {'section':section} %}
                     {% elseif sectionname == 'ApiRequest' %}
                     {% include 'apirequest.twig' with {'section':section} %}
                     {% elseif sectionname == 'ApiResponse' %}
