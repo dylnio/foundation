@@ -78,8 +78,10 @@ class ApiClient
             $query = [];
         }
         $this->addResponseBodyMiddleware(new ConvertToMessageMiddleware());
-        if (AppEnv::isDebugEnabled()) {
+        if (AppEnv::isXdebugEnabled()) {
             $query['XDEBUG_SESSION_START'] = 'PHPSTORM';
+        }
+        if (AppEnv::isDebugEnabled()) {
             $query['debug'] = Config::get('app.debug.url_key');
         }
         if (AppEnv::isCacheResetEnabled()) {
@@ -111,6 +113,7 @@ class ApiClient
             }
             $body = (string) $res->getBody();
             $body = $this->applyResponseBodyMiddlewares($body);
+
             return $body;
         } catch (ClientException $e) {
             $responseBody = $e->getResponse()->getBody()->getContents();
@@ -128,6 +131,7 @@ class ApiClient
             $extra = [
                 'exception' => $responseBody['exception'] ?? null,
             ];
+
             return MessageFactory::error(['message' => $message, 'extra' => $extra]);
         } catch (ServerException $e) {
             $responseBody = $e->getResponse()->getBody()->getContents();
@@ -136,6 +140,7 @@ class ApiClient
             $extra = [
                 'exception' => $responseBody['exception'] ?? $responseBody['error'] ?? null,
             ];
+
             return MessageFactory::error(['message' => $message, 'extra' => $extra]);
         } catch (\Exception $e) {
             return MessageFactory::error(['message' => $e->getMessage()]);
@@ -152,6 +157,7 @@ class ApiClient
         if (!$this->httpClient) {
             $this->httpClient = new Client([]);
         }
+
         return $this->httpClient;
     }
 
@@ -162,6 +168,7 @@ class ApiClient
         if ($query) {
             $path .= '?' . http_build_query($query);
         }
+
         return $baseUrl . '/' . $path;
     }
 
@@ -192,6 +199,7 @@ class ApiClient
         $cookie = SetCookie::fromString($cookieString);
         $cookie->setDomain('0');
         $this->getCookieJar()->setCookie($cookie);
+
         return $res;
     }
 
@@ -200,6 +208,7 @@ class ApiClient
         foreach ($this->responseBodyMiddlewares as $middleware) {
             $body = $middleware->execute($body);
         }
+
         return $body;
     }
 
@@ -229,6 +238,7 @@ class ApiClient
             }
             $response->addData('bulk_response', $bulkResponse);
         }
+
         return $response;
     }
 
@@ -238,6 +248,7 @@ class ApiClient
         $nonce = random_int(10000, 90000);
         $message = $method . '+' . urlencode(urldecode(trim($path, '/'))) . '+' . (string) $time . '+' . (string) $nonce;
         $digest = hash_hmac('sha256', $message, $secret) . ':' . $time . ':' . $nonce;
+
         return $digest;
     }
 }

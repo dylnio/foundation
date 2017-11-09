@@ -115,6 +115,13 @@ class AppEnv
         return $debug;
     }
 
+    public static function isXdebugEnabled()
+    {
+        $overwrite = $_GET['XDEBUG_SESSION_START'] ?? $_COOKIE['XDEBUG_SESSION_START'] ?? $_GET['XDEBUG_SESSION'] ?? $_COOKIE['XDEBUG_SESSION'] ?? null;
+
+        return !!$overwrite;
+    }
+
     public static function isApiSignatureCheckDisabled()
     {
         $check = $_GET['debug_sign'] ?? $_COOKIE['debug_sign'] ?? null;
@@ -136,6 +143,6 @@ class AppEnv
             return false;
         }
 
-        return $urlKey === $value;
+        return $urlKey === (string) $value;
     }
 }

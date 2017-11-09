@@ -47,6 +47,7 @@ class DebugbarListener implements ListenerInterface
         $parsed['end'] = $args['end'];
         $parsed['duration'] = $args['duration'];
         $parsed['args'] = getin($args, 'args', []);
+        $parsed['bt'] = $bt;
 
         return $parsed;
     }
@@ -69,6 +70,7 @@ class DebugbarListener implements ListenerInterface
         $parsed['end'] = $args['end'];
         $parsed['duration'] = $args['duration'];
         $parsed['args'] = getin($args, 'args', []);
+        $parsed['bt'] = $bt;
 
         return $parsed;
     }
@@ -100,6 +102,7 @@ class DebugbarListener implements ListenerInterface
         $parsed['key'] = getin($args, 'args.key', []);
         $parsed['indexName'] = getin($args, 'args.indexName', []);
         $parsed['indexes'] = getin($args, 'args.indexes', []);
+        $parsed['bt'] = $bt;
 
         return $parsed;
     }
