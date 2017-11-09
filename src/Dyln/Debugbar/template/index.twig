@@ -1,0 +1,31 @@
+{% extends "layout.twig" %}
+{% block content %}
+<div class="row" style="margin: 10px;">
+    <div id="exampleAccordion" data-children=".item">
+        {% for sectionname,section in data %}
+        <div class="item">
+            <a data-toggle="collapse" data-parent="#exampleAccordion" href="#{{ sectionname }}_panel" aria-expanded="true" aria-controls="exampleAccordion1">
+                {{ sectionname }}
+            </a>
+            <div id="{{ sectionname }}_panel" class="collapse" role="tabpanel">
+                <div class="mb-3">
+                    {% if sectionname == 'Elastic' %}
+                    {#{% include 'elastic.twig' with {'section':section} %}#}
+                    {% elseif sectionname =='Mongo' %}
+                    {% include 'mongo.twig' with {'section':section} %}
+                    {% elseif sectionname == 'Redis' %}
+                    {#{% include 'redis.twig' with {'section':section} %}#}
+                    {% elseif sectionname == 'ApiRequest' %}
+                    {% include 'apirequest.twig' with {'section':section} %}
+                    {% elseif sectionname == 'ApiResponse' %}
+                    {% include 'apiresponse.twig' with {'section':section} %}
+                    {% else %}
+                        {#<div>{{ dump(section) }}</div>#}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

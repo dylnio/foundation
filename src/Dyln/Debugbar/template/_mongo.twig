@@ -1,0 +1,14 @@
+<div class="mongo_row">
+    <div class="command"><span class="_command">{{ command|raw }}({{ params|raw }})</span><span class="bt-btn _bttoggler">backtrace</span></div>
+    <div class="backtrace_row" style="display: none">
+        <ul>
+            {% for bt in backtrace %}
+                {% if bt.file %}
+                    <li>{{ bt.file }}:{{ bt.line }}</li>
+                {% else %}
+                    <li><span class="missing">< missing ></span></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,5 @@
+{% for row in section %}
+    <div class="apiresponse">
+        <pre><code class="json">{{ json_decode(row.body)|json_encode(constant('JSON_PRETTY_PRINT')) }}</code></pre>
+    </div>
+{% endfor %}

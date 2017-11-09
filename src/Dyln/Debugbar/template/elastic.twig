@@ -1,0 +1,19 @@
+{% for row in section %}
+    <div class="elastic dt">
+        <div class="command">{{ row.command }}</div>
+        <div class="query">{{ row.query }}</div>
+        {% if row.backtrace is defined %}
+            <div>
+                <div><a class="_bttoggler">backtrace</a></div>
+                <div class="backtrace" style="display: none;">
+                    <ul>
+                        {% for bt in row.backtrace %}
+                            <li>→ {{ bt.file }}:{{ bt.line }} {{ bt.function }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+        <div class="time">{{ row.time }} secs.</div>
+    </div>
+{% endfor %}
