@@ -116,6 +116,11 @@ class ClockworkMiddleware
         }
         if ($apiResponses) {
             foreach ($apiResponses as $row) {
+                $body = json_decode($row['body'], true);
+                if (isset($body['debug'])) {
+                    unset($body['debug']);
+                }
+                $row['body'] = json_encode($body);
                 $this->clockwork->log(LogLevel::INFO, $row);
             }
         }
