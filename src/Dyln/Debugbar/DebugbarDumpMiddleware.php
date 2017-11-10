@@ -8,6 +8,7 @@ use Dyln\Twig\Extension\Functions;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Slim\Views\Twig;
+use function Dyln\getin;
 
 class DebugbarDumpMiddleware
 {
@@ -26,6 +27,16 @@ class DebugbarDumpMiddleware
 
     private function render($data = [])
     {
+        $apiResponse = getin($data, 'ApiResponse', []);
+        foreach ($apiResponse as &$response) {
+            $body = json_decode($response['body'], true);
+            if (isset($body['debug'])) {
+                unset($body['debug']);
+                $response['body'] = json_encode($body);
+            }
+        }
+        $data['ApiResponse'] = $apiResponse;
+
         return $this->getView()->fetch('index.twig', ['data' => $data]);
     }
 
