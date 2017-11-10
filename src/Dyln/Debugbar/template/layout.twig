@@ -39,6 +39,11 @@
             let parent = $(e.target).parent('div').parent('div');
             $('.backtrace_row', parent).toggle();
         });
+        $('.responseheader').on('click', (e) => {
+            e.preventDefault();
+            let parent = $(e.target).parent('div');
+            $('.apiresponserow', parent).toggle();
+        });
     });
 </script>
 {% block js %}{% endblock %}

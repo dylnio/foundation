@@ -41,3 +41,10 @@ body {
     text-decoration: underline;
     cursor: pointer;
 }
+
+.responseheader {
+    color: #0d8ddb;
+    font-size: 11px;
+    padding-left: 20px;
+    cursor: pointer;
+}
