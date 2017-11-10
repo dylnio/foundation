@@ -19,6 +19,8 @@
                     {% include 'apirequest.twig' with {'section':section} %}
                     {% elseif sectionname == 'ApiResponse' %}
                     {% include 'apiresponse.twig' with {'section':section} %}
+                    {% elseif sectionname == 'Timeline' %}
+
                     {% else %}
                         {#<div>{{ dump(section) }}</div>#}
                     {% endif %}
@@ -28,4 +30,34 @@
         {% endfor %}
     </div>
 </div>
+<div class="row">
+    <div class="col">
+        <div id="timeline"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div id="timeline"></div>
+    </div>
+</div>
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        google.charts.load('current', {'packages': ['timeline']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var timelinedata = JSON.parse('{{ data.Timeline|json_encode|replace({"'":"\\'"})|raw }}');
+            var container = document.getElementById('timeline');
+            var chart = new google.visualization.Timeline(container);
+            var dataTable = new google.visualization.DataTable();
+
+            dataTable.addColumn({type: 'string', id: 'President'});
+            dataTable.addColumn({type: 'number', id: 'Start'});
+            dataTable.addColumn({type: 'number', id: 'End'});
+            dataTable.addRows(timelinedata);
+
+            chart.draw(dataTable);
+        }
+    </script>
 {% endblock %}

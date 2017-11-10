@@ -17,12 +17,41 @@ class DebugbarDumpMiddleware
         $next($request, $response);
         if (AppEnv::isDebugEnabled()) {
             if (AppEnv::isUrlKeyMatch('dump', 1)) {
-                echo $this->render(Debugbar::getData());
+                $timeline = $this->extractTimeline(Debugbar::getData());
+                $data = Debugbar::getData();
+                $data['Timeline'] = $timeline;
+                echo $this->render($data);
                 exit;
             }
         }
 
         return $response;
+    }
+
+    private function extractTimeline($data)
+    {
+        $timeline = [];
+        foreach ($data as $section => $rows) {
+            foreach ($rows as $index => $row) {
+                if (isset($row['start'])) {
+                    $timeline[] = [
+                        $section . '_' . $index,
+                        (int) ($row['start'] * 1000),
+                        (int) ($row['end'] * 1000),
+                    ];
+                }
+            }
+        }
+        usort($timeline, function ($a, $b) {
+            return $a[1] <=> $b[1];
+        });
+        $start = $timeline[0][1];
+        foreach ($timeline as &$row) {
+            $row[1] = $row[1] - $start;
+            $row[2] = $row[2] - $start;
+        }
+
+        return $timeline;
     }
 
     private function render($data = [])
