@@ -242,6 +242,11 @@ class ApiClient
         return $response;
     }
 
+    protected function isBulkCall($body = [])
+    {
+        return isset($body['requests']);
+    }
+
     private function calculateSecret($path, $method, $secret)
     {
         $time = time();

@@ -17,7 +17,7 @@ class ApiRequest
 
     /**
      * @param array $array
-     * @return mixed
+     * @return ApiRequest
      */
     public static function fromArray($array = [])
     {

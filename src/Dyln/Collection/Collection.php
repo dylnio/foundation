@@ -118,15 +118,15 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return count($this->data);
     }
 
-    /**
-     * @param $key
-     *
-     * @return bool
-     */
-    public function get($key)
+    public function get($key, $delete = false)
     {
         if (array_key_exists($key, $this->data)) {
-            return $this->data[$key];
+            $value = $this->data[$key];
+            if ($delete) {
+                $this->remove($key);
+            }
+
+            return $value;
         }
 
         return null;
@@ -179,7 +179,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         array_pop($this->data);
     }
 
-    public function filter(callable $callback = null): Collection
+    public function filter(callable $callback = null) : Collection
     {
         if ($callback) {
             $return = [];
@@ -225,7 +225,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return null;
     }
 
-    public function map(callable $callback = null): Collection
+    public function map(callable $callback = null) : Collection
     {
         $return = [];
         if ($callback) {
@@ -370,7 +370,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return array_values($this->toArray());
     }
 
-    public function trim(): Collection
+    public function trim() : Collection
     {
         $data = [];
         foreach ($this->data as $key => $value) {
@@ -394,7 +394,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return false;
     }
 
-    public function slice($offset = 0, $length = 1): Collection
+    public function slice($offset = 0, $length = 1) : Collection
     {
         $sliced = array_slice($this->data, $offset, $length);
 
@@ -413,7 +413,7 @@ class Collection implements \IteratorAggregate, \Countable, \ArrayAccess
         return implode($glue, $this->data);
     }
 
-    public function reindex(callable $callback = null): Collection
+    public function reindex(callable $callback = null) : Collection
     {
         if ($callback) {
             $return = [];
