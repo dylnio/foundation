@@ -22,7 +22,7 @@ class Identity implements IdentityInterface
 
     public function getDisplayName()
     {
-        return $this->data['display_name'] ?? $this->data['displayname'];
+        return $this->data['display_name'] ?? $this->data['displayname'] ?? 'N/A';
     }
 
     public function isLoggedIn()
