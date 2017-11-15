@@ -4,6 +4,7 @@ namespace Dyln\Database\Dao;
 
 use Dyln\Database\Model\ModelInterface;
 use MongoDB\Database;
+use MongoDB\Driver\WriteConcern;
 
 /**
  * Class MongoDao
@@ -82,7 +83,7 @@ class MongoDao extends AbstractDao
             unset($options['forceInsert']);
         }
         if (!isset($options['w'])) {
-            $options['w'] = 1;
+            $options['writeConcern'] = new WriteConcern(1);
         }
         $model->preSave();
         $id = $model->getId();
@@ -110,7 +111,7 @@ class MongoDao extends AbstractDao
     public function update(ModelInterface $model, $options = [])
     {
         if (!isset($options['w'])) {
-            $options['w'] = 1;
+            $options['writeConcern'] = new WriteConcern(1);
         }
         $model->preUpdate();
         $data = $model->getChanges();
@@ -144,6 +145,9 @@ class MongoDao extends AbstractDao
      */
     public function delete($id, $options = [])
     {
+        if (!isset($options['w'])) {
+            $options['writeConcern'] = new WriteConcern(1);
+        }
         $condition = [$this->getIdFieldName() => $id];
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteOne($condition, $options);
 
@@ -157,6 +161,9 @@ class MongoDao extends AbstractDao
      */
     public function deleteBy($condition, $options = [])
     {
+        if (!isset($options['w'])) {
+            $options['writeConcern'] = new WriteConcern(1);
+        }
         $options['multi'] = true;
         $result = $this->getDbAdapter()->selectCollection($this->getTableName())->deleteMany($condition, $options);
 
