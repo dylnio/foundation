@@ -48,8 +48,13 @@ abstract class AbstractModel implements ModelInterface
         return $this;
     }
 
-    public function setProperty($fieldName, $value)
+    public function setProperty($fieldName, $value = null, $force = false)
     {
+        if ($force) {
+            $this->dirty[$fieldName] = $value;
+
+            return $this;
+        }
         $compare = $this->getProperty($fieldName);
         $compareTo = $value;
         if (is_object($compare) && method_exists($compare, '__toString')) {
