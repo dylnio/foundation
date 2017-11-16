@@ -55,14 +55,14 @@ abstract class AbstractModel implements ModelInterface
 
             return $this;
         }
-        $compare = $this->getProperty($fieldName);
-        $compareTo = $value;
-        if (is_object($compare) && method_exists($compare, '__toString')) {
-            $compare = (string)$this->getProperty($fieldName);
-        }
-        if (is_object($compareTo) && method_exists($compareTo, '__toString')) {
-            $compareTo = (string)$value;
-        }
+        $compare = serialize($this->getProperty($fieldName));
+        $compareTo = serialize($value);
+//        if (is_object($compare) && method_exists($compare, '__toString')) {
+//            $compare = (string)$this->getProperty($fieldName);
+//        }
+//        if (is_object($compareTo) && method_exists($compareTo, '__toString')) {
+//            $compareTo = (string)$value;
+//        }
         if ($compare !== $compareTo) {
             $this->dirty[$fieldName] = $value;
         }
