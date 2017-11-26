@@ -121,7 +121,7 @@ class ApiClient
             if (!$responseBody) {
                 if ($e->getCode() == 401) {
                     $responseBody = ['message' => '401 Unauthorized'];
-                } else if ($e->getCode() == 403) {
+                } elseif ($e->getCode() == 403) {
                     $responseBody = ['message' => '403 Unauthorized'];
                 } else {
                     $responseBody = ['message' => 'Unkown error'];
@@ -228,7 +228,7 @@ class ApiClient
             $bulkResponse = new Collection();
             foreach ($payload as $id => $_payload) {
                 if (!isset($_payload['success'])) {
-                    $payload['success'] = false;
+                    $_payload['success'] = false;
                 }
                 if ($_payload['success']) {
                     $bulkResponse->add(MessageFactory::success($_payload), (string) $id);
