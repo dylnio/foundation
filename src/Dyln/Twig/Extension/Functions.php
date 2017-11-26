@@ -16,12 +16,18 @@ class Functions extends \Twig_Extension
             new \Twig_SimpleFunction('md5', [$this, '_md5']),
             new \Twig_SimpleFunction('gavatar', [$this, '_gavatar']),
             new \Twig_SimpleFunction('json_decode', [$this, '_json_decode']),
+            new \Twig_SimpleFunction('json_encode', [$this, '_json_encode']),
         ];
     }
 
     public function _json_decode($data, $assoc = false, $depth = 512, $options = 0)
     {
         return json_decode($data, $assoc, $depth, $options);
+    }
+
+    public function _json_encode($value, $options = 0, $depth = 512)
+    {
+        return json_encode($value, $options, $depth);
     }
 
     public function _md5($value)
