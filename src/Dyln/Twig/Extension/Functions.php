@@ -17,6 +17,7 @@ class Functions extends \Twig_Extension
             new \Twig_SimpleFunction('gavatar', [$this, '_gavatar']),
             new \Twig_SimpleFunction('json_decode', [$this, '_json_decode']),
             new \Twig_SimpleFunction('json_encode', [$this, '_json_encode']),
+            new \Twig_SimpleFunction('url_encode', [$this, '_url_encode']),
         ];
     }
 
@@ -28,6 +29,11 @@ class Functions extends \Twig_Extension
     public function _json_encode($value, $options = 0, $depth = 512)
     {
         return json_encode($value, $options, $depth);
+    }
+
+    public function _url_encode($value)
+    {
+        return urlencode($value);
     }
 
     public function _md5($value)
