@@ -18,6 +18,8 @@ class Functions extends \Twig_Extension
             new \Twig_SimpleFunction('json_decode', [$this, '_json_decode']),
             new \Twig_SimpleFunction('json_encode', [$this, '_json_encode']),
             new \Twig_SimpleFunction('url_encode', [$this, '_url_encode']),
+            new \Twig_SimpleFunction('base64_encode', [$this, '_base64encode']),
+            new \Twig_SimpleFunction('base64_decode', [$this, '_base64decode']),
         ];
     }
 
@@ -39,6 +41,16 @@ class Functions extends \Twig_Extension
     public function _md5($value)
     {
         return md5($value);
+    }
+
+    public function _base64encode($value)
+    {
+        return base64_encode($value);
+    }
+
+    public function _base64decode($value)
+    {
+        return base64_decode($value);
     }
 
     public function _gavatar($value)
