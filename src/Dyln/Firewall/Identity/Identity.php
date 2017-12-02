@@ -46,4 +46,9 @@ class Identity implements IdentityInterface
     {
         return $this->data;
     }
+
+    public function get($key)
+    {
+        return $this->data[$key] ?? null;
+    }
 }
