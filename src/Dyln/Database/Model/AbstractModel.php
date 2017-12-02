@@ -85,6 +85,18 @@ abstract class AbstractModel implements ModelInterface
         return $default;
     }
 
+    public function hasProperty($fieldName)
+    {
+        if (array_key_exists($fieldName, $this->dirty)) {
+            return true;
+        }
+        if (array_key_exists($fieldName, $this->data)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static function fromArray(array $data = [], $dirty = false)
     {
         return new static([
