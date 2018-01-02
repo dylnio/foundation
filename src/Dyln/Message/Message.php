@@ -119,9 +119,8 @@ class Message
     public function withError(array $error = [])
     {
         if (empty($error['message'])) {
-            throw new \Exception('Invalid error. ["message" => "Error Message", "code"=>100,"extra"=>["exception" => ....]]');
+            throw new \Exception('Invalid error. Received ' . var_export($error, true));
         }
-
         $this->errorMessage = $error['message'];
         $this->errorCode = $error['code'] ?? null;
         $this->errorExtra = $error['extra'] ?? null;
