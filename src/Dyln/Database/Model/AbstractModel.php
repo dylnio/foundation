@@ -14,7 +14,6 @@ abstract class AbstractModel implements ModelInterface
     public function __construct($config = [])
     {
         $this->availableProperties = array_merge($this->availableProperties, ['upt', '_id']);
-
         if (!isset($config['dirty'])) {
             $config['dirty'] = false;
         }
@@ -169,11 +168,16 @@ abstract class AbstractModel implements ModelInterface
         return $changes;
     }
 
+    public function isFieldChanged($field)
+    {
+        return !empty($this->dirty[$field]);
+    }
+
     public function getId($asString = false)
     {
         $id = $this->getProperty($this->idField);
         if ($asString) {
-            $id = (string)$id;
+            $id = (string) $id;
         }
 
         return $id;
