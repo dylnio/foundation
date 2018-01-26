@@ -25,7 +25,6 @@ class FormHelper
         $this->id = uniqid();
     }
 
-
     public function setValues($values = [])
     {
         $this->values = $values;
@@ -36,6 +35,8 @@ class FormHelper
     public function setError($field, $error)
     {
         $this->errors[$field] = $error;
+
+        return $this;
     }
 
     public function setErrors($errors = [])
