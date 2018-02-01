@@ -92,6 +92,11 @@ class AppEnv
         return $value;
     }
 
+    public static function cookie($key, $default = null)
+    {
+        return getin($_COOKIE, $key, $default);
+    }
+
     public static function option($key, $default = null)
     {
         return self::env('_option.' . $key, $default);

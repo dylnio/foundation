@@ -20,6 +20,7 @@ class Env extends \Twig_Extension
             new \Twig_SimpleFunction('isAppDev', [$this, 'isAppDev']),
             new \Twig_SimpleFunction('isUrlKeyMatch', [$this, 'isUrlKeyMatch']),
             new \Twig_SimpleFunction('env', [$this, 'env']),
+            new \Twig_SimpleFunction('cookie', [$this, 'cookie']),
         ];
     }
 
@@ -31,6 +32,11 @@ class Env extends \Twig_Extension
     public function env($key, $default = null)
     {
         return AppEnv::env($key, $default);
+    }
+
+    public function cookie($key, $default = null)
+    {
+        return AppEnv::cookie($key, $default);
     }
 
     public function isAppLive()
