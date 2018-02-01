@@ -25,4 +25,6 @@ interface ModelInterface
     public function getTempData($field, $default = null);
 
     public function with($field, $value);
+
+    public function isFieldChanged($field);
 }
