@@ -19,4 +19,8 @@ interface Params
     public function has($field);
 
     public function remove($field);
+
+    public function isEmpty();
+
+    public function isSet($field);
 }

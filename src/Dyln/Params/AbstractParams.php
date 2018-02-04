@@ -18,7 +18,7 @@ abstract class AbstractParams implements Params
 
     public function __construct($params = [])
     {
-        $params = (array)$params;
+        $params = (array) $params;
         $this->params = $params;
         $this->init();
         $this->setDefaultFilters();
@@ -75,7 +75,7 @@ abstract class AbstractParams implements Params
                 if ($validator instanceof Validator) {
                     /** @var Message $result */
                     $result = $validator->isValid($value);
-                } elseif (is_callable($validator)) {
+                } else if (is_callable($validator)) {
                     /** @var Message $result */
                     $result = $validator($value);
                 } else {
@@ -88,7 +88,6 @@ abstract class AbstractParams implements Params
                 }
             }
         }
-
         $this->validation = MessageFactory::success();
 
         return;
@@ -96,7 +95,7 @@ abstract class AbstractParams implements Params
 
     public function get($field, $default = null)
     {
-        return ArrayUtil::getIn($this->params, [$field], $default);
+        return ArrayUtil::getIn($this->params, $field, $default);
     }
 
     public function set($field, $value)
@@ -141,7 +140,7 @@ abstract class AbstractParams implements Params
 
     public function has($field)
     {
-        return array_key_exists($this->params, $field);
+        return array_key_exists($field, $this->params);
     }
 
     public function remove($field)
@@ -149,5 +148,15 @@ abstract class AbstractParams implements Params
         unset($this->params[$field]);
 
         return $this;
+    }
+
+    public function isEmpty()
+    {
+        return count($this->params) == 0;
+    }
+
+    public function isSet($field)
+    {
+        return isset($this->params[$field]);
     }
 }
