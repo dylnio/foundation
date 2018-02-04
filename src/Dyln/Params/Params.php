@@ -22,5 +22,7 @@ interface Params
 
     public function isEmpty();
 
-    public function isSet($field);
+    public function isFieldSet($field);
+
+    public function isFieldEmpty($field);
 }

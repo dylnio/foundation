@@ -53,12 +53,12 @@ abstract class AbstractParams implements Params
             }
         }
         foreach ($this->filters as $field => $filters) {
-            if (isset($this->params[$field])) {
+            if ($this->has($field)) {
                 if (!is_array($filters)) {
                     $filters = [$filters];
                 }
                 foreach ($filters as $filter) {
-                    $this->params[$field] = $filter(ArrayUtil::getIn($this->params, [$field]));
+                    $this->params[$field] = $filter($this->get($field));
                 }
             }
         }
@@ -67,7 +67,7 @@ abstract class AbstractParams implements Params
     private function validate()
     {
         foreach ($this->validators as $field => $validators) {
-            $value = ArrayUtil::getIn($this->params, [$field]);
+            $value = $this->get($field);
             if (!is_array($validators)) {
                 $validators = [$validators];
             }
@@ -79,10 +79,10 @@ abstract class AbstractParams implements Params
                     /** @var Message $result */
                     $result = $validator($value);
                 } else {
-                    $result = MessageFactory::error(['message' => ['generic' => ['msg' => 'Invalid Validator']]]);
+                    $result = MessageFactory::error(['message' => 'Invalid Validator']);
                 }
                 if ($result->isError()) {
-                    $this->validation = MessageFactory::error(['message' => [$field => $result->getError()]]);
+                    $this->validation = MessageFactory::error(['message' => $result->getErrorMessage(), 'extra' => ['field' => $field]]);
 
                     return;
                 }
@@ -155,8 +155,13 @@ abstract class AbstractParams implements Params
         return count($this->params) == 0;
     }
 
-    public function isSet($field)
+    public function isFieldSet($field)
     {
         return isset($this->params[$field]);
+    }
+
+    public function isFieldEmpty($field)
+    {
+        return empty($this->params[$field]);
     }
 }
