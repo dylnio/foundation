@@ -4,6 +4,7 @@ namespace Dyln\Sentry;
 
 use Dyln\AppEnv;
 use Dyln\Config\Config;
+use Dyln\Firewall\Exception\RouteNotFoundException;
 use Dyln\Sentry\Exception\NotLoggableException;
 
 class Sentry
@@ -28,7 +29,6 @@ class Sentry
         }
 
         return self::$instance;
-
     }
 
     static public function addExtraContext($key, $value)
@@ -44,7 +44,7 @@ class Sentry
     {
         if (self::getInstance()->enabled) {
             array_walk($params, function (&$value) {
-                $value = (string)$value;
+                $value = (string) $value;
             });
             $data['tags'] = $tags;
             self::getInstance()->client->captureMessage($message, $params, $data, $stack, $vars);
@@ -77,7 +77,7 @@ class Sentry
 
     static public function exception($e)
     {
-        if ($e instanceof NotLoggableException) {
+        if ($e instanceof NotLoggableException || $e instanceof RouteNotFoundException) {
             return;
         }
         if (self::getInstance()->enabled) {
