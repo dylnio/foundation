@@ -17,6 +17,7 @@ use Dyln\Http\Header\ExtraHeaderMiddleware;
 use Dyln\Message\Message;
 use Dyln\Message\MessageFactory;
 use Dyln\Util\ArrayUtil;
+use Dyln\Util\IpUtil;
 use Dyln\Util\Timer;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJarInterface;
@@ -88,6 +89,7 @@ class ApiClient
             $query['reset'] = Config::get('app.debug.url_key');
         }
         $headers = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
+        $headers['x-SHOPCADE-USER-IP'] = IpUtil::getRealIp();
         if ($this->clientToken) {
             $headers['X-SHOPCADE-CLIENT-TOKEN'] = $this->clientToken;
             $headers['X-SHOPCADE-CLIENT-SIGNATURE'] = $this->calculateSecret($path, $method, $this->clientSecret);
