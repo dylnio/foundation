@@ -75,7 +75,7 @@ abstract class AbstractParams implements Params
                 if ($validator instanceof Validator) {
                     /** @var Message $result */
                     $result = $validator->isValid($value);
-                } else if (is_callable($validator)) {
+                } elseif (is_callable($validator)) {
                     /** @var Message $result */
                     $result = $validator($value);
                 } else {

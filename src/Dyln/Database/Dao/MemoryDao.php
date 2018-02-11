@@ -104,7 +104,7 @@ class MemoryDao extends AbstractDao
                 if (is_array($value)) {
                     foreach ($value as $op => $co) {
                         switch ($op) {
-                            case '$gte' :
+                            case '$gte':
                                 if (isset($row[$key]) && $row[$key] >= $co) {
                                     $result = $result && true;
                                 } else {

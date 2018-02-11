@@ -2,7 +2,6 @@
 
 namespace Dyln\Twig\Extension;
 
-
 class Config extends \Twig_Extension
 {
     public function getName()

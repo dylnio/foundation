@@ -8,7 +8,6 @@ use Slim\Interfaces\CallableResolverInterface;
 
 class CallableResolver implements CallableResolverInterface
 {
-
     /**
      * @var ContainerInterface
      */

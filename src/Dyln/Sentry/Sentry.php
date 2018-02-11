@@ -9,7 +9,7 @@ use Dyln\Sentry\Exception\NotLoggableException;
 
 class Sentry
 {
-    static protected $instance;
+    protected static $instance;
     /** @var  \Raven_Client */
     protected $client;
     protected $enabled = false;
@@ -20,7 +20,7 @@ class Sentry
         $this->enabled = $enabled;
     }
 
-    static public function getInstance()
+    public static function getInstance()
     {
         $sentryUrl = Config::get('sentry.url');
         if (!self::$instance) {
@@ -31,7 +31,7 @@ class Sentry
         return self::$instance;
     }
 
-    static public function addExtraContext($key, $value)
+    public static function addExtraContext($key, $value)
     {
         if (self::getInstance()->enabled) {
             self::getInstance()->client->extra_context([
@@ -40,7 +40,7 @@ class Sentry
         }
     }
 
-    static public function message($message, $params = [], $data = [], $stack = true, $vars = null, $tags = [])
+    public static function message($message, $params = [], $data = [], $stack = true, $vars = null, $tags = [])
     {
         if (self::getInstance()->enabled) {
             array_walk($params, function (&$value) {
@@ -51,31 +51,31 @@ class Sentry
         }
     }
 
-    static public function info($message, $params = [], $data = [], $stack = true, $vars = null, $tags = [])
+    public static function info($message, $params = [], $data = [], $stack = true, $vars = null, $tags = [])
     {
         $data['level'] = \Raven_Client::INFO;
         self::getInstance()->message($message, $params, $data, $stack, $vars, $tags);
     }
 
-    static public function debug($message, $params = [], $data = [], $stack = true, $vars = null, $tags = [])
+    public static function debug($message, $params = [], $data = [], $stack = true, $vars = null, $tags = [])
     {
         $data['level'] = \Raven_Client::DEBUG;
         self::getInstance()->message($message, $params, $data, $stack, $vars, $tags);
     }
 
-    static public function error($message, $params = [], $data = [], $stack = true, $vars = null, $tags = [])
+    public static function error($message, $params = [], $data = [], $stack = true, $vars = null, $tags = [])
     {
         $data['level'] = \Raven_Client::ERROR;
         self::getInstance()->message($message, $params, $data, $stack, $vars, $tags);
     }
 
-    static public function fatal($message, $params = [], $data = [], $stack = true, $vars = null, $tags = [])
+    public static function fatal($message, $params = [], $data = [], $stack = true, $vars = null, $tags = [])
     {
         $data['level'] = \Raven_Client::FATAL;
         self::getInstance()->message($message, $params, $data, $stack, $vars, $tags);
     }
 
-    static public function exception($e)
+    public static function exception($e)
     {
         if ($e instanceof NotLoggableException || $e instanceof RouteNotFoundException) {
             return;

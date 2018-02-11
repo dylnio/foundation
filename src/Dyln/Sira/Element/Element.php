@@ -35,7 +35,6 @@ class Element
         $this->maxTry = $maxTry;
     }
 
-
     public function encode()
     {
         return json_encode([
@@ -69,7 +68,7 @@ class Element
         $this->endTime = time();
     }
 
-    static public function fromArray($data)
+    public static function fromArray($data)
     {
         return new static($data['id'], $data['queueName'], $data['callable'], $data['data'], $data['error'], $data['try'], $data['maxTry']);
     }

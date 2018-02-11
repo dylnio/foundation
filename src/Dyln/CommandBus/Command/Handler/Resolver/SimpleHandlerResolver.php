@@ -6,7 +6,6 @@ use Dyln\CommandBus\Command\Command;
 
 class SimpleHandlerResolver implements HandlerResolver
 {
-
     public function getHandlerClassName(Command $command)
     {
         $commandClassName = get_class($command); // App\User\Command\RegisterUserCommand

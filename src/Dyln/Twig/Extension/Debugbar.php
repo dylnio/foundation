@@ -45,7 +45,7 @@ class Debugbar extends \Twig_Extension
                         'time'  => 0,
                         'data'  => $sectionData,
                     ];
-                } else if ($sectionName == 'ApiRequest') {
+                } elseif ($sectionName == 'ApiRequest') {
                     $data[$sectionName] = [
                         'count' => 1,
                         'time'  => 0,
@@ -86,5 +86,4 @@ class Debugbar extends \Twig_Extension
 
         return $payload;
     }
-
 }

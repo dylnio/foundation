@@ -4,7 +4,7 @@ namespace Dyln\Util;
 
 class UrlUtil
 {
-    static public function getBaseUrl($forceHttps = false)
+    public static function getBaseUrl($forceHttps = false)
     {
         $host = $_SERVER['HTTP_HOST'] ?? null;
         $https = $_SERVER['HTTPS'] ?? false;
@@ -15,14 +15,14 @@ class UrlUtil
         return BooleanUtil::getBool($https) ? 'https://' . $host : 'http://' . $host;
     }
 
-    static public function getCurrentUrl()
+    public static function getCurrentUrl()
     {
         $uri = $_SERVER['REQUEST_URI'] ?? null;
 
         return self::getBaseUrl() . $uri;
     }
 
-    static public function generate($path = null, $forceHttps = false)
+    public static function generate($path = null, $forceHttps = false)
     {
         $path = ltrim(trim($path), '/');
         $base = self::getBaseUrl($forceHttps);

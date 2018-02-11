@@ -4,7 +4,7 @@ namespace Dyln\Util;
 
 class BooleanUtil
 {
-    static public function getBool($value)
+    public static function getBool($value)
     {
         if ($value === true) {
             return true;

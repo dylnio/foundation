@@ -17,7 +17,6 @@ class CollectionCache extends CacheProvider
         $this->cache = new Collection();
     }
 
-
     /**
      * Fetches an entry from the cache.
      *

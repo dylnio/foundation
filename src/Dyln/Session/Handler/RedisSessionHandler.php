@@ -168,7 +168,6 @@ class RedisSessionHandler implements \SessionHandlerInterface
         return true;
     }
 
-
     /**
      * A no-op function, somethings just aren't worth doing.
      */

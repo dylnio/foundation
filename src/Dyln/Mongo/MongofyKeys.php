@@ -4,7 +4,7 @@ namespace Dyln\Mongo;
 
 class MongofyKeys
 {
-    static public function safe($array = [])
+    public static function safe($array = [])
     {
         $replacements = [
             '.' => '{_DOT_}',
@@ -28,7 +28,7 @@ class MongofyKeys
         return $array;
     }
 
-    static public function unsafe($array = [])
+    public static function unsafe($array = [])
     {
         $replacements = [
             '.' => '{_DOT_}',

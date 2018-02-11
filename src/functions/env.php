@@ -43,11 +43,9 @@ if (!function_exists('Dyln\_load_env_')) {
         if (function_exists('apache_getenv') && function_exists('apache_setenv') && apache_getenv($name)) {
             apache_setenv($name, $value);
         }
-
         if (function_exists('putenv')) {
             putenv("$name=$value");
         }
-
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
     }

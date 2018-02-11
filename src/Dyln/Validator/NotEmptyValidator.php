@@ -6,7 +6,6 @@ use Dyln\Message\MessageFactory;
 
 class NotEmptyValidator extends AbstractValidator
 {
-
     public function isValid($value)
     {
         if ($value === null || $value === '') {

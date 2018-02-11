@@ -4,12 +4,12 @@ namespace Dyln\Util;
 
 class Browser
 {
-    static public function getUserAgent()
+    public static function getUserAgent()
     {
         return !empty($_SERVER['HTTP_USER_AGENT']) ? addslashes($_SERVER['HTTP_USER_AGENT']) : '';
     }
 
-    static public function isMobileBrowser()
+    public static function isMobileBrowser()
     {
         $useragent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
         if (!$useragent) {

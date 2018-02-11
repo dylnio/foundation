@@ -36,7 +36,7 @@ abstract class AbstractRepository implements RepositoryInterface
         $this->cache = ($cache) ?: new CollectionCache();
     }
 
-    static public function factory($daos, $entityClassName)
+    public static function factory($daos, $entityClassName)
     {
         if (!is_array($daos)) {
             $daos = [

@@ -97,5 +97,4 @@ class Firewall
 
         return $rule;
     }
-
 }

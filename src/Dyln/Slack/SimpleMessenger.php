@@ -32,7 +32,6 @@ class SimpleMessenger
         } catch (\Exception $e) {
             Sentry::exception($e);
         }
-
     }
 
     private function getClient()

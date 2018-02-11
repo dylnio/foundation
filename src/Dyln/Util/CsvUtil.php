@@ -38,7 +38,7 @@ class CsvUtil
         return $results[0];
     }
 
-    static public function head($handle, $lines = 200)
+    public static function head($handle, $lines = 200)
     {
         if (!is_resource($handle)) {
             throw new \InvalidArgumentException('$handle must be a resource');

@@ -2,7 +2,6 @@
 
 namespace Dyln\Database\Repository;
 
-
 use Dyln\Database\Dao\DaoInterface;
 use Dyln\Database\Model\ModelInterface;
 
@@ -27,5 +26,4 @@ interface RepositoryInterface
     public function deleteByCondition($condition = [], $daoKey = 'default');
 
     public function addDao($key, DaoInterface $dao);
-
 }

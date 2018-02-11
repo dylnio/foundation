@@ -7,9 +7,9 @@ use Stringy\StaticStringy;
 
 class StringUtil
 {
-    static protected $canonicalNamesReplacements = ['-' => '', '_' => '', ' ' => '', '\\' => '', '/' => '', ',' => ''];
+    protected static $canonicalNamesReplacements = ['-' => '', '_' => '', ' ' => '', '\\' => '', '/' => '', ',' => ''];
 
-    static public function canonicalizeName($name)
+    public static function canonicalizeName($name)
     {
         return strtolower(strtr($name, self::$canonicalNamesReplacements));
     }
@@ -30,7 +30,7 @@ class StringUtil
     {
         if (PHP_MAJOR_VERSION >= 7) {
             $bytes = random_bytes($length);
-        } else if (function_exists('openssl_random_pseudo_bytes')) {
+        } elseif (function_exists('openssl_random_pseudo_bytes')) {
             $bytes = openssl_random_pseudo_bytes($length, $strong);
             if ($bytes === false || $strong === false) {
                 throw new \RuntimeException('Unable to generate random string.');
@@ -125,7 +125,7 @@ class StringUtil
                     $tagsArray[$childTagName] =
                         in_array($childTagName, $options['alwaysArray']) || !$options['autoArray']
                             ? [$childProperties] : $childProperties;
-                } else if (
+                } elseif (
                     is_array($tagsArray[$childTagName]) && array_keys($tagsArray[$childTagName])
                     === range(0, count($tagsArray[$childTagName]) - 1)
                 ) {
@@ -175,7 +175,7 @@ class StringUtil
         return trim($initals);
     }
 
-    static public function makeValidUTF8($string)
+    public static function makeValidUTF8($string)
     {
         $string = mb_convert_encoding($string, "UTF-8", "UTF-8");
         $string = str_replace("\xc2\xa0", ' ', $string);
@@ -183,7 +183,7 @@ class StringUtil
         return preg_replace('!\p{C}!u', '', $string);
     }
 
-    static public function render($template, $vars = [])
+    public static function render($template, $vars = [])
     {
         $formatted = [];
         foreach ($vars as $field => $value) {
@@ -193,7 +193,7 @@ class StringUtil
         return str_replace(array_keys($formatted), array_values($formatted), $template);
     }
 
-    static public function htmlToText($document)
+    public static function htmlToText($document)
     {
         $html = new Html2Text($document);
 

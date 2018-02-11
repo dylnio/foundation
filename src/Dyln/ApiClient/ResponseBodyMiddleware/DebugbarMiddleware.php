@@ -17,6 +17,7 @@ class DebugbarMiddleware implements ResponseBodyMiddlewareInterface
             unset($body['debug']);
         }
         Debugbar::addBulk($debugInfo);
+
         return $body;
     }
 }

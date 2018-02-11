@@ -119,5 +119,4 @@ class Session
     {
         return $this->getDefaultSegment()->get($key, $default, $deleteAfter);
     }
-
 }

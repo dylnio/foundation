@@ -4,7 +4,7 @@ namespace Dyln\Util;
 
 class IpUtil
 {
-    static public function getLocationFromIp($ipAddress = false)
+    public static function getLocationFromIp($ipAddress = false)
     {
         if (!$ipAddress) {
             $ipAddress = self::getRealIp();
@@ -39,7 +39,7 @@ class IpUtil
         ];
     }
 
-    static public function getRealIp()
+    public static function getRealIp()
     {
         if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
             $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -60,7 +60,7 @@ class IpUtil
         return $ip;
     }
 
-    static public function isProxyUser()
+    public static function isProxyUser()
     {
         if (isset($_SERVER['HTTP_VIA']) || isset($_SERVER['HTTP_X_FORWARDED_FOR']) || isset($_SERVER['HTTP_FORWARDED_FOR']) || isset($_SERVER['HTTP_X_FORWARDED']) || isset($_SERVER['HTTP_FORWARDED']) || isset($_SERVER['HTTP_CLIENT_IP']) || isset($_SERVER['HTTP_FORWARDED_FOR_IP']) || isset($_SERVER['VIA']) || isset($_SERVER['X_FORWARDED_FOR']) || isset($_SERVER['FORWARDED_FOR']) || isset($_SERVER['X_FORWARDED FORWARDED']) || isset($_SERVER['CLIENT_IP']) || isset($_SERVER['FORWARDED_FOR_IP']) || isset($_SERVER['HTTP_PROXY_CONNECTION'])
         ) {

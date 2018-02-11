@@ -6,7 +6,7 @@ use MongoDB\BSON\ObjectID;
 
 class IsValidObjectId
 {
-    static public function isValid($id)
+    public static function isValid($id)
     {
         if ($id instanceof ObjectID) {
             return true;
