@@ -115,6 +115,9 @@ class MongoDao extends AbstractDao
         }
         $model->preUpdate();
         $data = $model->getChanges();
+        if (isset($data['_id']) && $data['_id'] == $model->getId()) {
+            unset($data['_id']);
+        }
         if (!empty($data)) {
             $data['upt'] = microtime(true);
             $condition = [$this->getIdFieldName() => $model->getProperty($this->getIdFieldName())];
