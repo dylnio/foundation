@@ -4,6 +4,7 @@ namespace Dyln\Form;
 
 use Dyln\Session\Session;
 use Dyln\Util\ArrayUtil;
+use function Dyln\getin;
 
 class FormHelper
 {
@@ -78,6 +79,28 @@ class FormHelper
 
     public function save($name = 'form')
     {
-        $this->session->getSegment('form')->set($name, $this);
+        $this->session->getSegment('form')->set($name, $this->toArray());
+    }
+
+    public function toArray()
+    {
+        return [
+            'values' => $this->values,
+            'errors' => $this->errors,
+            'id'     => $this->id,
+        ];
+    }
+
+    public static function createFromArray($data = [], Session $session)
+    {
+        if (!$data) {
+            $data = [];
+        }
+        $helper = new self($session);
+        $helper->values = getin($data, 'values', []);
+        $helper->errors = getin($data, 'errors', []);
+        $helper->id = getin($data, 'id', null);
+
+        return $helper;
     }
 }

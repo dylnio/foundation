@@ -39,7 +39,8 @@ class FormHelper extends \Twig_Extension
     private function getHelper($formname)
     {
         if (!$this->helper) {
-            $this->helper = $this->session->getSegment('form')->get($formname, null, true);
+            $data = $this->session->getSegment('form')->get($formname, null, true);
+            $this->helper = \Dyln\Form\FormHelper::createFromArray($data, $this->session);
         }
 
         return $this->helper;
