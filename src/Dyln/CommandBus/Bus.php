@@ -44,7 +44,6 @@ class Bus
         $handler->resetEventsTriggered();
 
         return $paylod;
-
     }
 
     /**

@@ -6,7 +6,7 @@ use function Dyln\getin;
 
 class ModuleConfigSerializer
 {
-    static public function combineModuleConfig($moduleClasses = [])
+    public static function combineModuleConfig($moduleClasses = [])
     {
         $services = [];
         $params = [];

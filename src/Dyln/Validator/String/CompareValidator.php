@@ -16,7 +16,6 @@ class CompareValidator extends AbstractValidator
 
     public function isValid($value)
     {
-
         return $value === $this->compareToValue ? MessageFactory::success() : MessageFactory::error(['message' => 'value does not match']);
     }
 }

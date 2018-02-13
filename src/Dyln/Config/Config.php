@@ -8,33 +8,33 @@ use function Dyln\set;
 
 class Config
 {
-    static protected $config = [];
-    static protected $overwrite = [];
-    static protected $manual = [];
+    protected static $config = [];
+    protected static $overwrite = [];
+    protected static $manual = [];
 
-    static public function load($config = [])
+    public static function load($config = [])
     {
         self::$config = $config;
     }
 
-    static public function loadFromFiles($files = [])
+    public static function loadFromFiles($files = [])
     {
         foreach ($files as $file) {
             self::merge(require_once $file);
         }
     }
 
-    static public function overwrite($overwrite = [])
+    public static function overwrite($overwrite = [])
     {
         self::$overwrite = $overwrite;
     }
 
-    static public function merge($merge = [])
+    public static function merge($merge = [])
     {
         self::$config = array_replace_recursive(self::$config, $merge);
     }
 
-    static public function get($key, $default = null)
+    public static function get($key, $default = null)
     {
         $value = getin(self::$config, $key, $default);
         if (has(self::$manual, $key)) {
@@ -48,20 +48,19 @@ class Config
         return $value;
     }
 
-    static public function set($key, $value)
+    public static function set($key, $value)
     {
         $array = self::$manual;
         set($array, $key, $value);
         self::$manual = $array;
     }
 
-    static public function toArray()
+    public static function toArray()
     {
         array_replace_recursive(self::$config, self::$overwrite);
     }
 
-    static public function value($value)
+    public static function value($value)
     {
-
     }
 }

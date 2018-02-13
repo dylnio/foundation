@@ -54,5 +54,4 @@ class Auth
     {
         $this->storage->saveIdentity($identity);
     }
-
 }

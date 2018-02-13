@@ -18,7 +18,6 @@ class FlashMessenger extends \Twig_Extension
         $this->messenger = $messenger;
     }
 
-
     public function getName()
     {
         return 'flash';

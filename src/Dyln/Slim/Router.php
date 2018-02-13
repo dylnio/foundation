@@ -42,7 +42,8 @@ class Router extends \Slim\Router
             $dispatchData = $this->cacheProvider->fetch($this->key);
             if (!$dispatchData) {
                 $routeCollector = new $options['routeCollector'](
-                    new $options['routeParser'], new $options['dataGenerator']
+                    new $options['routeParser'],
+                    new $options['dataGenerator']
                 );
                 $routeDefinitionCallback($routeCollector);
 
@@ -52,7 +53,7 @@ class Router extends \Slim\Router
             }
 
             return new $options['dispatcher']($dispatchData);
-        } else if ($this->cacheFile) {
+        } elseif ($this->cacheFile) {
             $this->dispatcher = \FastRoute\cachedDispatcher($routeDefinitionCallback, [
                 'routeParser' => $this->routeParser,
                 'cacheFile'   => $this->cacheFile,

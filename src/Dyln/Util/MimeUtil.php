@@ -4,7 +4,7 @@ namespace Dyln\Util;
 
 class MimeUtil
 {
-    static public function getFileMimeType($file)
+    public static function getFileMimeType($file)
     {
         $fi = finfo_open(FILEINFO_MIME, null);
         if (file_exists($file)) {
@@ -14,104 +14,104 @@ class MimeUtil
         return false;
     }
 
-    static public function getExtensionFromMimeType($mimeType)
+    public static function getExtensionFromMimeType($mimeType)
     {
         switch (strtolower($mimeType)) {
-            case "image/jpg" :
-            case "image/jpeg" :
-            case "image/pjpeg" :
+            case "image/jpg":
+            case "image/jpeg":
+            case "image/pjpeg":
                 return 'jpg';
-            case "image/png" :
-            case "image/x-png" :
+            case "image/png":
+            case "image/x-png":
                 return 'png';
-            case "image/gif" :
+            case "image/gif":
                 return 'gif';
-            default :
+            default:
                 return false;
         }
     }
 
-    static public function returnMIMEType($filename)
+    public static function returnMIMEType($filename)
     {
         $filename = self::removeQuerystringVar($filename, 'v');
         preg_match("|\.([a-z0-9]{2,4})$|i", $filename, $fileSuffix);
         if (isset($fileSuffix[1])) {
             switch (strtolower($fileSuffix[1])) {
-                case "js" :
+                case "js":
                     return "application/x-javascript";
-                case "json" :
+                case "json":
                     return "application/json";
-                case "jpg" :
-                case "jpeg" :
-                case "jpe" :
+                case "jpg":
+                case "jpeg":
+                case "jpe":
                     return "image/jpeg";
-                case "png" :
-                case "gif" :
-                case "bmp" :
-                case "tiff" :
+                case "png":
+                case "gif":
+                case "bmp":
+                case "tiff":
                     return "image/" . strtolower($fileSuffix[1]);
-                case "css" :
+                case "css":
                     return "text/css";
-                case "xml" :
+                case "xml":
                     return "application/xml";
-                case "doc" :
-                case "docx" :
+                case "doc":
+                case "docx":
                     return "application/msword";
-                case "xls" :
-                case "xlt" :
-                case "xlm" :
-                case "xld" :
-                case "xla" :
-                case "xlc" :
-                case "xlw" :
-                case "xll" :
+                case "xls":
+                case "xlt":
+                case "xlm":
+                case "xld":
+                case "xla":
+                case "xlc":
+                case "xlw":
+                case "xll":
                     return "application/vnd.ms-excel";
-                case "ppt" :
-                case "pps" :
+                case "ppt":
+                case "pps":
                     return "application/vnd.ms-powerpoint";
-                case "rtf" :
+                case "rtf":
                     return "application/rtf";
-                case "pdf" :
+                case "pdf":
                     return "application/pdf";
-                case "html" :
-                case "htm" :
-                case "php" :
+                case "html":
+                case "htm":
+                case "php":
                     return "text/html";
-                case "txt" :
+                case "txt":
                     return "text/plain";
-                case "mpeg" :
-                case "mpg" :
-                case "mpe" :
+                case "mpeg":
+                case "mpg":
+                case "mpe":
                     return "video/mpeg";
-                case "mp3" :
+                case "mp3":
                     return "audio/mpeg3";
-                case "wav" :
+                case "wav":
                     return "audio/wav";
-                case "aiff" :
-                case "aif" :
+                case "aiff":
+                case "aif":
                     return "audio/aiff";
-                case "avi" :
+                case "avi":
                     return "video/msvideo";
-                case "wmv" :
+                case "wmv":
                     return "video/x-ms-wmv";
-                case "mov" :
+                case "mov":
                     return "video/quicktime";
-                case "zip" :
+                case "zip":
                     return "application/zip";
-                case "tar" :
+                case "tar":
                     return "application/x-tar";
-                case "swf" :
+                case "swf":
                     return "application/x-shockwave-flash";
-                case "svg" :
+                case "svg":
                     return "image/svg+xml";
-                case "woff" :
+                case "woff":
                     return "application/x-woff";
-                case "eot" :
+                case "eot":
                     return "application/vnd.ms-fontobject";
-                case "otf" :
-                case "ttf" :
+                case "otf":
+                case "ttf":
                     return "application/octet-stream";
-                default :
+                default:
                     return "unknown/" . trim($fileSuffix[1], ".");
             }
         } else {
@@ -119,7 +119,7 @@ class MimeUtil
         }
     }
 
-    static public function removeQuerystringVar($url, $key)
+    public static function removeQuerystringVar($url, $key)
     {
         $url = preg_replace('/(?<=&|\?)' . $key . '(=[^&]*)?(&|$)/', '', $url . '&');
         $url = substr($url, 0, -1);
@@ -132,7 +132,7 @@ class MimeUtil
      *
      * @return string
      */
-    static public function getFileExtension($fileName)
+    public static function getFileExtension($fileName)
     {
         return strtolower(substr(strrchr($fileName, '.'), 1));
     }
@@ -142,7 +142,7 @@ class MimeUtil
      *
      * @return mixed
      */
-    static public function getRemoteMimeType($url)
+    public static function getRemoteMimeType($url)
     {
         $url = str_replace(' ', '%20', trim($url));
         $ch = curl_init($url);
@@ -164,7 +164,7 @@ class MimeUtil
      *
      * @return array
      */
-    static public function getRemoteMimeTypeAndContent($url, $allowedMimeTypes = [], $cleanForImages = true)
+    public static function getRemoteMimeTypeAndContent($url, $allowedMimeTypes = [], $cleanForImages = true)
     {
         $url = str_replace(' ', '%20', trim($url));
         try {
@@ -264,7 +264,6 @@ class MimeUtil
                     }
                 }
             }
-
         } catch (\Exception $e) {
             if (isset($ch) && is_resource($ch)) {
                 curl_close($ch);
@@ -277,5 +276,4 @@ class MimeUtil
 
         return $ret;
     }
-
 }

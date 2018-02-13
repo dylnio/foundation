@@ -6,7 +6,6 @@ use Dyln\Message\MessageFactory;
 
 class EmailValidator extends AbstractValidator
 {
-
     public function isValid($value)
     {
         if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {

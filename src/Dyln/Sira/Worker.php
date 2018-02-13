@@ -2,7 +2,6 @@
 
 namespace Dyln\Sira;
 
-
 use Dyln\Sira\Element\Element;
 
 class Worker

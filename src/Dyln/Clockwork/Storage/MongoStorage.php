@@ -10,7 +10,6 @@ use MongoDB\Driver\Manager;
 
 class MongoStorage extends Storage
 {
-
     /** @var \MongoDB\Collection */
     protected $collection;
     protected $expiration;
@@ -41,12 +40,14 @@ class MongoStorage extends Storage
     public function all()
     {
         $rows = $this->collection->find();
+
         return $this->resultsToRequests($rows);
     }
 
     public function find($id)
     {
         $condition = ['id' => $id];
+
         return $this->resultsToRequests($this->collection->find($condition));
     }
 
@@ -57,6 +58,7 @@ class MongoStorage extends Storage
             'sort'  => ['id' => -1],
             'limit' => 1,
         ];
+
         return $this->resultsToRequests($this->collection->find($condition, $options));
     }
 
@@ -72,6 +74,7 @@ class MongoStorage extends Storage
             'sort'  => ['id' => -1],
             'limit' => $count,
         ];
+
         return $this->resultsToRequests($this->collection->find($condition, $options));
     }
 
@@ -87,6 +90,7 @@ class MongoStorage extends Storage
             'sort'  => ['id' => 1],
             'limit' => $count,
         ];
+
         return $this->resultsToRequests($this->collection->find($condition, $options));
     }
 
@@ -111,8 +115,10 @@ class MongoStorage extends Storage
         if ($rows instanceof Cursor) {
             $rows = $rows->toArray();
         }
+
         return array_map(function ($data) {
             unset($data['_id']);
+
             return $this->dataToRequest($data);
         }, $rows);
     }
@@ -121,6 +127,7 @@ class MongoStorage extends Storage
     protected function dataToRequest($data)
     {
         $data = $this->replaceKeys($data, '_dot_', '.');
+
         return new Request($data);
     }
 
@@ -135,6 +142,7 @@ class MongoStorage extends Storage
             }
             $return[$key] = $value;
         }
+
         return $return;
     }
 }

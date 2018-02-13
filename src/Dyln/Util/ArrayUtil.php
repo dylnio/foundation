@@ -4,7 +4,7 @@ namespace Dyln\Util;
 
 class ArrayUtil
 {
-    static public function getFirstElement(array $array, $remove = false)
+    public static function getFirstElement(array $array, $remove = false)
     {
         if ($remove) {
             return array_shift($array);
@@ -13,7 +13,7 @@ class ArrayUtil
         return array_shift(array_values($array));
     }
 
-    static public function getLastElement(array $array, $remove = false)
+    public static function getLastElement(array $array, $remove = false)
     {
         if ($remove) {
             return array_pop($array);
@@ -22,7 +22,7 @@ class ArrayUtil
         return array_pop(array_values($array));
     }
 
-    static public function getIn(array $array, $keys, $default = null)
+    public static function getIn(array $array, $keys, $default = null)
     {
         if (is_null($keys)) {
             return $array;
@@ -47,7 +47,7 @@ class ArrayUtil
         return is_null($current) ? $default : $current;
     }
 
-    static public function has($array, $key)
+    public static function has($array, $key)
     {
         if (is_array($key)) {
             $key = implode('.', $key);
@@ -68,7 +68,7 @@ class ArrayUtil
         return true;
     }
 
-    static public function isAssoc(array $array)
+    public static function isAssoc(array $array)
     {
         if ([] === $array) {
             return false;

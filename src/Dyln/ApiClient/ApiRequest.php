@@ -46,6 +46,7 @@ class ApiRequest
         if (isset($array['dependsOn'])) {
             $request = $request->withDependsOn($array['dependsOn']);
         }
+
         return $request;
     }
 
@@ -190,5 +191,4 @@ class ApiRequest
     {
         return $this->dependsOn;
     }
-
 }

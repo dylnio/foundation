@@ -26,6 +26,7 @@ class SlimDataSource extends DataSource
         $request->controller = $this->getController();
         $request->headers = $this->getRequestHeaders();
         $request->responseStatus = $this->getResponseStatus();
+
         return $request;
     }
 
@@ -50,17 +51,18 @@ class SlimDataSource extends DataSource
         $controller = $route->getCallable();
         if ($controller instanceof \Closure) {
             $controller = 'anonymous function';
-        } else if (is_object($controller)) {
+        } elseif (is_object($controller)) {
             $controller = 'instance of ' . get_class($controller);
-        } else if (is_array($controller) && count($controller) == 2) {
+        } elseif (is_array($controller) && count($controller) == 2) {
             if (is_object($controller[0])) {
                 $controller = get_class($controller[0]) . '->' . $controller[1];
             } else {
                 $controller = $controller[0] . '::' . $controller[1];
             }
-        } else if (!is_string($controller)) {
+        } elseif (!is_string($controller)) {
             $controller = null;
         }
+
         return $controller;
     }
 
@@ -88,6 +90,7 @@ class SlimDataSource extends DataSource
             }
         }
         ksort($headers);
+
         return $headers;
     }
 
@@ -98,6 +101,7 @@ class SlimDataSource extends DataSource
     {
         /** @var \Slim\Http\Request $req */
         $req = $this->app->getContainer()->get(\Slim\Http\Request::class);
+
         return $req->getMethod();
     }
 
@@ -108,6 +112,7 @@ class SlimDataSource extends DataSource
     {
         /** @var \Slim\Http\Request $req */
         $req = $this->app->getContainer()->get(\Slim\Http\Request::class);
+
         return $req->getUri();
     }
 
@@ -118,6 +123,7 @@ class SlimDataSource extends DataSource
     {
         /** @var \Slim\Http\Response $res */
         $res = $this->app->getContainer()->get(\Slim\Http\Response::class);
+
         return $res->getStatusCode();
     }
 }

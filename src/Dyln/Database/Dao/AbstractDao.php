@@ -17,7 +17,7 @@ abstract class AbstractDao implements DaoInterface
         $this->idFieldName = $idFieldName;
     }
 
-    static public function factory($dbAdapter, $tableName, $idFieldName)
+    public static function factory($dbAdapter, $tableName, $idFieldName)
     {
         $static = new static($dbAdapter, $tableName, $idFieldName);
 

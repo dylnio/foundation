@@ -7,7 +7,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class DummyOutput implements OutputInterface
 {
-
     /**
      * Writes a message to the output.
      *

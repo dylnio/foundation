@@ -7,7 +7,6 @@ use Dyln\Validator\AbstractValidator;
 
 class MinMaxLengthValidator extends AbstractValidator
 {
-
     protected $min;
     protected $max;
 

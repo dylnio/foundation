@@ -4,28 +4,29 @@ namespace Dyln\Util;
 
 class Timer
 {
-    static protected $start = 0;
-    static protected $end = 0;
+    protected static $start = 0;
+    protected static $end = 0;
 
-    static public function start()
+    public static function start()
     {
         self::$start = microtime(true);
         self::$end = 0;
     }
 
-    static public function result()
+    public static function result()
     {
         self::$end = microtime(true);
         $time = self::$end - self::$start;
+
         return $time;
     }
 
-    static public function getStart()
+    public static function getStart()
     {
         return self::$start;
     }
 
-    static public function getEnd()
+    public static function getEnd()
     {
         return self::$end;
     }

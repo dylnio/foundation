@@ -98,6 +98,4 @@ class Segment
             unset($this->session[$this->name][self::EXPIRY_KEY_NAME][$this->cleanKey($key)]);
         }
     }
-
-
 }

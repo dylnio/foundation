@@ -70,7 +70,7 @@ class MongoDao extends AbstractDao
     {
         /**
          * Logic:
-         * We assume that if _id is set it can only be an update. This is incorrect theoretically, but works in practice.
+         * We assume that if $this->getIdFieldName() is set it can only be an update. This is incorrect theoretically, but works in practice.
          * If I want to insert a document with a specific id, this logic would stop me. Luckily it's rare.
          * To get past this limitation, we can set an attribute in the options array, which gets stripped here.
          * This parameter is 'forceInsert'
@@ -93,7 +93,7 @@ class MongoDao extends AbstractDao
             $data = $model->getChanges();
             $data['upt'] = microtime(true);
             if (empty($data[$this->getIdFieldName()])) {
-                unset($data['_id']);
+                unset($data[$this->getIdFieldName()]);
             }
             $result = $this->getDbAdapter()->selectCollection($this->getTableName())->insertOne($data, $options);
             $model->setProperty($this->getIdFieldName(), $result->getInsertedId());
@@ -115,6 +115,9 @@ class MongoDao extends AbstractDao
         }
         $model->preUpdate();
         $data = $model->getChanges();
+        if (isset($data[$this->getIdFieldName()]) && $data[$this->getIdFieldName()] == $model->getProperty($this->getIdFieldName())) {
+            unset($data[$this->getIdFieldName()]);
+        }
         if (!empty($data)) {
             $data['upt'] = microtime(true);
             $condition = [$this->getIdFieldName() => $model->getProperty($this->getIdFieldName())];
