@@ -28,9 +28,14 @@ class AnonymousIdentity extends Identity
     public function getSerializeIdentityData($options = [])
     {
         return [
-            '_id'       => (string)$this->getId(),
+            '_id'       => (string) $this->getId(),
             'roles'     => $this->getRoles(),
             '__class__' => get_class($this),
         ];
+    }
+
+    public function getUser()
+    {
+        return null;
     }
 }
