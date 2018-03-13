@@ -155,13 +155,11 @@ abstract class AbstractParams implements Params
         return count($this->params) == 0;
     }
 
-    public function isFieldSet($field)
-    {
-        return isset($this->params[$field]);
-    }
-
     public function isFieldEmpty($field)
     {
+        if (!$this->has($field)) {
+            throw new \Exception('Field ' . $field . ' does not exist');
+        }
         return empty($this->params[$field]);
     }
 }
