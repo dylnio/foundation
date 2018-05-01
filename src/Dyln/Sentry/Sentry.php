@@ -85,13 +85,16 @@ class Sentry
         }
     }
 
-    public function register($version)
+    public function register($version, $userContext = [])
     {
         global $argv;
         $instance = self::getInstance();
         if (self::getInstance()->enabled) {
             $client = $instance->client;
             $client->setRelease($version);
+            if ($userContext) {
+                $client->user_context($userContext);
+            }
             $client->setEnvironment(AppEnv::getAppEnv());
             $client->extra_context([
                 'argv'   => $argv ? implode(' ', $argv) : null,
