@@ -90,7 +90,7 @@ class ApiClient
         }
         $headers = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
         $headers['x-SHOPCADE-USER-IP'] = IpUtil::getRealIp();
-        $headers['x-SHOPCADE-USER-AGENT'] = $_SERVER['HTTP_USER_AGENT'];
+        $headers['x-SHOPCADE-USER-AGENT'] = $_SERVER['HTTP_USER_AGENT'] ?? null;
         if ($this->clientToken) {
             $headers['X-SHOPCADE-CLIENT-TOKEN'] = $this->clientToken;
             $headers['X-SHOPCADE-CLIENT-SIGNATURE'] = $this->calculateSecret($path, $method, $this->clientSecret);
