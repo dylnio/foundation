@@ -476,4 +476,16 @@ class StringUtil
     {
         return (bool) preg_match('//u', $str);
     }
+
+    public static function formatBytes($value)
+    {
+        $unim = ["B", "KB", "MB", "GB", "TB", "PB"];
+        $thousand = 0;
+        while ($value >= 1024) {
+            $thousand++;
+            $value = $value / 1024;
+        }
+
+        return number_format($value, ($thousand ? 2 : 0), ".", ",") . " " . $unim[$thousand];
+    }
 }
