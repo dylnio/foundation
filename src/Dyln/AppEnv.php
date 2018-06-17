@@ -150,4 +150,9 @@ class AppEnv
 
         return $urlKey === (string) $value;
     }
+
+    public static function getLocaleFromBrowser()
+    {
+        return \Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+    }
 }
