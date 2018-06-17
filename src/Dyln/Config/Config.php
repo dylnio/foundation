@@ -57,7 +57,7 @@ class Config
 
     public static function toArray()
     {
-        array_replace_recursive(self::$config, self::$overwrite);
+        return array_replace_recursive(self::$config, self::$overwrite);
     }
 
     public static function value($value)

@@ -19,11 +19,9 @@ if (!function_exists('Dyln\getin')) {
     function set(&$arr, $path, $value, $separator = '.')
     {
         $keys = explode($separator, $path);
-
         foreach ($keys as $key) {
             $arr = &$arr[$key];
         }
-
         $arr = $value;
     }
 
@@ -39,5 +37,19 @@ if (!function_exists('Dyln\getin')) {
         }
 
         return Collection::create(explode($delimiter, $string))->trim()->filter()->toArrayValues();
+    }
+
+    function collect($data)
+    {
+        if (!$data) {
+            return Collection::create();
+        }
+        if ($data instanceof Collection) {
+            return $data;
+        }
+        if (is_array($data)) {
+            return Collection::create($data);
+        }
+        throw new \InvalidArgumentException('Invalid type $data');
     }
 }

@@ -56,12 +56,6 @@ abstract class AbstractModel implements ModelInterface
         }
         $compare = serialize($this->getProperty($fieldName));
         $compareTo = serialize($value);
-//        if (is_object($compare) && method_exists($compare, '__toString')) {
-//            $compare = (string)$this->getProperty($fieldName);
-//        }
-//        if (is_object($compareTo) && method_exists($compareTo, '__toString')) {
-//            $compareTo = (string)$value;
-//        }
         if ($compare !== $compareTo) {
             $this->dirty[$fieldName] = $value;
         }
@@ -123,9 +117,9 @@ abstract class AbstractModel implements ModelInterface
 
     public function toArray($includeTemp = true, $secure = true)
     {
-        $merged = array_merge($this->data, $this->dirty);
+        $merged = array_merge_recursive($this->data, $this->dirty);
         if ($includeTemp) {
-            $merged = array_merge($merged, $this->temp);
+            $merged = array_merge_recursive($merged, $this->temp);
         }
         foreach ($merged as $key => $field) {
             if (in_array($key, $this->secureFields)) {
@@ -170,7 +164,7 @@ abstract class AbstractModel implements ModelInterface
 
     public function isFieldChanged($field)
     {
-        return !empty($this->dirty[$field]);
+        return array_key_exists($field, $this->dirty);
     }
 
     public function getId($asString = false)
