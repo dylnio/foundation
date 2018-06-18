@@ -1,6 +1,6 @@
 <?php
 
-namespace Dyln\Util\Csv;
+namespace Dyln\Util;
 
 class CsvUtil
 {
