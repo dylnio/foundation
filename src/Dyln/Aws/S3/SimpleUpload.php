@@ -21,7 +21,7 @@ class SimpleUpload
         $this->defaultRegion = $defaultRegion;
     }
 
-    public function uploadToS3($file, $acl = 'public-read', $region = null, $bucket = null) : Message
+    public function uploadToS3(SimpleUploadFile $file, $acl = 'public-read', $region = null, $bucket = null) : Message
     {
         if (!$bucket) {
             $bucket = $this->defaultBucket;
@@ -29,20 +29,13 @@ class SimpleUpload
         if (!$region) {
             $region = $this->defaultRegion;
         }
-        $filename = $file['tmp_name']; // path inclusive
-        $niceName = $file['name'];
-        $contentType = $file['type'];
-        $size = $file['size'];
-        if (!$contentType === null) {
-            $contentType = mime_content_type($file);
-        }
         try {
             $response = $this->s3Client->putObject([
                 'Bucket'        => $bucket,
-                'Key'           => $niceName,
-                'Body'          => fopen($filename, 'rb'),
-                'ContentType'   => $contentType,
-                'ContentLength' => $size,
+                'Key'           => $file->getNewFileName() ?? $file->getFileName(),
+                'Body'          => fopen($file->getFile(), 'rb'),
+                'ContentType'   => $file->getContentType(),
+                'ContentLength' => $file->getSize(),
                 'ACL'           => $acl,
                 '@region'       => $region,
             ]);
