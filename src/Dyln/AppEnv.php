@@ -153,6 +153,8 @@ class AppEnv
 
     public static function getLocaleFromBrowser()
     {
-        return \Locale::acceptFromHttp($_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        $acceptLanguage = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en_GB';
+
+        return \Locale::acceptFromHttp($acceptLanguage);
     }
 }
