@@ -194,10 +194,10 @@ class ApiClient
             'end'   => Timer::getEnd(),
             'time'  => $time,
         ]);
-        $body = (string) $res->getBody();
-        Debugbar::add('ApiResponse', [
-            'body' => $body,
-        ]);
+//        $body = (string) $res->getBody();
+//        Debugbar::add('ApiResponse', [
+//            'body' => $body,
+//        ]);
         $cookieString = $res->getHeaderLine('Set-Cookie');
         $cookie = SetCookie::fromString($cookieString);
         $cookie->setDomain('0');
