@@ -14,6 +14,8 @@ class ApiRequest
     protected $priority = 100;
     protected $stopOnError = true;
     protected $dependsOn = null;
+    protected $cacheable = false;
+    protected $cacheLifeTime = 0;
 
     /**
      * @param array $array
@@ -45,6 +47,12 @@ class ApiRequest
         }
         if (isset($array['dependsOn'])) {
             $request = $request->withDependsOn($array['dependsOn']);
+        }
+        if (isset($array['cacheable'])) {
+            $request = $request->withCacheable($array['cacheable']);
+        }
+        if (isset($array['cache_lifetime'])) {
+            $request = $request->withCacheLifeTime($array['cache_lifetime']);
         }
 
         return $request;
@@ -93,7 +101,7 @@ class ApiRequest
     public function withPriority($priority)
     {
         $clone = clone $this;
-        $clone->priority = (int)$priority;
+        $clone->priority = (int) $priority;
 
         return $clone;
     }
@@ -114,17 +122,27 @@ class ApiRequest
         return $clone;
     }
 
+    public function withCacheable($cacheable)
+    {
+        $clone = clone $this;
+        $clone->cacheable = BooleanUtil::getBool($cacheable);
+
+        return $clone;
+    }
+
     public function toArray()
     {
         return [
-            'id'          => $this->getId(),
-            'path'        => $this->getPath(),
-            'query'       => $this->getQuery(),
-            'body'        => $this->getBody(),
-            'method'      => $this->getMethod(),
-            'priority'    => $this->getPriority(),
-            'stopOnError' => $this->isStopOnError(),
-            'dependsOn'   => $this->getDependsOn(),
+            'id'             => $this->getId(),
+            'path'           => $this->getPath(),
+            'query'          => $this->getQuery(),
+            'body'           => $this->getBody(),
+            'method'         => $this->getMethod(),
+            'priority'       => $this->getPriority(),
+            'stopOnError'    => $this->isStopOnError(),
+            'dependsOn'      => $this->getDependsOn(),
+            'cacheable'      => $this->isCacheable(),
+            'cache_lifetime' => $this->getCacheLifeTime(),
         ];
     }
 
@@ -147,7 +165,7 @@ class ApiRequest
     /**
      * @return string
      */
-    public function getMethod(): string
+    public function getMethod() : string
     {
         return $this->method ?: 'GET';
     }
@@ -155,7 +173,7 @@ class ApiRequest
     /**
      * @return array
      */
-    public function getQuery(): array
+    public function getQuery() : array
     {
         return $this->query ?: [];
     }
@@ -163,7 +181,7 @@ class ApiRequest
     /**
      * @return array
      */
-    public function getBody(): array
+    public function getBody() : array
     {
         return $this->body ?: [];
     }
@@ -171,15 +189,15 @@ class ApiRequest
     /**
      * @return int
      */
-    public function getPriority(): int
+    public function getPriority() : int
     {
-        return (int)$this->priority;
+        return (int) $this->priority;
     }
 
     /**
      * @return bool
      */
-    public function isStopOnError(): bool
+    public function isStopOnError() : bool
     {
         return BooleanUtil::getBool($this->stopOnError);
     }
@@ -190,5 +208,26 @@ class ApiRequest
     public function getDependsOn()
     {
         return $this->dependsOn;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCacheable()
+    {
+        return $this->cacheable;
+    }
+    
+    public function withCacheLifeTime($lifeTime = 0)
+    {
+        $clone = clone $this;
+        $clone->cacheLifeTime = (int) $lifeTime;
+
+        return $clone;
+    }
+
+    public function getCacheLifeTime()
+    {
+        return (int) $this->cacheLifeTime;
     }
 }

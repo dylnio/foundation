@@ -2,6 +2,7 @@
 
 namespace Dyln\ApiClient;
 
+use Doctrine\Common\Cache\CacheProvider;
 use Dyln\ApiClient\Enum\Events;
 use Dyln\ApiClient\ResponseBodyMiddleware\ConvertToMessageMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\DebugbarMiddleware;
@@ -50,6 +51,8 @@ class ApiClient
      * @var Emitter|null
      */
     protected $emitter;
+    /** @var CacheProvider */
+    protected $cacheProvider;
 
     /**
      * ApiService constructor.
@@ -58,8 +61,13 @@ class ApiClient
      * @param Emitter|null $emitter
      * @param array $options
      */
-    public function __construct($baseUrl, CookieJarInterface $cookieJar = null, Emitter $emitter = null, array $options = [])
-    {
+    public function __construct(
+        $baseUrl,
+        CookieJarInterface $cookieJar = null,
+        Emitter $emitter = null,
+        array $options = [],
+        CacheProvider $cacheProvider = null
+    ) {
         $this->baseUrl = $baseUrl;
         $this->defaultHeaders = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
         $this->cookieJar = $cookieJar;
@@ -69,6 +77,7 @@ class ApiClient
         $this->clientSecret = getin($options, 'client.secret');
         $this->userToken = getin($options, 'user.token');
         $this->emitter = $emitter;
+        $this->cacheProvider = $cacheProvider;
     }
 
     public function call($path, array $query = null, array $data = null, $method = 'GET', $options = []) : Message
@@ -221,17 +230,38 @@ class ApiClient
             throw new \Exception('Empty calls');
         }
         $request = [];
+        $cachedResponses = [];
         /** @var ApiRequest $call */
         foreach ($calls as $call) {
+            if ($call->isCacheable()) {
+                $cachedResponse = $this->getResponseFromCache($call->getId());
+                if ($cachedResponse) {
+                    $cachedResponses[$call->getId()] = $cachedResponse;
+                    continue;
+                }
+            }
             $request[] = $call->toArray();
         }
-        $response = $this->call('/', null, ['requests' => $request], 'POST', ['headers' => ['X-SHOPCADE-MULTI' => true]]);
+        if ($request) {
+            $response = $this->call('/', null, ['requests' => $request], 'POST', ['headers' => ['X-SHOPCADE-MULTI' => true]]);
+        } else {
+            $response = MessageFactory::success(['payload' => []]);
+        }
         if ($response->isSuccess()) {
             $payload = $response->getData()['payload'];
+            foreach ($cachedResponses as $id => $cachedResponse) {
+                $payload[$id] = $cachedResponse;
+            }
             $bulkResponse = new Collection();
             foreach ($payload as $id => $_payload) {
                 if (!isset($_payload['success'])) {
                     $_payload['success'] = false;
+                }
+                $call = Collection::create($calls)->find(function (ApiRequest $request) use ($id) {
+                    return $request->getId() == $id;
+                });
+                if ($call && $call->isCacheable()) {
+                    $this->saveResponseToCache($call->getId(), $_payload, $call->getCacheLifeTime());
                 }
                 if ($_payload['success']) {
                     $bulkResponse->add(MessageFactory::success($_payload), (string) $id);
@@ -258,5 +288,21 @@ class ApiClient
         $digest = hash_hmac('sha256', $message, $secret) . ':' . $time . ':' . $nonce;
 
         return $digest;
+    }
+
+    private function getResponseFromCache($key)
+    {
+        if (!$this->cacheProvider) {
+            return null;
+        }
+
+        return $this->cacheProvider->fetch($key);
+    }
+
+    private function saveResponseToCache($key, $data, $lifeTime = 0)
+    {
+        if ($this->cacheProvider) {
+            $this->cacheProvider->save($key, $data, $lifeTime);
+        }
     }
 }
