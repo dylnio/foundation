@@ -59,16 +59,12 @@ class Firewall
     {
         $authorized = false;
         $identity = $this->auth->getIdentity();
-        $identityRoles = $identity->getRoles();
-        if ($this->isLoggedIn()) {
-            $identityRoles[] = Roles::GUEST;
-        }
-        $identityRoles = array_unique($identityRoles);
+        $identity->addRole(Roles::GUEST);
         $rule = $this->getRule($resource, $privilege);
         if ($rule instanceof \Closure) {
             $authorized = $rule($identity, $params);
         } else {
-            foreach ($identityRoles as $identityRole) {
+            foreach ($identity->getRoles() as $identityRole) {
                 if (in_array($identityRole, $rule)) {
                     $authorized = true;
                     break;

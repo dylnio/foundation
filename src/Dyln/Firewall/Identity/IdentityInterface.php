@@ -15,4 +15,6 @@ interface IdentityInterface
     public function hasRole($role);
 
     public function getSerializeIdentityData($options = []);
+
+    public function addRole($role);
 }

@@ -51,4 +51,11 @@ class Identity implements IdentityInterface
     {
         return $this->data[$key] ?? null;
     }
+
+    public function addRole($role)
+    {
+        $roles = $this->getRoles();
+        $roles[] = $role;
+        $this->data['roles'] = array_values(array_unique($roles));
+    }
 }
