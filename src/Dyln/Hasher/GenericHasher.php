@@ -29,11 +29,11 @@ class GenericHasher implements Hasher
     }
 
     /**
-     * @param string $value
-     * @param string $hashedValue
+     * @param String $value
+     * @param String $hashedValue
      * @return bool
      */
-    public function check(string $value, string $hashedValue)
+    public function check($value, $hashedValue)
     {
         if (!$hashedValue) {
             return false;
