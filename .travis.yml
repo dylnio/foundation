@@ -3,8 +3,11 @@ language: php
 dist: trusty
 php:
   - '7.0'
-before_script:
-  - pecl -q install mongodb && echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
-  - composer install -o
-  - vendor/bin/phpcs --standard=./phpcs.xml ./src
+branches:
+  only:
+    - master
+install:
+  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+  - composer install -o --no-interaction    
+  - vendor/bin/phpcs -ps --config-set ignore_errors_on_exit 1 --config-set ignore_warnings_on_exit 1 --standard=./phpcs.xml --report=code --report-file=./build/logs/phpcs/phpcs.txt ./src
 script: echo '1'
