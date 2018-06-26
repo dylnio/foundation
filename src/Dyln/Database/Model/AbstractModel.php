@@ -38,10 +38,20 @@ abstract class AbstractModel implements ModelInterface
         unset($data['__meta__']);
         if ($dirty) {
             foreach ($data as $field => $value) {
-                $this->setProperty($field, $value);
+                if (substr($field, 0, 2) == '__') {
+                    $this->addTempData($field, $value);
+                } else {
+                    $this->setProperty($field, $value);
+                }
             }
         } else {
-            $this->data = array_merge($this->data, $data);
+            foreach ($data as $field => $value) {
+                if (substr($field, 0, 2) == '__') {
+                    $this->addTempData($field, $value);
+                } else {
+                    $this->data[$field] = $value;
+                }
+            }
         }
 
         return $this;
