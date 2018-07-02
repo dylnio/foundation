@@ -147,10 +147,14 @@ class ApiClient
             return MessageFactory::error(['message' => $message, 'extra' => $extra]);
         } catch (ServerException $e) {
             $responseBody = $e->getResponse()->getBody()->getContents();
-            $responseBody = json_decode($responseBody, true);
-            $message = $responseBody['message'];
+            $response = json_decode($responseBody, true);
+            if (!is_array($response)) {
+                $message = $responseBody;
+            } else {
+                $message = $response['message'];
+            }
             $extra = [
-                'exception' => $responseBody['exception'] ?? $responseBody['error'] ?? null,
+                'exception' => $response['exception'] ?? $response['error'] ?? null,
             ];
 
             return MessageFactory::error(['message' => $message, 'extra' => $extra]);
