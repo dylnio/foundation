@@ -4,6 +4,7 @@ namespace Dyln\DI;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Dyln\Event\Emitter;
+use Dyln\Log\Logger;
 
 class Container extends \DI\Container implements \ArrayAccess
 {
@@ -91,6 +92,9 @@ class Container extends \DI\Container implements \ArrayAccess
         }
         if ($obj instanceof CacheAwareInterface) {
             $obj->setCache($this->get(CacheProvider::class));
+        }
+        if ($obj instanceof LogAwareInterface) {
+            $obj->setLogger($this->get(Logger::class));
         }
 
         return $obj;
