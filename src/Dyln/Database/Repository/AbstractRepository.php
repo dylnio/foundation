@@ -18,6 +18,7 @@ abstract class AbstractRepository implements RepositoryInterface
     protected $entityClassName;
     /** @var CacheProvider */
     protected $cache;
+    protected $cacheDisabled = false;
 
     private function __construct(array $daos, $entityClassName, $cache = null)
     {
@@ -173,6 +174,9 @@ abstract class AbstractRepository implements RepositoryInterface
 
     private function isInCache($key)
     {
+        if ($this->cacheDisabled) {
+            return false;
+        }
         if ($this->cache) {
             return $this->cache->contains($key);
         }
@@ -182,6 +186,9 @@ abstract class AbstractRepository implements RepositoryInterface
 
     private function getFromCache($key)
     {
+        if ($this->cacheDisabled) {
+            return false;
+        }
         if ($this->cache) {
             return $this->cache->fetch($key);
         }
@@ -191,8 +198,20 @@ abstract class AbstractRepository implements RepositoryInterface
 
     private function saveToCache($key, $data)
     {
-        if ($this->cache) {
-            $this->cache->save($key, $data);
+        if (!$this->cacheDisabled) {
+            if ($this->cache) {
+                $this->cache->save($key, $data);
+            }
         }
+    }
+
+    public function disableCache()
+    {
+        $this->cacheDisabled = true;
+    }
+
+    public function enableCache()
+    {
+        $this->cacheDisabled = false;
     }
 }
