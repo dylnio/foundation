@@ -29,8 +29,12 @@ class Client
             $method = strtoupper($method);
             $options = [
                 'headers' => $this->getHeaders(),
-                'body'    => json_encode($data),
             ];
+            if (in_array($method, ['POST', 'PUT'])) {
+                $options['form_params'] = $data;
+            } else {
+                $path .= '?' . http_build_query($data);
+            }
             if ($method == 'POST') {
                 $result = $this->getHttpClient()->request('POST', $this->prepareUrl($path), $options);
             } elseif ($method == 'PUT') {
