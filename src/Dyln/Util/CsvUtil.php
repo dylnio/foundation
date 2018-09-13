@@ -34,7 +34,7 @@ class CsvUtil
             $count++;
         }
         if (!$results) {
-            $results = [','];
+            $results = [',' => 1];
         }
         $results = array_keys($results, max($results));
 
