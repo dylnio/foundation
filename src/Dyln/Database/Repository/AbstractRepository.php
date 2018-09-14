@@ -6,12 +6,16 @@ use Doctrine\Common\Cache\CacheProvider;
 use Dyln\Collection\Collection;
 use Dyln\Database\Dao\DaoInterface;
 use Dyln\Database\Model\ModelInterface;
+use Dyln\Database\Repository\Event\RepositoryEvents;
+use Dyln\DI\EventEmitterAwareInterface;
 use Dyln\Doctrine\Common\Cache\CollectionCache;
+use Dyln\Event\Emitter;
+use Dyln\Event\Event;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Driver\Cursor;
 use MongoDB\Model\BSONDocument;
 
-abstract class AbstractRepository implements RepositoryInterface
+abstract class AbstractRepository implements RepositoryInterface, EventEmitterAwareInterface
 {
     /** @var  DaoInterface[] */
     protected $daos = [];
@@ -19,6 +23,8 @@ abstract class AbstractRepository implements RepositoryInterface
     /** @var CacheProvider */
     protected $cache;
     protected $cacheDisabled = false;
+    /** @var Emitter */
+    protected $emitter;
 
     private function __construct(array $daos, $entityClassName, $cache = null)
     {
@@ -137,9 +143,13 @@ abstract class AbstractRepository implements RepositoryInterface
             $forceInsert = $options['forceInsert'];
         }
         if ($model->getId() && !$forceInsert) {
+            $this->getEmitter()->emit(Event::named(RepositoryEvents::BEFORE_MODEL_UPDATED), ['model' => $model, 'options' => $options, 'dao_key' => $daoKey]);
             $model = $this->getDao($daoKey)->update($model, $options);
+            $this->getEmitter()->emit(Event::named(RepositoryEvents::AFTER_MODEL_UPDATED), ['model' => $model, 'options' => $options, 'dao_key' => $daoKey]);
         } else {
+            $this->getEmitter()->emit(Event::named(RepositoryEvents::BEFORE_MODEL_CREATED), ['model' => $model, 'options' => $options, 'dao_key' => $daoKey]);
             $model = $this->getDao($daoKey)->save($model, $options);
+            $this->getEmitter()->emit(Event::named(RepositoryEvents::AFTER_MODEL_CREATED), ['model' => $model, 'options' => $options, 'dao_key' => $daoKey]);
         }
 
         return $model;
@@ -213,5 +223,15 @@ abstract class AbstractRepository implements RepositoryInterface
     public function enableCache()
     {
         $this->cacheDisabled = false;
+    }
+
+    public function setEmitter(Emitter $emitter)
+    {
+        $this->emitter = $emitter;
+    }
+
+    public function getEmitter() : Emitter
+    {
+        return $this->emitter;
     }
 }
