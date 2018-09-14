@@ -29,7 +29,6 @@ class App extends \Slim\App
         $config = $this->mergeModuleConfigs();
         $services = array_merge($services, getin($config, ['services'], []));
         Config::merge(getin($config, ['params'], []));
-
         $containerBuilder->addDefinitions($services);
         $cache = $this->getDiCache(Config::get(['di.cache']));
         $containerBuilder->setDefinitionCache($cache);
@@ -94,21 +93,26 @@ class App extends \Slim\App
 
     public function getGeneric($pattern, $actionClassName)
     {
-        return $this->get($pattern, $actionClassName . ':dispatch');
+        return $this->get($pattern, "{$actionClassName}:dispatch");
     }
 
     public function postGeneric($pattern, $actionClassName)
     {
-        return $this->post($pattern, $actionClassName . ':dispatch');
+        return $this->post($pattern, "{$actionClassName}:dispatch");
     }
 
     public function putGeneric($pattern, $actionClassName)
     {
-        return $this->put($pattern, $actionClassName . ':dispatch');
+        return $this->put($pattern, "{$actionClassName}:dispatch");
+    }
+
+    public function patchGeneric($pattern, $actionClassName)
+    {
+        return $this->patch($pattern, "{$actionClassName}:dispatch");
     }
 
     public function deleteGeneric($pattern, $actionClassName)
     {
-        return $this->delete($pattern, $actionClassName . ':dispatch');
+        return $this->delete($pattern, "{$actionClassName}:dispatch");
     }
 }

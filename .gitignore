@@ -3,3 +3,4 @@
 vendor/
 var/
 .idea/
+.php_cs.cache
