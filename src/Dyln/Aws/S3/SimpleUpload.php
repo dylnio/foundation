@@ -21,7 +21,7 @@ class SimpleUpload
         $this->defaultRegion = $defaultRegion;
     }
 
-    public function uploadToS3(SimpleUploadFile $file, $acl = 'public-read', $region = null, $bucket = null) : Message
+    public function uploadToS3(SimpleUploadFile $file, $acl = 'public-read', $region = null, $bucket = null, $extra = []) : Message
     {
         if (!$bucket) {
             $bucket = $this->defaultBucket;
@@ -30,7 +30,7 @@ class SimpleUpload
             $region = $this->defaultRegion;
         }
         try {
-            $response = $this->s3Client->putObject([
+            $arguments = [
                 'Bucket'        => $bucket,
                 'Key'           => $file->getNewFileName() ?? $file->getFileName(),
                 'Body'          => fopen($file->getFile(), 'rb'),
@@ -38,7 +38,11 @@ class SimpleUpload
                 'ContentLength' => $file->getSize(),
                 'ACL'           => $acl,
                 '@region'       => $region,
-            ]);
+            ];
+            foreach ($extra as $key => $value) {
+                $arguments[$key] = $value;
+            }
+            $response = $this->s3Client->putObject($arguments);
         } catch (\Exception $e) {
             return MessageFactory::error(['message' => $e->getMessage()]);
         }
