@@ -4,6 +4,7 @@ namespace Dyln\ApiClient;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Dyln\ApiClient\Enum\Events;
+use Dyln\ApiClient\Exception\InvalidJsonException;
 use Dyln\ApiClient\ResponseBodyMiddleware\ConvertToMessageMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\DebugbarMiddleware;
 use Dyln\ApiClient\ResponseBodyMiddleware\JsonDecodeMiddleware;
@@ -158,6 +159,8 @@ class ApiClient
             ];
 
             return MessageFactory::error(['message' => $message, 'extra' => $extra]);
+        } catch (InvalidJsonException $e) {
+            return MessageFactory::error(['message' => $e->getMessage(), 'extra' => ['json_string' => $e->getJsonString()]]);
         } catch (\Exception $e) {
             return MessageFactory::error(['message' => $e->getMessage()]);
         }
