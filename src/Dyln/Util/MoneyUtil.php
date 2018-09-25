@@ -11,12 +11,12 @@ class MoneyUtil
         return (int)bcmul($amount, 100);
     }
 
-    public static function toFloat($amount)
+    public static function toFloat($amount, $format = true)
     {
         $amount = (float)bcdiv($amount, 100, 3);
         $amount = round($amount, 2, PHP_ROUND_HALF_UP);
 
-        return number_format($amount, 2, '.', '');
+        return ($format) ? number_format($amount, 2, '.', '') : $amount;
     }
 
     public static function formatCurrency($valueInPence, $currency = null)
