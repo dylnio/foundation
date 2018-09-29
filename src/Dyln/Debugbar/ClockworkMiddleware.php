@@ -16,6 +16,7 @@ class ClockworkMiddleware
 
     /**
      * ClockworkMiddleware constructor.
+     *
      * @param Clockwork $clockwork
      */
     public function __construct(Clockwork $clockwork)
@@ -126,7 +127,7 @@ class ClockworkMiddleware
         }
         if ($userLog) {
             foreach ($userLog as $row) {
-                $this->clockwork->log($row['level'] ?? LogLevel::INFO, $row['message']);
+                $this->clockwork->log($row['level'] ?? LogLevel::INFO, $row['message'], $row['context']);
             }
         }
 
