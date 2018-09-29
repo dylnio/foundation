@@ -3,6 +3,7 @@
 namespace Dyln\Debugbar;
 
 use Clockwork\Clockwork;
+use Clockwork\DataSource\XdebugDataSource;
 use Dyln\Clockwork\DataSource\MultiQueryDataSource;
 use Psr\Log\LogLevel;
 use Slim\Http\Request;
@@ -146,6 +147,10 @@ class ClockworkMiddleware
         if (!$found) {
             $found = new MultiQueryDataSource();
             $this->clockwork->addDataSource($found);
+        }
+
+        if (extension_loaded('xdebug')) {
+            $this->clockwork->addDataSource(new XdebugDataSource());
         }
 
         return $found;

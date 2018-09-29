@@ -127,6 +127,13 @@ class AppEnv
         return !!$overwrite;
     }
 
+    public static function isXdebugProfilerEnabled()
+    {
+        $overwrite = $_GET['XDEBUG_PROFILE'] ?? $_COOKIE['XDEBUG_PROFILE'] ?? null;
+
+        return !!$overwrite;
+    }
+
     public static function isApiSignatureCheckDisabled()
     {
         $check = $_GET['debug_sign'] ?? $_COOKIE['debug_sign'] ?? null;

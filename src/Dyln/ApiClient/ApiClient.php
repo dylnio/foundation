@@ -92,6 +92,9 @@ class ApiClient
         if (AppEnv::isXdebugEnabled()) {
             $query['XDEBUG_SESSION_START'] = 'PHPSTORM';
         }
+        if (AppEnv::isXdebugProfilerEnabled()) {
+            $query['XDEBUG_PROFILE'] = 1;
+        }
         if (AppEnv::isDebugEnabled()) {
             $query['debug'] = Config::get('app.debug.url_key');
         }
