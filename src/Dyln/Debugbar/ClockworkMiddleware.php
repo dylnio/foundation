@@ -154,6 +154,7 @@ class ClockworkMiddleware
     private function addXdebugDataSource()
     {
         if (extension_loaded('xdebug')) {
+            $sources = $this->clockwork->getDataSources();
             foreach ($sources as $source) {
                 if ($source instanceof XdebugDataSource) {
                     $xdds = $source;
