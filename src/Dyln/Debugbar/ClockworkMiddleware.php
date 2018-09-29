@@ -36,8 +36,8 @@ class ClockworkMiddleware
         $apiRequest = getin($data, 'ApiRequest', []);
         $apiResponses = getin($data, 'ApiResponse', []);
         $userLog = getin($data, 'UserLog', []);
+        $databaseSource = $this->getDatabaseSource();
         if ($mongo) {
-            $databaseSource = $this->getDatabaseSource();
             foreach ($mongo as $row) {
                 $params = [];
                 if (!empty($row['fieldName'])) {
@@ -94,7 +94,6 @@ class ClockworkMiddleware
             }
         }
         if ($redis) {
-            $databaseSource = $this->getDatabaseSource();
             foreach ($redis as $row) {
                 $params = [];
                 if (!empty($row['args'])) {
@@ -110,7 +109,6 @@ class ClockworkMiddleware
             }
         }
         if ($apiRequest) {
-            $databaseSource = $this->getDatabaseSource();
             foreach ($apiRequest as $row) {
                 $timeline->addEvent(uniqid(), '[API REQUEST] ' . $row['curl'], $row['start'], $row['end']);
                 $databaseSource->addApiRequest($row['curl'], $row['start'], $row['end']);
@@ -131,6 +129,7 @@ class ClockworkMiddleware
                 $this->clockwork->log($row['level'] ?? LogLevel::INFO, $row['message'], $row['context']);
             }
         }
+        $this->addXdebugDataSource();
 
         return $response;
     }
@@ -138,21 +137,32 @@ class ClockworkMiddleware
     private function getDatabaseSource()
     {
         $sources = $this->clockwork->getDataSources();
-        $found = null;
+        $mqds = null;
         foreach ($sources as $source) {
             if ($source instanceof MultiQueryDataSource) {
-                $found = $source;
+                $mqds = $source;
             }
         }
-        if (!$found) {
-            $found = new MultiQueryDataSource();
-            $this->clockwork->addDataSource($found);
+        if (!$mqds) {
+            $mqds = new MultiQueryDataSource();
+            $this->clockwork->addDataSource($mqds);
         }
 
+        return $mqds;
+    }
+
+    private function addXdebugDataSource()
+    {
         if (extension_loaded('xdebug')) {
-            $this->clockwork->addDataSource(new XdebugDataSource());
+            foreach ($sources as $source) {
+                if ($source instanceof XdebugDataSource) {
+                    $xdds = $source;
+                }
+            }
+            if (!$xdds) {
+                $xdds = new XdebugDataSource();
+                $this->clockwork->addDataSource($xdds);
+            }
         }
-
-        return $found;
     }
 }
