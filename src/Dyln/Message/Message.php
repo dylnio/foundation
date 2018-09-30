@@ -140,6 +140,10 @@ class Message implements ReprInfoProvider
 
     public function provideReprInfo()
     {
-        return $this->toArray();
+        return [
+            'class'   => get_class($this),
+            'payload' => $this->toArray(),
+            'note'    => 'by \\Dyln\\Sentry\\ReprInfoProvider',
+        ];
     }
 }

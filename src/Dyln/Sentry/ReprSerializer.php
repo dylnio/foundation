@@ -27,6 +27,15 @@ class ReprSerializer extends \Raven_ReprSerializer
             if ($value instanceof ReprInfoProvider) {
                 return $this->serialize($value->provideReprInfo());
             }
+            if (method_exists($value, '__toString')) {
+                return $this->serialize(['class' => get_class($value), 'payload' => (string) $value, 'note' => 'by \\Dyln\\Sentry\\ReprSerializer']);
+            }
+            if (method_exists($value, '__toArray')) {
+                return $this->serialize(['class' => get_class($value), 'payload' => (array) $value, 'note' => 'by \\Dyln\\Sentry\\ReprSerializer']);
+            }
+            if (method_exists($value, 'toArray')) {
+                return $this->serialize(['class' => get_class($value), 'payload' => $value->toArray(), 'note' => 'by \\Dyln\\Sentry\\ReprSerializer']);
+            }
 
             return 'Object ' . get_class($value);
         } elseif (is_resource($value)) {
