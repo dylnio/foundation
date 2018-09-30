@@ -2,9 +2,10 @@
 
 namespace Dyln\Message;
 
+use Dyln\Sentry\ReprInfoProvider;
 use Dyln\Util\ArrayUtil;
 
-class Message
+class Message implements ReprInfoProvider
 {
     protected $isError = false;
     protected $data = [];
@@ -135,5 +136,10 @@ class Message
             'error'   => $this->getError(),
             'data'    => $this->getData(),
         ];
+    }
+
+    public function provideReprInfo()
+    {
+        return $this->toArray();
     }
 }
