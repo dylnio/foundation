@@ -81,7 +81,7 @@ abstract class AbstractParams implements Params
                 } else {
                     $result = MessageFactory::error(['message' => 'Invalid Validator']);
                 }
-                if ($result->isError()) {
+                if ($result && $result->isError()) {
                     $this->validation = MessageFactory::error(['message' => $result->getErrorMessage(), 'extra' => ['field' => $field]]);
 
                     return;
@@ -160,6 +160,7 @@ abstract class AbstractParams implements Params
         if (!$this->has($field)) {
             throw new \Exception('Field ' . $field . ' does not exist');
         }
+
         return empty($this->params[$field]);
     }
 }
