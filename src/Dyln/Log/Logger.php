@@ -25,8 +25,9 @@ class Logger
     {
         if (!$this->logger) {
             $this->logger = new \Monolog\Logger('app');
-            $handlerConfig = getin($this->config, ['handlers']);
-            if ($streamConfig = getin($handlerConfig, ['stream'], [])) {
+            $handlerConfig = getin($this->config, ['handlers'], []);
+            $streamConfig = getin($handlerConfig, ['stream'], []);
+            if ($streamConfig) {
                 $handler = new RotatingFileHandler($streamConfig['file'], 7, \Monolog\Logger::DEBUG);
                 $handler->setFormatter($this->getDefaultFormatter());
                 $this->logger->pushHandler($handler);

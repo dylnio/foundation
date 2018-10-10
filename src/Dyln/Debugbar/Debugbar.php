@@ -36,9 +36,9 @@ class Debugbar
         return $this->data;
     }
 
-    public static function log($message, $level = LogLevel::INFO)
+    public static function log($message, $level = LogLevel::INFO, $context = [])
     {
-        self::getInstance()->_add('UserLog', ['level' => $level, 'message' => $message]);
+        self::getInstance()->_add('UserLog', ['level' => $level, 'message' => $message, 'context' => $context]);
     }
 
     public static function add($section, $data)

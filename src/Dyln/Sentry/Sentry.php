@@ -14,7 +14,7 @@ class Sentry
     protected $client;
     protected $enabled = false;
 
-    private function __construct(\Raven_Client $client, $enabled = true)
+    private function __construct(Client $client, $enabled = true)
     {
         $this->client = $client;
         $this->enabled = $enabled;
@@ -24,7 +24,7 @@ class Sentry
     {
         $sentryUrl = Config::get('sentry.url');
         if (!self::$instance) {
-            $client = new \Raven_Client($sentryUrl);
+            $client = new Client($sentryUrl);
             self::$instance = new self($client, $sentryUrl ? true : false);
         }
 

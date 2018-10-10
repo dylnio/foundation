@@ -6,7 +6,7 @@ use Dyln\AppEnv;
 use Dyln\Slim\Http\JsonResponse;
 use Slim\Http\Request;
 
-class DebugbarMiddleware
+class InjectDebugBarDataToResponseMiddleware
 {
     public function __invoke(Request $request, JsonResponse $response, $next)
     {

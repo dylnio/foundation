@@ -57,10 +57,11 @@ class ApiClient
 
     /**
      * ApiService constructor.
-     * @param $baseUrl
+     *
+     * @param                         $baseUrl
      * @param CookieJarInterface|null $cookieJar
-     * @param Emitter|null $emitter
-     * @param array $options
+     * @param Emitter|null            $emitter
+     * @param array                   $options
      */
     public function __construct(
         $baseUrl,
@@ -68,7 +69,8 @@ class ApiClient
         Emitter $emitter = null,
         array $options = [],
         CacheProvider $cacheProvider = null
-    ) {
+    )
+    {
         $this->baseUrl = $baseUrl;
         $this->defaultHeaders = array_merge($this->defaultHeaders, ArrayUtil::getIn($options, ['headers'], []));
         $this->cookieJar = $cookieJar;
@@ -81,7 +83,7 @@ class ApiClient
         $this->cacheProvider = $cacheProvider;
     }
 
-    public function call($path, array $query = null, array $data = null, $method = 'GET', $options = []) : Message
+    public function call($path, array $query = null, array $data = null, $method = 'GET', $options = []): Message
     {
         $eventParams = ['path' => $path, 'query' => $query, 'data' => $data, 'method' => $method, 'options' => $options];
         $this->emitter->emit(Events::CALL_BEGIN, $eventParams);
@@ -91,6 +93,9 @@ class ApiClient
         $this->addResponseBodyMiddleware(new ConvertToMessageMiddleware());
         if (AppEnv::isXdebugEnabled()) {
             $query['XDEBUG_SESSION_START'] = 'PHPSTORM';
+        }
+        if (AppEnv::isXdebugProfilerEnabled()) {
+            $query['XDEBUG_PROFILE'] = 1;
         }
         if (AppEnv::isDebugEnabled()) {
             $query['debug'] = Config::get('app.debug.url_key');
@@ -231,7 +236,7 @@ class ApiClient
         return $body;
     }
 
-    public function bulkCall($calls = []) : Message
+    public function bulkCall($calls = []): Message
     {
         if (!$calls) {
             throw new \Exception('Empty calls');
@@ -309,7 +314,9 @@ class ApiClient
     private function saveResponseToCache($key, $data, $lifeTime = 0)
     {
         if ($this->cacheProvider) {
-            $this->cacheProvider->save($key, $data, $lifeTime);
+            if (!$this->cacheProvider->contains($key)) {
+                $this->cacheProvider->save($key, $data, $lifeTime);
+            }
         }
     }
 }

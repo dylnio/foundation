@@ -31,62 +31,33 @@ class DebugbarListener implements ListenerInterface
 
     private function parseForRedis($args = [])
     {
-        $bt = [];
         $parsed = [];
-        $traces = array_reverse(debug_backtrace());
-        foreach ($traces as $trace) {
-            $bt[] = [
-                'file'     => isset($trace['file']) ? $trace['file'] : false,
-                'line'     => isset($trace['line']) ? $trace['line'] : false,
-                'function' => isset($trace['function']) ? $trace['function'] : false,
-            ];
-        }
         $parsed['command'] = "{$args['command']}";
         $parsed['time'] = $args['duration'];
         $parsed['start'] = $args['start'];
         $parsed['end'] = $args['end'];
         $parsed['duration'] = $args['duration'];
         $parsed['args'] = getin($args, 'args', []);
-        $parsed['bt'] = $bt;
 
         return $parsed;
     }
 
     private function parseForElastic($args = [])
     {
-        $bt = [];
         $parsed = [];
-        $traces = array_reverse(debug_backtrace());
-        foreach ($traces as $trace) {
-            $bt[] = [
-                'file'     => isset($trace['file']) ? $trace['file'] : false,
-                'line'     => isset($trace['line']) ? $trace['line'] : false,
-                'function' => isset($trace['function']) ? $trace['function'] : false,
-            ];
-        }
         $parsed['command'] = "{$args['command']}";
         $parsed['time'] = $args['duration'];
         $parsed['start'] = $args['start'];
         $parsed['end'] = $args['end'];
         $parsed['duration'] = $args['duration'];
         $parsed['args'] = getin($args, 'args', []);
-        $parsed['bt'] = $bt;
 
         return $parsed;
     }
 
     private function parseForMongo($args = [])
     {
-        $bt = [];
         $parsed = [];
-        $traces = array_reverse(debug_backtrace());
-        foreach ($traces as $trace) {
-            $bt[] = [
-                'file'     => isset($trace['file']) ? $trace['file'] : false,
-                'line'     => isset($trace['line']) ? $trace['line'] : false,
-                'function' => isset($trace['function']) ? $trace['function'] : false,
-            ];
-        }
         $parsed['command'] = "{$args['database']}.{$args['collection']}.{$args['command']}";
         $parsed['time'] = $args['duration'];
         $parsed['start'] = $args['start'];
@@ -102,7 +73,6 @@ class DebugbarListener implements ListenerInterface
         $parsed['key'] = getin($args, 'args.key', []);
         $parsed['indexName'] = getin($args, 'args.indexName', []);
         $parsed['indexes'] = getin($args, 'args.indexes', []);
-        $parsed['bt'] = $bt;
 
         return $parsed;
     }

@@ -25,9 +25,15 @@ class AppEnv
     public static function getAppEnv()
     {
         if (!defined('APPLICATION_ENV')) {
-            $env = getenv('APPLICATION_ENV') ?? get_cfg_var('APPLICATION_ENV') ?? self::getAppEnvFromServerName();
+            $env = getenv('APPLICATION_ENV');
             if (!$env) {
-                $env = self::DEFAULT_ENV;
+                $env = get_cfg_var('APPLICATION_ENV');
+                if (!$env) {
+                    $env = self::getAppEnvFromServerName();
+                    if (!$env) {
+                        $env = self::DEFAULT_ENV;
+                    }
+                }
             }
             define('APPLICATION_ENV', $env);
         }
@@ -123,6 +129,13 @@ class AppEnv
     public static function isXdebugEnabled()
     {
         $overwrite = $_GET['XDEBUG_SESSION_START'] ?? $_COOKIE['XDEBUG_SESSION_START'] ?? $_GET['XDEBUG_SESSION'] ?? $_COOKIE['XDEBUG_SESSION'] ?? null;
+
+        return !!$overwrite;
+    }
+
+    public static function isXdebugProfilerEnabled()
+    {
+        $overwrite = $_GET['XDEBUG_PROFILE'] ?? $_COOKIE['XDEBUG_PROFILE'] ?? null;
 
         return !!$overwrite;
     }
