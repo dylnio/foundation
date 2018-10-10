@@ -9,6 +9,8 @@ interface RepositoryInterface
 {
     public function getDao($key = 'default');
 
+    public function setDefaultDao($key);
+
     public function fetch($id, $fields = [], $daoKey = 'default');
 
     public function fetchBy($condition = [], $fields = [], $limit = null, $skip = null, $sort = null, $daoKey = 'default');

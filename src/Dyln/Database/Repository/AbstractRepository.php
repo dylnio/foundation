@@ -65,6 +65,13 @@ abstract class AbstractRepository implements RepositoryInterface, EventEmitterAw
         $this->daos[$key] = $dao;
     }
 
+    public function setDefaultDao($key)
+    {
+        if ($dao = $this->getDao($key)) {
+            $this->addDao('default', $dao);
+        }
+    }
+
     public function fetch($id, $fields = [], $daoKey = 'default')
     {
         $condition = ['_id' => $id];
