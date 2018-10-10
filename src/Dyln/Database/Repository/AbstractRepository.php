@@ -11,6 +11,7 @@ use Dyln\DI\EventEmitterAwareInterface;
 use Dyln\Doctrine\Common\Cache\CollectionCache;
 use Dyln\Event\Emitter;
 use Dyln\Event\Event;
+use function Dyln\getin;
 use MongoDB\BSON\ObjectID;
 use MongoDB\Driver\Cursor;
 use MongoDB\Model\BSONDocument;
@@ -56,7 +57,7 @@ abstract class AbstractRepository implements RepositoryInterface, EventEmitterAw
 
     public function getDao($key = 'default')
     {
-        return $this->daos[$key];
+        return getin($this->daos, $key);
     }
 
     public function addDao($key, DaoInterface $dao)
